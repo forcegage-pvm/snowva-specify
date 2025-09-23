@@ -90,24 +90,26 @@ tests/
 ├── integration/
 └── unit/
 
-# Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   ├── middleware/
-│   ├── validation/
-│   ├── data/mock/
-│   └── app/api/        # Next.js App Router API routes
-└── tests/
+# Monorepo with Next.js Web App
+packages/
+└── web/
+    ├── src/
+    │   ├── app/            # Next.js App Router (pages and API routes)
+    │   ├── components/
+    │   ├── models/
+    │   ├── services/
+    │   ├── middleware/
+    │   ├── validation/
+    │   └── data/mock/
+    └── tests/
+        ├── contract/
+        ├── integration/
+        └── unit/
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── app/            # Next.js App Router pages
-│   ├── services/
-│   └── stories/        # Storybook documentation
-└── tests/
+specs/
+└── [###-feature]/
+
+docs/
 
 # Option 3: Mobile + API (when "iOS/Android" detected)
 api/
@@ -117,7 +119,7 @@ ios/ or android/
 └── [platform-specific structure]
 ```
 
-**Structure Decision**: Option 2 (Web application) - Frontend (Next.js) + Backend (API routes) structure detected from Technical Context
+**Structure Decision**: Monorepo with Next.js Web App - Consolidating frontend and backend into a single Next.js project within a `packages/web` directory.
 
 ## Phase 0: Outline & Research
 
