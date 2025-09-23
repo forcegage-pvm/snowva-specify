@@ -1,0 +1,268 @@
+--- Page 1 ---
+STATEMENT
+Snowva™ Trading Pty Ltd
+2010/007043/07 Date: 2024/10/07
+67 Wildevy Street Invoice #: 241007404
+Lynnwood Manor Customer Sportsmans Warehouse
+Pretoria Sportsmans
+Warehouse
+VAT #: 4100263500 Bill To: Holdsport Group Pty Ltd t/a Sportsmans Warehouse
+PO Box 2721
+Cape Town, 8000
+VAT #: 4080304928
+Terms: 30 Days from Invoice
+Date Invoice # Order # Branch Description Item Code Amount
+07.10.2024 241007101 PO10630114 Sportsmans Warehouse - Nelspruit Snowva Ultimate Ice Maker 1013250 R 1 520.00
+07.10.2024 241007202 PO10630114 Sportsmans Warehouse - Northridge Snowva Ultimate Ice Maker 1013250 R 1 520.00
+07.10.2024 241007303 PO10630114 Sportsmans Warehouse - Polokwane Snowva Ultimate Ice Maker 1013250 R 1 520.00
+07.10.2024 241007404 PO10630114 Sportsmans Warehouse - Polokwane Snowva Ultimate Ice Maker 1013250 R 1 520.00
+07.10.2024 241007505 PO10630114 Sportsmans Warehouse - Port Elizabeth Snowva Ultimate Ice Maker 1013250 R 1 520.00
+07.10.2024 241007606 PO10630114 Sportsmans Warehouse - Tokai Snowva Ultimate Ice Maker 1013250 R 1 520.00
+07.10.2024 241007707 PO10630114 Sportsmans Warehouse - Tygervalley Snowva Ultimate Ice Maker 1013250 R 1 520.00
+07.10.2024 241007808 PO10630114 Sportsmans Warehouse - Waterfront Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206101 10631872 Sportsmans Warehouse - Ballito Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206202 10631872 Sportsmans Warehouse - Centurion Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206303 10631872 Sportsmans Warehouse - Cresta Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206404 10631872 Sportsmans Warehouse - Eastrand Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206505 10631872 Sportsmans Warehouse - Fourways Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206606 10631872 Sportsmans Warehouse - George Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206707 10631872 Sportsmans Warehouse - Hermanus Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206808 10631872 Sportsmans Warehouse - Kimberley Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206909 10631872 Sportsmans Warehouse - Klerksdorp Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206101 10631872 Sportsmans Warehouse - Northridge Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206111 10631872 Sportsmans Warehouse - Seapoint Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206121 10631872 Sportsmans Warehouse - Somerset West Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206131 10631872 Sportsmans Warehouse - Tygervalley Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206141 10631872 Sportsmans Warehouse - West Coast VillagSneowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206151 10631872 Sportsmans Warehouse - Woodmead Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206161 10631872 Sportsmans Warehouse - Worcester Snowva Ultimate Ice Maker 1013250 R 1 520.00
+06.12.2024 241206171 10631872 Sportsmans Warehouse - Zambezi Snowva Ultimate Ice Maker 1013250 R 1 520.00
+16.12.2024 241216101 PO10634368 Sportsmans Warehouse - Atterbury Snowva Ultimate Ice Maker 1013250 R 1 520.00
+16.12.2024 241216202 PO10632913 Sportsmans Warehouse - Atterbury Snowva Ultimate Ice Maker 1013250 R 1 520.00
+16.12.2024 241216303 PO10632913 Sportsmans Warehouse - Ballito Snowva Ultimate Ice Maker 1013250 R 1 520.00
+16.12.2024 241216404 PO10632913 Sportsmans Warehouse - Centurion Snowva Ultimate Ice Maker 1013250 R 1 520.00
+16.12.2024 241216505 PO10632913 Sportsmans Warehouse - Cresta Snowva Ultimate Ice Maker 1013250 R 1 520.00
+16.12.2024 241216606 PO10632913 Sportsmans Warehouse - East London Snowva Ultimate Ice Maker 1013250 R 1 520.00
+241216707
+TOTAL DUE (VAT incl) R 4 7 120.00
+Banking details:
+Snowva Pty Ltd
+First National Bank
+Branch code 250 655
+Account number 62264885082
+--- Tables on Page 1 ---
+
+Table 1:
+Date Invoice # Order # Branch Description Item Code Amount |  |  |  |  |  | 
+07.10.2024
+07.10.2024
+07.10.2024
+07.10.2024
+07.10.2024
+07.10.2024
+07.10.2024
+07.10.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+06.12.2024
+16.12.2024
+16.12.2024
+16.12.2024
+16.12.2024
+16.12.2024
+16.12.2024 | 241007101
+241007202
+241007303
+241007404
+241007505
+241007606
+241007707
+241007808
+241206101
+241206202
+241206303
+241206404
+241206505
+241206606
+241206707
+241206808
+241206909
+241206101
+241206111
+241206121
+241206131
+241206141
+241206151
+241206161
+241206171
+241216101
+241216202
+241216303
+241216404
+241216505
+241216606
+241216707 | PO10630114
+PO10630114
+PO10630114
+PO10630114
+PO10630114
+PO10630114
+PO10630114
+PO10630114
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+10631872
+PO10634368
+PO10632913
+PO10632913
+PO10632913
+PO10632913
+PO10632913 | Sportsmans Warehouse - Nelspruit
+Sportsmans Warehouse - Northridge
+Sportsmans Warehouse - Polokwane
+Sportsmans Warehouse - Polokwane
+Sportsmans Warehouse - Port Elizabeth
+Sportsmans Warehouse - Tokai
+Sportsmans Warehouse - Tygervalley
+Sportsmans Warehouse - Waterfront
+Sportsmans Warehouse - Ballito
+Sportsmans Warehouse - Centurion
+Sportsmans Warehouse - Cresta
+Sportsmans Warehouse - Eastrand
+Sportsmans Warehouse - Fourways
+Sportsmans Warehouse - George
+Sportsmans Warehouse - Hermanus
+Sportsmans Warehouse - Kimberley
+Sportsmans Warehouse - Klerksdorp
+Sportsmans Warehouse - Northridge
+Sportsmans Warehouse - Seapoint
+Sportsmans Warehouse - Somerset West
+Sportsmans Warehouse - Tygervalley
+Sportsmans Warehouse - West Coast Villa
+Sportsmans Warehouse - Woodmead
+Sportsmans Warehouse - Worcester
+Sportsmans Warehouse - Zambezi
+Sportsmans Warehouse - Atterbury
+Sportsmans Warehouse - Atterbury
+Sportsmans Warehouse - Ballito
+Sportsmans Warehouse - Centurion
+Sportsmans Warehouse - Cresta
+Sportsmans Warehouse - East London | Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+gSneowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker
+Snowva Ultimate Ice Maker | 1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250
+1013250 | R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00
+R 1 520.00

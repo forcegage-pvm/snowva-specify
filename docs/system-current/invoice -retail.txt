@@ -1,0 +1,31 @@
+--- Page 1 ---
+TAX INVOICE
+Snowva™ Trading Pty Ltd
+2010/007043/07 Date: 2025/08/27
+67 Wildevy Street Invoice #: 250827101
+Lynnwood Manor For:
+Pretoria Trans Africa Self
+drive adventures
+Bill To: Trans Africa Self drive adventures & Tours
+7 Hill street
+Keurboomstrand
+VAT #: 4100263500 VAT #: 0000
+Order #: #270801
+Description Item Code Qty Unit Price Total (Excl VAT)
+Snowva Ultimate Ice Maker 078119125409 5 R 1 87.83 R 939.13
+Braai Grid - Small GRID2525 5 R 3 65.22 R 1 826.09
+BraaiTas 123456 10 R 1 043.48 R 1 0 434.78
+Delivery Fee 1 R - R -
+Banking details: SUBTOTAL R 13 200.00
+Snowva Pty Ltd VAT Rate 15%
+First National Bank Vat Amount R 1 980.00
+Branch code 250 655
+Account number 62264885082 TOTAL R 15 180.00
+--- Tables on Page 1 ---
+
+Table 1:
+Description Item Code Qty Unit Price Total (Excl VAT)
+Snowva Ultimate Ice Maker 078119125409 5 R 1 87.83 R 939.13
+Braai Grid - Small GRID2525 5 R 3 65.22 R 1 826.09
+BraaiTas 123456 10 R 1 043.48 R 1 0 434.78
+Delivery Fee 1 R - R -

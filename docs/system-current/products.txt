@@ -1,0 +1,50 @@
+--- Page 1 ---
+Type Product Description Item Code Price
+Retail Snowva Snowva Ultimate Ice Maker 0781159125409 R 315.00
+Retail Outray Outray 123456 R 375.00
+Retail Makabrai Makabrai 123456 R 580.00
+Retail Braai Bak ‐ 2.5l Braai Bak ‐ 2.5l 123456 R 285.00
+Retail Braai Bak ‐ 3.8l Braai Bak ‐ 3.8l 123456 R 410.00
+Retail Braai Bak ‐ 5.2l Braai Bak ‐ 5.2l 123456 R 510.00
+Retail Braai Grid ‐ Medium Braai Grid ‐ Medium 123456 R 540.00
+Retail Braai Grid ‐ Large Braai Grid ‐ Large 123456 R 820.00
+Retail Braai Grid ‐ Small Braai Grid ‐ Small 123456 R 420.00
+Retail Borki Borki 123456 R 145.00
+Retail BraaiTas BraaiTas 123456 R 1 200.00
+Consumer Snowva Snowva R 400.00
+Consumer Outray Outray R 400.00
+Consumer Makabrai Makabrai R 750.00
+Consumer Borki Borki R 200.00
+Consumer Braai Bak ‐ 2.5l Braai Bak ‐ 2.5l R 450.00
+Consumer Braai Bak ‐ 3.8l Braai Bak ‐ 3.8l R 550.00
+Consumer Braai Bak ‐ 5.2l Braai Bak ‐ 5.2l R 650.00
+Consumer Braai Grid ‐ Medium Braai Grid ‐ Medium R 800.00
+Consumer Braai Grid ‐ Large Braai Grid ‐ Large R 1 000.00
+Consumer Braai Grid ‐ Small Braai Grid ‐ Small R 650.00
+Consumer BraaiTas BraaiTas R 1 600.00
+--- Tables on Page 1 ---
+
+Table 1:
+Type | Product | Description | Item Code | Price
+Retail | Snowva | Snowva Ultimate Ice Maker | 0781159125409 | R 315.00
+Retail | Outray | Outray | 123456 | R 375.00
+Retail | Makabrai | Makabrai | 123456 | R 580.00
+Retail | Braai Bak ‐ 2.5l | Braai Bak ‐ 2.5l | 123456 | R 285.00
+Retail | Braai Bak ‐ 3.8l | Braai Bak ‐ 3.8l | 123456 | R 410.00
+Retail | Braai Bak ‐ 5.2l | Braai Bak ‐ 5.2l | 123456 | R 510.00
+Retail | Braai Grid ‐ Medium | Braai Grid ‐ Medium | 123456 | R 540.00
+Retail | Braai Grid ‐ Large | Braai Grid ‐ Large | 123456 | R 820.00
+Retail | Braai Grid ‐ Small | Braai Grid ‐ Small | 123456 | R 420.00
+Retail | Borki | Borki | 123456 | R 145.00
+Retail | BraaiTas | BraaiTas | 123456 | R 1 200.00
+Consumer | Snowva | Snowva |  | R 400.00
+Consumer | Outray | Outray |  | R 400.00
+Consumer | Makabrai | Makabrai |  | R 750.00
+Consumer | Borki | Borki |  | R 200.00
+Consumer | Braai Bak ‐ 2.5l | Braai Bak ‐ 2.5l |  | R 450.00
+Consumer | Braai Bak ‐ 3.8l | Braai Bak ‐ 3.8l |  | R 550.00
+Consumer | Braai Bak ‐ 5.2l | Braai Bak ‐ 5.2l |  | R 650.00
+Consumer | Braai Grid ‐ Medium | Braai Grid ‐ Medium |  | R 800.00
+Consumer | Braai Grid ‐ Large | Braai Grid ‐ Large |  | R 1 000.00
+Consumer | Braai Grid ‐ Small | Braai Grid ‐ Small |  | R 650.00
+Consumer | BraaiTas | BraaiTas |  | R 1 600.00

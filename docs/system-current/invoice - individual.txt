@@ -1,0 +1,26 @@
+--- Page 1 ---
+TAX INVOICE
+Snowva™ Trading Pty Ltd
+Date: 2025/07/07
+2010/007043/07 Invoice #: 250707101
+67 Wildevy Street
+Lynnwood Manor
+Pretoria Bill To: Hendrik Coetzee
+Wilgers
+Pretoria
+0081
+Gauteng
+0
+VAT #: 4100263500 Contact No: 0718542160
+DESCRIPTION Qty Unit Price Total (Excl VAT)
+Makabrai 1 R 6 52.17 R 652.17
+Banking details: SUBTOTAL R 652.17
+Snowva Pty Ltd VAT Rate 15%
+First National Bank Vat Amount R 97.83
+Branch code 250 655
+Account number 62264885082 TOTAL R 750.00
+--- Tables on Page 1 ---
+
+Table 1:
+DESCRIPTION Qty Unit Price Total (Excl VAT)
+Makabrai 1 R 6 52.17 R 652.17
