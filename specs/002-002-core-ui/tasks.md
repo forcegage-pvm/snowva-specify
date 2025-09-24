@@ -41,7 +41,7 @@
 - [x] T028 [P] Implement product catalog card grid in `frontend/src/features/products/components/ProductCatalogEntryCard.tsx` with dual pricing badges and override callouts.
 - [x] T029 [P] Implement price list version timeline in `frontend/src/features/products/components/PriceListVersionTimeline.tsx` reflecting state transitions.
 - [x] T030 [P] Implement quote composer wizard in `frontend/src/features/sales/components/QuoteComposerWizard.tsx` with validation guards and preview pane.
-- [ ] T031 [P] Implement invoice workspace timeline in `frontend/src/features/sales/components/InvoiceWorkspace.tsx` with draft/final controls and locking rules.
+- [x] T031 [P] Implement invoice workspace timeline in `frontend/src/features/sales/components/InvoiceWorkspace.tsx` with draft/final controls and locking rules.
 - [ ] T032 [P] Implement payment allocation panel in `frontend/src/features/finance/components/PaymentAllocationPanel.tsx` including FIFO recommendations, manual override UI, and an embedded audit log listing allocator, timestamp, and affected invoices.
 - [ ] T033 [P] Implement statement overview table in `frontend/src/features/finance/components/StatementOverview.tsx` with branch grouping and export triggers.
 - [ ] T034 [P] Implement shared document timeline component in `frontend/src/features/shared/components/DocumentTimeline.tsx` with filter chips and accessibility roles.

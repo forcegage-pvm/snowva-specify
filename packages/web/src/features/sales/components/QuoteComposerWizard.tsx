@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
 import type { FC } from 'react';
+import { useMemo, useState } from 'react';
 
 export type QuoteComposerStep = 'details' | 'items' | 'review';
 
