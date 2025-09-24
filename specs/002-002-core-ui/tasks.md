@@ -51,7 +51,7 @@
 - [x] T038 [P] Create product catalog query hook in `frontend/src/features/products/api/useProductCatalogQuery.ts` supporting version snapshots.
 - [x] T039 [P] Create quote/invoice mutation hooks in `frontend/src/features/sales/api/useQuoteToInvoiceMutation.ts` covering conversion flow.
 - [x] T040 [P] Create payment allocation mutation hook in `frontend/src/features/finance/api/usePaymentAllocationMutation.ts` handling FIFO/manual paths.
-- [ ] T040a [P] Create payment allocation audit log query in `frontend/src/features/finance/api/usePaymentAllocationAuditLogQuery.ts` and wire it into the allocation panel timeline.
+- [x] T040a [P] Create payment allocation audit log query in `frontend/src/features/finance/api/usePaymentAllocationAuditLogQuery.ts` and wire it into the allocation panel timeline.
 - [ ] T041 [P] Create statement history query hook in `frontend/src/features/finance/api/useStatementHistoryQuery.ts` with branch aggregations.
 - [ ] T042 Compose application shell layout in `frontend/src/app/(dashboard)/layout.tsx` adopting Tailwind sidebar shell and injecting providers/navigation.
 

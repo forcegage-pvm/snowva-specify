@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 
+import { usePaymentAllocationAuditLogQuery } from '@/features/finance/api/usePaymentAllocationAuditLogQuery';
+
 export type AllocationRecommendation = {
   invoiceId: string;
   invoiceNumber: string;
@@ -62,12 +64,30 @@ export const PaymentAllocationPanel: FC<PaymentAllocationPanelProps> = ({
 }) => {
   const [overrideInputs, setOverrideInputs] = useState<Record<string, string>>({});
 
+  const initialAuditLog = useMemo(() => {
+    if (payment.auditEvents.length === 0) {
+      return undefined;
+    }
+
+    return {
+      events: payment.auditEvents,
+      generatedAt: new Date().toISOString(),
+      notes: null,
+    };
+  }, [payment.auditEvents]);
+
+  const { data: auditLogData } = usePaymentAllocationAuditLogQuery(payment.paymentId, {
+    initialData: initialAuditLog,
+  });
+
   const totalSuggested = useMemo(
     () => payment.recommendedAllocations.reduce((total, rec) => total + rec.suggestedAmount, 0),
     [payment.recommendedAllocations],
   );
 
-  const sortedAuditEvents = useMemo(() => sortAuditEvents(payment.auditEvents), [payment.auditEvents]);
+  const auditEvents = auditLogData?.events ?? payment.auditEvents;
+
+  const sortedAuditEvents = useMemo(() => sortAuditEvents(auditEvents), [auditEvents]);
 
   const handleOverrideChange = (invoiceId: string, value: string) => {
     setOverrideInputs((prev) => ({ ...prev, [invoiceId]: value }));

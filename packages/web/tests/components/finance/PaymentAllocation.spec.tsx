@@ -6,6 +6,12 @@ import {
     type PaymentAllocation
 } from '@/features/finance/components/PaymentAllocationPanel';
 
+const mockUsePaymentAllocationAuditLogQuery = jest.fn();
+
+jest.mock('@/features/finance/api/usePaymentAllocationAuditLogQuery', () => ({
+  usePaymentAllocationAuditLogQuery: (...args: unknown[]) => mockUsePaymentAllocationAuditLogQuery(...args),
+}));
+
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR' }).format(
     value,
@@ -64,8 +70,16 @@ const buildPayment = (
 });
 
 describe('PaymentAllocationPanel', () => {
+  beforeEach(() => {
+    mockUsePaymentAllocationAuditLogQuery.mockReset();
+  });
+
   it('renders FIFO recommendations, totals, and remaining balance summary', () => {
     const payment = buildPayment();
+
+    mockUsePaymentAllocationAuditLogQuery.mockReturnValue({
+      data: { events: payment.auditEvents },
+    });
 
     render(
       <PaymentAllocationPanel
@@ -92,6 +106,10 @@ describe('PaymentAllocationPanel', () => {
     const payment = buildPayment({ remainingBalance: 1200 });
     const handleOverride = jest.fn();
 
+    mockUsePaymentAllocationAuditLogQuery.mockReturnValue({
+      data: { events: payment.auditEvents },
+    });
+
     render(
       <PaymentAllocationPanel
         payment={payment}
@@ -114,6 +132,8 @@ describe('PaymentAllocationPanel', () => {
 
   it('renders allocation audit log events in chronological order', () => {
     const payment = buildPayment();
+
+    mockUsePaymentAllocationAuditLogQuery.mockReturnValue({ data: undefined });
 
     render(
       <PaymentAllocationPanel
