@@ -14,10 +14,10 @@
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 
-- [X] T007 Create Jest/Testing Library tests for dashboard metrics tiles in `frontend/tests/components/dashboard/DashboardTile.spec.tsx` (loading, thresholds, trend indicators).
-- [X] T008 [P] Create Jest tests for the virtualized customer directory table in `frontend/tests/components/customers/CustomerDirectoryTable.spec.tsx` (filtering, pagination, 2 s SLA mocks).
-- [ ] T009 [P] Create Jest tests for branch detail panel editing flows in `frontend/tests/components/customers/BranchDetailPanel.spec.tsx` (inline edits, audit log rendering).
-- [ ] T010 [P] Create Jest tests for product catalog cards in `frontend/tests/components/products/ProductCatalogEntry.spec.tsx` (dual pricing, override badge, version history chips).
+- [x] T007 Create Jest/Testing Library tests for dashboard metrics tiles in `frontend/tests/components/dashboard/DashboardTile.spec.tsx` (loading, thresholds, trend indicators).
+- [x] T008 [P] Create Jest tests for the virtualized customer directory table in `frontend/tests/components/customers/CustomerDirectoryTable.spec.tsx` (filtering, pagination, 2 s SLA mocks).
+- [x] T009 [P] Create Jest tests for branch detail panel editing flows in `frontend/tests/components/customers/BranchDetailPanel.spec.tsx` (inline edits, audit log rendering).
+- [x] T010 [P] Create Jest tests for product catalog cards in `frontend/tests/components/products/ProductCatalogEntry.spec.tsx` (dual pricing, override badge, version history chips).
 - [ ] T011 [P] Create Jest tests for price list version timeline in `frontend/tests/components/products/PriceListVersionTimeline.spec.tsx` (state transitions, archival badges).
 - [ ] T012 [P] Create Jest tests for quote composer wizard in `frontend/tests/components/sales/QuoteComposer.spec.tsx` (step progression, VAT/order validation, preview snapshot).
 - [ ] T013 [P] Create Jest tests for invoice workspace timeline in `frontend/tests/components/sales/InvoiceWorkspace.spec.tsx` (draft vs finalized states, mutation guards).
