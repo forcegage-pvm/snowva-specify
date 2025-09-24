@@ -38,8 +38,8 @@
 - [x] T025 Implement dashboard metric tiles component in `frontend/src/features/dashboard/components/DashboardTile.tsx` with dynamic thresholds and hero icon support.
 - [x] T026 [P] Implement virtualized customer directory view in `frontend/src/features/customers/components/CustomerDirectoryTable.tsx` with React Query + react-virtual integration.
 - [x] T027 [P] Implement branch detail panel in `frontend/src/features/customers/components/BranchDetailPanel.tsx` including inline edit forms and audit timeline slot.
-- [ ] T028 [P] Implement product catalog card grid in `frontend/src/features/products/components/ProductCatalogEntryCard.tsx` with dual pricing badges and override callouts.
-- [ ] T029 [P] Implement price list version timeline in `frontend/src/features/products/components/PriceListVersionTimeline.tsx` reflecting state transitions.
+- [x] T028 [P] Implement product catalog card grid in `frontend/src/features/products/components/ProductCatalogEntryCard.tsx` with dual pricing badges and override callouts.
+- [x] T029 [P] Implement price list version timeline in `frontend/src/features/products/components/PriceListVersionTimeline.tsx` reflecting state transitions.
 - [ ] T030 [P] Implement quote composer wizard in `frontend/src/features/sales/components/QuoteComposerWizard.tsx` with validation guards and preview pane.
 - [ ] T031 [P] Implement invoice workspace timeline in `frontend/src/features/sales/components/InvoiceWorkspace.tsx` with draft/final controls and locking rules.
 - [ ] T032 [P] Implement payment allocation panel in `frontend/src/features/finance/components/PaymentAllocationPanel.tsx` including FIFO recommendations, manual override UI, and an embedded audit log listing allocator, timestamp, and affected invoices.
