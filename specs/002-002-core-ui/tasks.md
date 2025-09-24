@@ -48,7 +48,7 @@
 - [x] T035 Implement session timeout hook + modal in `frontend/src/features/session/useSessionTimeout.ts` and `frontend/src/features/session/components/SessionTimeoutModal.tsx` (auto-save + warning UX).
 - [x] T036 Create customer directory data hooks in `frontend/src/features/customers/api/useCustomerDirectoryQuery.ts` with pagination + filter params.
 - [x] T037 [P] Create branch detail data hook in `frontend/src/features/customers/api/useBranchDetailQuery.ts` including audit log fetch.
-- [ ] T038 [P] Create product catalog query hook in `frontend/src/features/products/api/useProductCatalogQuery.ts` supporting version snapshots.
+- [x] T038 [P] Create product catalog query hook in `frontend/src/features/products/api/useProductCatalogQuery.ts` supporting version snapshots.
 - [ ] T039 [P] Create quote/invoice mutation hooks in `frontend/src/features/sales/api/useQuoteToInvoiceMutation.ts` covering conversion flow.
 - [ ] T040 [P] Create payment allocation mutation hook in `frontend/src/features/finance/api/usePaymentAllocationMutation.ts` handling FIFO/manual paths.
 - [ ] T040a [P] Create payment allocation audit log query in `frontend/src/features/finance/api/usePaymentAllocationAuditLogQuery.ts` and wire it into the allocation panel timeline.
