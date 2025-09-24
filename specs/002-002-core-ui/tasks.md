@@ -20,7 +20,7 @@
 - [x] T010 [P] Create Jest tests for product catalog cards in `frontend/tests/components/products/ProductCatalogEntry.spec.tsx` (dual pricing, override badge, version history chips).
 - [x] T011 [P] Create Jest tests for price list version timeline in `frontend/tests/components/products/PriceListVersionTimeline.spec.tsx` (state transitions, archival badges).
 - [x] T012 [P] Create Jest tests for quote composer wizard in `frontend/tests/components/sales/QuoteComposer.spec.tsx` (step progression, VAT/order validation, preview snapshot).
-- [ ] T013 [P] Create Jest tests for invoice workspace timeline in `frontend/tests/components/sales/InvoiceWorkspace.spec.tsx` (draft vs finalized states, mutation guards).
+- [x] T013 [P] Create Jest tests for invoice workspace timeline in `frontend/tests/components/sales/InvoiceWorkspace.spec.tsx` (draft vs finalized states, mutation guards).
 - [ ] T014 [P] Create Jest tests for payment allocation panel in `frontend/tests/components/finance/PaymentAllocation.spec.tsx` (FIFO recommendations, manual overrides, remaining balance calc, audit log event rendering).
 - [ ] T015 [P] Create Jest tests for statement overview table in `frontend/tests/components/finance/StatementOverview.spec.tsx` (branch grouping, export triggers).
 - [ ] T016 [P] Create Jest tests for shared document timeline component in `frontend/tests/components/shared/DocumentTimeline.spec.tsx` (event rendering, filters, accessibility roles).
