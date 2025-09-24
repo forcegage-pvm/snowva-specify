@@ -7,15 +7,15 @@
 
 - [x] T001 Update `frontend/package.json` to add required UI dependencies (`@headlessui/react`, `@heroicons/react`, `@tanstack/react-query`, `@tanstack/react-virtual`, `tailwindcss-animate`) and align npm scripts with TDD workflow.
 - [x] T002 Configure Snowva brand tokens and Tailwind UI block presets in `frontend/tailwind.config.ts` and create `frontend/src/styles/theme.css` to expose colors/spacing/typography.
-- [X] T003 Establish global providers in `frontend/src/app/providers.tsx` and `frontend/src/lib/queryClient.ts` for React Query, session context, and Toast notifications.
+- [x] T003 Establish global providers in `frontend/src/app/providers.tsx` and `frontend/src/lib/queryClient.ts` for React Query, session context, and Toast notifications.
 - [ ] T004 [P] Scaffold UI data contract stubs (`customer-directory.json`, `quote-composer.json`, `invoice-workspace.json`, `payment-allocation.json`, `statement-overview.json`) under `specs/002-002-core-ui/contracts/ui/` to document expected payloads.
 - [ ] T005 [P] Configure multi-viewport Cypress + Playwright settings in `frontend/cypress.config.ts` and `frontend/tests/e2e/support/commands.ts` for desktop/tablet/mobile coverage.
 - [ ] T006 [P] Update `frontend/.storybook/preview.ts` to load Tailwind theme tokens and register component documentation scaffolds.
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 
-- [ ] T007 Create Jest/Testing Library tests for dashboard metrics tiles in `frontend/tests/components/dashboard/DashboardTile.spec.tsx` (loading, thresholds, trend indicators).
-- [ ] T008 [P] Create Jest tests for the virtualized customer directory table in `frontend/tests/components/customers/CustomerDirectoryTable.spec.tsx` (filtering, pagination, 2 s SLA mocks).
+- [X] T007 Create Jest/Testing Library tests for dashboard metrics tiles in `frontend/tests/components/dashboard/DashboardTile.spec.tsx` (loading, thresholds, trend indicators).
+- [X] T008 [P] Create Jest tests for the virtualized customer directory table in `frontend/tests/components/customers/CustomerDirectoryTable.spec.tsx` (filtering, pagination, 2 s SLA mocks).
 - [ ] T009 [P] Create Jest tests for branch detail panel editing flows in `frontend/tests/components/customers/BranchDetailPanel.spec.tsx` (inline edits, audit log rendering).
 - [ ] T010 [P] Create Jest tests for product catalog cards in `frontend/tests/components/products/ProductCatalogEntry.spec.tsx` (dual pricing, override badge, version history chips).
 - [ ] T011 [P] Create Jest tests for price list version timeline in `frontend/tests/components/products/PriceListVersionTimeline.spec.tsx` (state transitions, archival badges).
