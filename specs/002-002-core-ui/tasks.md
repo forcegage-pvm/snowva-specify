@@ -43,7 +43,7 @@
 - [x] T030 [P] Implement quote composer wizard in `frontend/src/features/sales/components/QuoteComposerWizard.tsx` with validation guards and preview pane.
 - [x] T031 [P] Implement invoice workspace timeline in `frontend/src/features/sales/components/InvoiceWorkspace.tsx` with draft/final controls and locking rules.
 - [x] T032 [P] Implement payment allocation panel in `frontend/src/features/finance/components/PaymentAllocationPanel.tsx` including FIFO recommendations, manual override UI, and an embedded audit log listing allocator, timestamp, and affected invoices.
-- [ ] T033 [P] Implement statement overview table in `frontend/src/features/finance/components/StatementOverview.tsx` with branch grouping and export triggers.
+- [x] T033 [P] Implement statement overview table in `frontend/src/features/finance/components/StatementOverview.tsx` with branch grouping and export triggers.
 - [ ] T034 [P] Implement shared document timeline component in `frontend/src/features/shared/components/DocumentTimeline.tsx` with filter chips and accessibility roles.
 - [ ] T035 Implement session timeout hook + modal in `frontend/src/features/session/useSessionTimeout.ts` and `frontend/src/features/session/components/SessionTimeoutModal.tsx` (auto-save + warning UX).
 - [ ] T036 Create customer directory data hooks in `frontend/src/features/customers/api/useCustomerDirectoryQuery.ts` with pagination + filter params.
