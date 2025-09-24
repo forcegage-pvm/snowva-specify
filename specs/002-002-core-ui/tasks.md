@@ -36,7 +36,7 @@
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 
 - [x] T025 Implement dashboard metric tiles component in `frontend/src/features/dashboard/components/DashboardTile.tsx` with dynamic thresholds and hero icon support.
-- [ ] T026 [P] Implement virtualized customer directory view in `frontend/src/features/customers/components/CustomerDirectoryTable.tsx` with React Query + react-virtual integration.
+- [x] T026 [P] Implement virtualized customer directory view in `frontend/src/features/customers/components/CustomerDirectoryTable.tsx` with React Query + react-virtual integration.
 - [ ] T027 [P] Implement branch detail panel in `frontend/src/features/customers/components/BranchDetailPanel.tsx` including inline edit forms and audit timeline slot.
 - [ ] T028 [P] Implement product catalog card grid in `frontend/src/features/products/components/ProductCatalogEntryCard.tsx` with dual pricing badges and override callouts.
 - [ ] T029 [P] Implement price list version timeline in `frontend/src/features/products/components/PriceListVersionTimeline.tsx` reflecting state transitions.
