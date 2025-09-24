@@ -1,0 +1,52 @@
+:root {
+  color-scheme: light;
+  --color-primary: 221 83% 55%;
+  --color-primary-foreground: 210 100% 97%;
+  --color-secondary: 186 72% 45%;
+  --color-secondary-foreground: 192 100% 96%;
+  --color-accent: 37 95% 56%;
+  --color-accent-foreground: 33 85% 15%;
+  --color-muted: 220 14% 94%;
+  --color-muted-foreground: 220 13% 26%;
+  --color-border: 219 16% 88%;
+  --color-input: 216 16% 90%;
+  --color-background: 0 0% 100%;
+  --color-foreground: 216 18% 12%;
+  --color-card: 0 0% 100%;
+  --color-card-foreground: 216 18% 12%;
+  --color-destructive: 3 87% 62%;
+  --color-destructive-foreground: 0 0% 100%;
+  --radius-base: 0.75rem;
+  --radius-md: calc(var(--radius-base) - 0.125rem);
+  --radius-sm: calc(var(--radius-base) - 0.25rem);
+  --shadow-soft: 0 20px 45px -20px hsl(221 83% 25% / 0.25);
+  --shadow-hard: 0 18px 32px -12px hsl(221 83% 18% / 0.35);
+}
+
+.dark {
+  color-scheme: dark;
+  --color-primary: 217 91% 70%;
+  --color-primary-foreground: 222 48% 11%;
+  --color-secondary: 188 74% 58%;
+  --color-secondary-foreground: 188 64% 14%;
+  --color-accent: 41 96% 64%;
+  --color-accent-foreground: 33 94% 18%;
+  --color-muted: 222 24% 14%;
+  --color-muted-foreground: 223 16% 74%;
+  --color-border: 220 18% 22%;
+  --color-input: 220 18% 22%;
+  --color-background: 222 24% 10%;
+  --color-foreground: 210 40% 96%;
+  --color-card: 222 24% 12%;
+  --color-card-foreground: 210 40% 96%;
+  --color-destructive: 3 91% 64%;
+  --color-destructive-foreground: 0 0% 98%;
+  --shadow-soft: 0 20px 45px -20px hsl(215 64% 6% / 0.5);
+  --shadow-hard: 0 18px 32px -12px hsl(215 72% 4% / 0.6);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --radius-base: 0.625rem;
+  }
+}
