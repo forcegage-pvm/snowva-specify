@@ -1,0 +1,127 @@
+{
+  "title": "Payment Allocation UI Contract",
+  "version": "0.1.0",
+  "updated": "2025-09-24",
+  "summary": "Outlines the data used to recommend FIFO allocations, support manual overrides, and surface audit events during payment application.",
+  "request": {
+    "params": {
+      "customerId": "string",
+      "paymentId": "string"
+    },
+    "options": {
+      "includeHistory": true,
+      "includeStatements": true
+    }
+  },
+  "responseSample": {
+    "payment": {
+      "id": "pay_2025_01_020",
+      "reference": "HOLDSPORT-R20000",
+      "receivedOn": "2025-01-08",
+      "amount": 2000000,
+      "currency": "ZAR",
+      "source": "eft",
+      "memo": "January settlement for Sportsmans branches"
+    },
+    "customer": {
+      "id": "cust_holdsport",
+      "displayName": "Holdsport Group",
+      "branchCount": 38,
+      "creditLimit": 7500000,
+      "outstandingBalance": 4712000
+    },
+    "invoices": [
+      {
+        "id": "inv_tokai_101",
+        "number": "TOKAI-101",
+        "branch": "Tokai",
+        "issuedOn": "2024-12-12",
+        "dueOn": "2025-01-11",
+        "status": "overdue",
+        "amountDue": 892000,
+        "recommendedAllocation": 892000,
+        "priority": 1,
+        "documents": {
+          "statementId": "stmt_2024-12",
+          "downloadUrl": "https://cdn.snowva.com/statements/stmt_2024-12.pdf"
+        }
+      },
+      {
+        "id": "inv_nelspruit_044",
+        "number": "NEL-044",
+        "branch": "Nelspruit",
+        "issuedOn": "2024-12-14",
+        "dueOn": "2025-01-13",
+        "status": "open",
+        "amountDue": 648000,
+        "recommendedAllocation": 648000,
+        "priority": 2,
+        "documents": {
+          "statementId": "stmt_2024-12",
+          "downloadUrl": "https://cdn.snowva.com/statements/stmt_2024-12.pdf"
+        }
+      }
+    ],
+    "recommendation": {
+      "strategy": "fifo",
+      "totalAllocated": 1540000,
+      "remainingBalance": 460000,
+      "notes": "Remainder should be applied to outstanding invoice TOKAI-102 once finalized."
+    },
+    "manualOverrideOptions": {
+      "allowPartial": true,
+      "allowBranchTransfer": true,
+      "requireReason": true,
+      "reasonPresets": [
+        "Dispute pending",
+        "Customer instruction",
+        "Awaiting credit note"
+      ]
+    },
+    "auditLog": [
+      {
+        "id": "audit_alloc_01",
+        "timestamp": "2025-01-08T09:30:00Z",
+        "actor": "lerato@snowva.com",
+        "action": "recommended",
+        "details": {
+          "strategy": "fifo",
+          "invoices": ["inv_tokai_101", "inv_nelspruit_044"]
+        }
+      }
+    ]
+  },
+  "uiStates": {
+    "allocationGrid": {
+      "columns": [
+        "invoiceNumber",
+        "branch",
+        "dueOn",
+        "status",
+        "amountDue",
+        "recommended",
+        "manualEntry"
+      ],
+      "persistColumnConfig": true
+    },
+    "alerts": [
+      {
+        "code": "ALLOCATION_OVERFLOW",
+        "message": "Allocation exceeds payment amount.",
+        "severity": "error"
+      },
+      {
+        "code": "CREDIT_LIMIT_WARNING",
+        "message": "Applying this payment still leaves customer over the credit limit.",
+        "severity": "warning"
+      }
+    ],
+    "success": {
+      "toast": "Payment allocation saved",
+      "redirect": {
+        "href": "/customers/holdsport/statements",
+        "delayMs": 1500
+      }
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "title": "Statement Overview UI Contract",
+  "version": "0.1.0",
+  "updated": "2025-09-24",
+  "summary": "Documents the payload structure for consolidated statement views, filters, and export metadata across parent and branch accounts.",
+  "request": {
+    "query": {
+      "customerId": "string | null",
+      "branchId": "string | null",
+      "period": "{ from: string, to: string } | null",
+      "status": "'open' | 'closed' | 'overdue' | null",
+      "minimumBalance": "number | null",
+      "customerType": "'retail' | 'consumer' | null"
+    }
+  },
+  "responseSample": {
+    "summary": {
+      "totalStatements": 12,
+      "totalBalance": 4712000,
+      "currency": "ZAR",
+      "lastGeneratedAt": "2025-01-01T07:30:00Z"
+    },
+    "statements": [
+      {
+        "id": "stmt_sportsmans_2024_12",
+        "customerId": "cust_sportsmans",
+        "customerName": "Sportsmans Warehouse",
+        "period": {
+          "label": "Dec 2024",
+          "start": "2024-12-01",
+          "end": "2024-12-31"
+        },
+        "issuedOn": "2024-12-20",
+        "dueOn": "2025-01-20",
+        "status": "open",
+        "balance": 4712000,
+        "branchBreakdown": [
+          {
+            "branchId": "branch_tokai",
+            "branchName": "Tokai",
+            "amount": 1654000,
+            "overdue": true
+          },
+          {
+            "branchId": "branch_northridge",
+            "branchName": "Northridge",
+            "amount": 1213000,
+            "overdue": false
+          }
+        ],
+        "lineItems": [
+          {
+            "invoiceNumber": "250827101",
+            "orderNumber": "PO-78421",
+            "branch": "Tokai",
+            "itemCode": "SNV-ICE-ULT",
+            "transactionDate": "2024-12-18",
+            "amount": 892000,
+            "status": "open"
+          }
+        ],
+        "exports": {
+          "pdf": {
+            "url": "https://cdn.snowva.com/statements/stm_sportsmans_2024_12.pdf",
+            "generatedAt": "2024-12-20T08:00:00Z"
+          },
+          "emailHistory": [
+            {
+              "id": "email_01",
+              "sentAt": "2024-12-20T08:05:00Z",
+              "recipients": ["finance@sportsmans.co.za"],
+              "status": "delivered"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "uiStates": {
+    "filters": {
+      "defaultPeriod": {
+        "preset": "last30Days"
+      },
+      "presetButtons": ["This Month", "Last Month", "Quarter to Date"],
+      "rememberLastSelection": true
+    },
+    "table": {
+      "virtualized": true,
+      "columns": [
+        "customer",
+        "period",
+        "issuedOn",
+        "dueOn",
+        "status",
+        "balance",
+        "actions"
+      ],
+      "groupBy": "customer"
+    },
+    "empty": {
+      "title": "No statements yet",
+      "body": "Adjust filters or generate a new statement to see results.",
+      "action": {
+        "label": "Generate statement",
+        "href": "/statements/new"
+      }
+    },
+    "errors": [
+      {
+        "code": "EXPORT_FAILED",
+        "message": "We couldn't export the statement. Please try again.",
+        "cta": "Retry export"
+      }
+    ]
+  },
+  "performance": {
+    "initialLoadBudgetMs": 2000,
+    "maxStatementsPerPage": 50,
+    "supportsStreaming": true
+  }
+}

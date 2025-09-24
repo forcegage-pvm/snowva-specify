@@ -2,10 +2,8 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
-  PaymentAllocationPanel,
-  type PaymentAllocation,
-  type AllocationRecommendation,
-  type AllocationAuditEvent,
+    PaymentAllocationPanel,
+    type PaymentAllocation
 } from '@/features/finance/components/PaymentAllocationPanel';
 
 const formatCurrency = (value: number) =>

@@ -2,9 +2,9 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
-  DocumentTimeline,
-  type DocumentTimelineEvent,
-  type DocumentTimelineFilters,
+    DocumentTimeline,
+    type DocumentTimelineEvent,
+    type DocumentTimelineFilters,
 } from '@/features/shared/components/DocumentTimeline';
 
 const buildEvents = (): DocumentTimelineEvent[] => [

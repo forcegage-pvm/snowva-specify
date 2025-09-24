@@ -2,9 +2,9 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
-  StatementOverviewTable,
-  type StatementOverview,
-  type StatementOverviewFilters,
+    StatementOverviewTable,
+    type StatementOverview,
+    type StatementOverviewFilters,
 } from '@/features/finance/components/StatementOverview';
 
 const formatCurrency = (value: number) =>

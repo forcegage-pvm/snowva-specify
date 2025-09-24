@@ -1,4 +1,4 @@
-// @ts-nocheck
+/// <reference types="cypress" />
 
 describe('Dashboard Quick Insights', () => {
   beforeEach(() => {
@@ -52,10 +52,11 @@ describe('Dashboard Quick Insights', () => {
   it('shows loading skeletons while metrics fetch is in flight', () => {
     cy.intercept('GET', '/api/metrics/kpis', (req) => {
       req.on('response', (res) => {
-        res.setDelay(1500);
+        (res as { setDelay?: (ms: number) => void }).setDelay?.(1500);
       });
     }).as('fetchSlowTiles');
 
+    cy.viewportPreset('tablet');
     cy.visit('/dashboard');
     cy.get('[data-testid="dashboard-tile-skeleton"]').should('have.length.at.least', 1);
     cy.wait('@fetchSlowTiles');
@@ -72,6 +73,7 @@ describe('Dashboard Quick Insights', () => {
       },
     }).as('fetchShortcuts');
 
+    cy.viewportPreset('mobile');
     cy.visit('/dashboard');
     cy.wait('@fetchShortcuts');
 

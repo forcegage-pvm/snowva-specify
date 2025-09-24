@@ -2,8 +2,8 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 
 import {
-  PriceListVersionTimeline,
-  type PriceListVersion,
+    PriceListVersionTimeline,
+    type PriceListVersion,
 } from '@/features/products/components/PriceListVersionTimeline';
 
 const buildVersions = (): PriceListVersion[] => [

@@ -2,9 +2,9 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
-  ProductCatalogEntryCard,
-  type ProductCatalogEntry,
-  type ProductOverride,
+    ProductCatalogEntryCard,
+    type ProductCatalogEntry,
+    type ProductOverride,
 } from '@/features/products/components/ProductCatalogEntryCard';
 
 const formatCurrency = (value: number) =>

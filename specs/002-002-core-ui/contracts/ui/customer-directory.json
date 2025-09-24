@@ -1,0 +1,153 @@
+{
+  "title": "Customer Directory UI Contract",
+  "version": "0.1.0",
+  "updated": "2025-09-24",
+  "summary": "Shapes the payloads required to render the parent-company directory, branch tree, and linked document context for operations staff.",
+  "requests": {
+    "listCustomers": {
+      "description": "Fetches paginated parent-company listings with aggregate balances and SLA-compliant metadata.",
+      "query": {
+        "search": "string | null",
+        "page": "number",
+        "pageSize": "number",
+        "sort": "'name' | 'outstandingBalance' | 'creditTerms'",
+        "filters": {
+          "type": "object",
+          "properties": {
+            "customerType": "'retail' | 'consumer' | 'mixed' | null",
+            "status": "'active' | 'inactive' | null",
+            "overdueOnly": "boolean"
+          }
+        }
+      }
+    },
+    "getCustomerWorkspace": {
+      "description": "Returns the full workspace payload for a selected parent company, including branches, contacts, documents, and audit timelines.",
+      "params": {
+        "customerId": "string"
+      }
+    }
+  },
+  "responseSamples": {
+    "listCustomers": {
+      "total": 152,
+      "page": 1,
+      "pageSize": 25,
+      "items": [
+        {
+          "id": "cust_sportsmans",
+          "displayName": "Sportsmans Warehouse",
+          "customerType": "retail",
+          "vatNumber": "4090207074",
+          "creditTerms": "Net 30",
+          "outstandingBalance": 47120,
+          "dueSoonCount": 6,
+          "overdueCount": 3,
+          "branchCount": 42,
+          "lastStatementDate": "2024-12-15",
+          "primaryContact": {
+            "name": "Annelize Willemse",
+            "email": "annelize@sportsmans.co.za",
+            "phone": "+27 21 555 1234"
+          }
+        }
+      ]
+    },
+    "getCustomerWorkspace": {
+      "customer": {
+        "id": "cust_sportsmans",
+        "displayName": "Sportsmans Warehouse",
+        "customerType": "retail",
+        "creditTerms": "Net 30",
+        "vatNumber": "4090207074",
+        "billingAddress": {
+          "line1": "16 Dawn Road",
+          "city": "Cape Town",
+          "postalCode": "7405",
+          "country": "ZA"
+        },
+        "customNotes": "Enable extended payment plan through Jan 2025."
+      },
+      "branches": [
+        {
+          "id": "branch_tokai",
+          "displayName": "Tokai",
+          "status": "active",
+          "outstandingBalance": 16540,
+          "nextStatementDue": "2025-01-05",
+          "contacts": [
+            {
+              "id": "contact_kim",
+              "name": "Kim Peterson",
+              "role": "Operations Manager",
+              "email": "kim.peterson@sportsmans.co.za",
+              "phone": "+27 21 711 2480"
+            }
+          ],
+          "documents": {
+            "recentInvoices": [
+              {
+                "id": "inv_250827101",
+                "number": "250827101",
+                "issuedOn": "2024-12-18",
+                "status": "finalized",
+                "amount": 8920,
+                "dueOn": "2025-01-17"
+              }
+            ],
+            "recentQuotes": [],
+            "recentStatements": [
+              {
+                "id": "stmt_2024-12",
+                "period": "Dec 2024",
+                "balance": 21200,
+                "sentOn": "2024-12-20"
+              }
+            ]
+          },
+          "auditTrail": [
+            {
+              "id": "audit_01",
+              "timestamp": "2024-12-02T08:14:00Z",
+              "actor": "nadiya@snowva.com",
+              "action": "Updated payment terms to Net 30",
+              "context": {
+                "previous": "Net 21",
+                "next": "Net 30"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "uiStates": {
+    "loading": {
+      "skeletonCount": 8,
+      "showGlobalSpinner": false
+    },
+    "empty": {
+      "title": "No customers match your filters",
+      "body": "Adjust filters or clear search to view all accounts.",
+      "cta": {
+        "label": "Clear filters",
+        "action": "dispatch('customerDirectory/clearFilters')"
+      }
+    },
+    "error": {
+      "title": "We could not load customer data",
+      "supporting": "Retry in a few seconds or contact operations support if the issue persists.",
+      "retryAction": "dispatch('customerDirectory/retryFetch')"
+    }
+  },
+  "performance": {
+    "initialLoadBudgetMs": 2000,
+    "subsequentPageBudgetMs": 1200,
+    "maxPageSize": 50
+  },
+  "notes": [
+    "Branch list must support virtualization for >40 items per parent.",
+    "Outstanding balances must reconcile with statements API within ±0.5%.",
+    "All monetary amounts are represented in cents to avoid rounding drift."
+  ]
+}

@@ -2,9 +2,8 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
-  QuoteComposerWizard,
-  type QuoteDraft,
-  type QuoteComposerStep,
+    QuoteComposerWizard,
+    type QuoteDraft
 } from '@/features/sales/components/QuoteComposerWizard';
 
 const buildQuoteDraft = (overrides: Partial<QuoteDraft> = {}): QuoteDraft => ({

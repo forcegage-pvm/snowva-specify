@@ -4,9 +4,9 @@ import { PropsWithChildren, useEffect } from 'react';
 
 import { SessionProvider } from '@/features/session/providers/SessionProvider';
 import {
-  useSessionTimeout,
-  type UseSessionTimeoutOptions,
-  type UseSessionTimeoutResult,
+    useSessionTimeout,
+    type UseSessionTimeoutOptions,
+    type UseSessionTimeoutResult,
 } from '@/features/session/useSessionTimeout';
 
 type HarnessProps = PropsWithChildren<{

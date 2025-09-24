@@ -11,7 +11,11 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:ci": "jest --runInBand --coverage"
+    "test:ci": "jest --runInBand --coverage",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test:e2e": "npm run cy:run",
+    "test:playwright": "playwright test"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -32,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.51.1",
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-interactions": "^8.6.14",
     "@storybook/addon-links": "^8.6.14",
@@ -39,6 +44,7 @@
     "@storybook/react-webpack5": "^8.6.14",
     "@storybook/testing-library": "^0.2.2",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/cypress": "^10.0.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
@@ -47,6 +53,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "axe-core": "^4.10.3",
+    "cypress": "^13.12.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
     "jest": "^30.1.3",

@@ -1,0 +1,158 @@
+{
+  "title": "Quote Composer UI Contract",
+  "version": "0.1.0",
+  "updated": "2025-09-24",
+  "summary": "Defines the multi-step wizard payloads for creating quotes, validating VAT rules, and previewing documents prior to conversion.",
+  "wizard": {
+    "steps": [
+      {
+        "id": "selectCustomer",
+        "label": "Customer",
+        "requirements": [
+          "Customer must be active and have valid VAT details when customerType = 'retail'.",
+          "Wizard preloads recent contacts to ease notifications."
+        ],
+        "payload": {
+          "customers": [
+            {
+              "id": "cust_transafrica",
+              "displayName": "Trans Africa Self Drive Adventures",
+              "customerType": "consumer",
+              "defaultCurrency": "ZAR",
+              "branchOptions": [
+                { "id": "branch_main", "label": "Cape Town HQ" }
+              ]
+            }
+          ],
+          "recentDocuments": {
+            "quotes": [
+              {
+                "id": "quote_2024_12_118",
+                "number": "Q-118/2024",
+                "issuedOn": "2024-12-01",
+                "amount": 15600,
+                "status": "sent"
+              }
+            ],
+            "invoices": []
+          }
+        }
+      },
+      {
+        "id": "configureLineItems",
+        "label": "Line Items",
+        "requirements": [
+          "Show dual pricing (retail vs consumer) for each product selection.",
+          "Compute VAT exclusive and inclusive totals in real time."
+        ],
+        "payload": {
+          "catalog": [
+            {
+              "productId": "prod_ice_maker",
+              "sku": "SNV-ICE-ULT",
+              "title": "Snowva Ultimate Ice Maker",
+              "unitOptions": [
+                {
+                  "unit": "each",
+                  "retailPrice": 31500,
+                  "consumerPrice": 40000,
+                  "vatRate": 0.15
+                }
+              ],
+              "seasonalOverride": {
+                "effectiveFrom": "2025-01-01",
+                "proposedPrice": 33000,
+                "notes": "Seasonal increase due to supplier adjustments."
+              }
+            }
+          ],
+          "defaults": {
+            "currency": "ZAR",
+            "vatRate": 0.15,
+            "maxLineItems": 50
+          }
+        }
+      },
+      {
+        "id": "review",
+        "label": "Review",
+        "requirements": [
+          "Preview must match official invoice layout with branding and totals.",
+          "Show validation errors for missing VAT or order numbers before enabling conversion to invoice."
+        ],
+        "payload": {
+          "quoteDraft": {
+            "customerId": "cust_transafrica",
+            "branchId": "branch_main",
+            "reference": "TA-QUOTE-2024-12",
+            "lineItems": [
+              {
+                "productId": "prod_ice_maker",
+                "description": "Snowva Ultimate Ice Maker",
+                "quantity": 5,
+                "unitPriceExVat": 31500,
+                "unitPriceIncVat": 36225,
+                "lineTotalExVat": 157500,
+                "lineTotalIncVat": 181125
+              },
+              {
+                "productId": "prod_braai_grid_large",
+                "description": "Makabrai Grid (Large)",
+                "quantity": 5,
+                "unitPriceExVat": 12500,
+                "unitPriceIncVat": 14375,
+                "lineTotalExVat": 62500,
+                "lineTotalIncVat": 71875
+              }
+            ],
+            "totals": {
+              "subtotalExVat": 220000,
+              "vatAmount": 33000,
+              "totalIncVat": 253000,
+              "currency": "ZAR"
+            },
+            "deliveryNotes": "Ship to Cape Town HQ with expedited courier.",
+            "paymentTerms": "Due on acceptance"
+          },
+          "preview": {
+            "url": "https://cdn.snowva.com/previews/Q-118-2024.pdf",
+            "expiresAt": "2024-12-01T10:00:00Z"
+          }
+        }
+      }
+    ]
+  },
+  "validation": {
+    "rules": [
+      "Retail customers must provide purchase order numbers before finalizing a quote.",
+      "Customers with outstanding balance > credit limit must trigger a warning banner.",
+      "Line item quantities must be > 0 and not exceed available stock when inventory integration is enabled.",
+      "Wizard must autosave draft data every 30 seconds to align with session timeout safeguards."
+    ]
+  },
+  "uiStates": {
+    "loading": {
+      "skeleton": {
+        "steps": 3,
+        "lineItems": 5
+      }
+    },
+    "autosave": {
+      "frequencyMs": 30000,
+      "toastMessage": "Draft saved",
+      "failureMessage": "We could not save your draft. Please retry."
+    },
+    "errors": [
+      {
+        "code": "MISSING_VAT",
+        "message": "Please capture a VAT number before sending a retail quote.",
+        "severity": "blocking"
+      },
+      {
+        "code": "PRICE_OVERRIDE_CONFLICT",
+        "message": "Custom branch pricing conflicts with the new price list. Review before sending.",
+        "severity": "warning"
+      }
+    ]
+  }
+}

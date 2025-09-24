@@ -8,9 +8,9 @@
 - [x] T001 Update `frontend/package.json` to add required UI dependencies (`@headlessui/react`, `@heroicons/react`, `@tanstack/react-query`, `@tanstack/react-virtual`, `tailwindcss-animate`) and align npm scripts with TDD workflow.
 - [x] T002 Configure Snowva brand tokens and Tailwind UI block presets in `frontend/tailwind.config.ts` and create `frontend/src/styles/theme.css` to expose colors/spacing/typography.
 - [x] T003 Establish global providers in `frontend/src/app/providers.tsx` and `frontend/src/lib/queryClient.ts` for React Query, session context, and Toast notifications.
-- [ ] T004 [P] Scaffold UI data contract stubs (`customer-directory.json`, `quote-composer.json`, `invoice-workspace.json`, `payment-allocation.json`, `statement-overview.json`) under `specs/002-002-core-ui/contracts/ui/` to document expected payloads.
-- [ ] T005 [P] Configure multi-viewport Cypress + Playwright settings in `frontend/cypress.config.ts` and `frontend/tests/e2e/support/commands.ts` for desktop/tablet/mobile coverage.
-- [ ] T006 [P] Update `frontend/.storybook/preview.ts` to load Tailwind theme tokens and register component documentation scaffolds.
+- [x] T004 [P] Scaffold UI data contract stubs (`customer-directory.json`, `quote-composer.json`, `invoice-workspace.json`, `payment-allocation.json`, `statement-overview.json`) under `specs/002-002-core-ui/contracts/ui/` to document expected payloads.
+- [x] T005 [P] Configure multi-viewport Cypress + Playwright settings in `frontend/cypress.config.ts` and `frontend/tests/e2e/support/commands.ts` for desktop/tablet/mobile coverage.
+- [x] T006 [P] Update `frontend/.storybook/preview.ts` to load Tailwind theme tokens and register component documentation scaffolds.
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 
@@ -26,9 +26,9 @@
 - [x] T016 [P] Create Jest tests for shared document timeline component in `frontend/tests/components/shared/DocumentTimeline.spec.tsx` (event rendering, filters, accessibility roles).
 - [x] T017 [P] Create Jest tests for session timeout hook in `frontend/tests/hooks/useSessionTimeout.spec.ts` (25-min warning, 30-min logout, draft auto-save callback).
 - [x] T018 Author Cypress flow for dashboard quick insights in `frontend/tests/e2e/dashboard.cy.ts` (KPI tiles, shortcuts navigation).
-- [ ] T019 [P] Author Cypress flow for customer & branch management in `frontend/tests/e2e/customer-branches.cy.ts` (search, branch edit, audit log view).
-- [ ] T020 [P] Author Cypress flow for seasonal price update workflow in `frontend/tests/e2e/pricing.cy.ts` (price edit, version diff, confirmation).
-- [ ] T021 [P] Author Cypress flow for quote creation to invoice preview in `frontend/tests/e2e/quote-to-invoice.cy.ts` (wizard, preview, conversion).
+- [x] T019 [P] Author Cypress flow for customer & branch management in `frontend/tests/e2e/customer-branches.cy.ts` (search, branch edit, audit log view).
+- [x] T020 [P] Author Cypress flow for seasonal price update workflow in `frontend/tests/e2e/pricing.cy.ts` (price edit, version diff, confirmation).
+- [x] T021 [P] Author Cypress flow for quote creation to invoice preview in `frontend/tests/e2e/quote-to-invoice.cy.ts` (wizard, preview, conversion).
 - [ ] T022 [P] Author Cypress flow for invoice status tracking in `frontend/tests/e2e/invoice-tracking.cy.ts` (timeline, finalization lock, email action).
 - [ ] T023 [P] Author Cypress flow for payment allocation lifecycle in `frontend/tests/e2e/payment-allocation.cy.ts` (FIFO suggestion, manual override, audit log timeline visibility, balance update).
 - [ ] T024 [P] Author Cypress flow for consolidated statement generation in `frontend/tests/e2e/statements.cy.ts` (filters, PDF export, due totals).

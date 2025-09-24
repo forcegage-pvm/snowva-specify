@@ -2,8 +2,8 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
-  InvoiceWorkspace,
-  type InvoiceWorkspaceState,
+    InvoiceWorkspace,
+    type InvoiceWorkspaceState,
 } from '@/features/sales/components/InvoiceWorkspace';
 
 const buildInvoice = (overrides: Partial<InvoiceWorkspaceState> = {}): InvoiceWorkspaceState => ({

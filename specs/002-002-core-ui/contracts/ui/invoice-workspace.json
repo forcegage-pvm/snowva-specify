@@ -1,0 +1,152 @@
+{
+  "title": "Invoice Workspace UI Contract",
+  "version": "0.1.0",
+  "updated": "2025-09-24",
+  "summary": "Captures the data necessary to display draft vs finalized invoice states, supporting comparisons, timeline events, and document actions.",
+  "requests": {
+    "getInvoice": {
+      "params": {
+        "invoiceId": "string"
+      },
+      "include": ["timeline", "linkedDocuments", "paymentProgress", "auditLog"]
+    }
+  },
+  "responseSample": {
+    "invoice": {
+      "id": "inv_250827101",
+      "number": "250827101",
+      "status": "finalized",
+      "issuedOn": "2024-12-18",
+      "dueOn": "2025-01-17",
+      "currency": "ZAR",
+      "customer": {
+        "id": "cust_transafrica",
+        "displayName": "Trans Africa Self Drive Adventures",
+        "branch": {
+          "id": "branch_main",
+          "displayName": "Cape Town HQ",
+          "contact": {
+            "name": "Thandi Jacobs",
+            "email": "thandi@transafrica.co.za"
+          }
+        }
+      },
+      "totals": {
+        "subtotalExVat": 220000,
+        "vatAmount": 33000,
+        "totalIncVat": 253000,
+        "amountPaid": 150000,
+        "balanceDue": 103000
+      },
+      "lines": [
+        {
+          "lineId": "line_1",
+          "productId": "prod_ice_maker",
+          "description": "Snowva Ultimate Ice Maker",
+          "quantity": 5,
+          "unitPriceExVat": 31500,
+          "unitPriceIncVat": 36225,
+          "lineTotalExVat": 157500,
+          "lineTotalIncVat": 181125,
+          "customItemCode": "ICE-TA"
+        }
+      ],
+      "draftSnapshot": {
+        "capturedAt": "2024-12-15T09:21:00Z",
+        "lines": [
+          {
+            "lineId": "line_1",
+            "quantity": 5,
+            "unitPriceExVat": 31500,
+            "lineTotalExVat": 157500
+          }
+        ],
+        "notes": "Original draft captured during site visit."
+      }
+    },
+    "timeline": [
+      {
+        "id": "timeline_01",
+        "timestamp": "2024-12-15T09:22:00Z",
+        "actor": "sabelo@snowva.com",
+        "type": "draft-created",
+        "summary": "Draft invoice created from quote Q-118/2024",
+        "metadata": {
+          "sourceQuote": "Q-118/2024"
+        }
+      },
+      {
+        "id": "timeline_02",
+        "timestamp": "2024-12-18T07:10:00Z",
+        "actor": "sabelo@snowva.com",
+        "type": "finalized",
+        "summary": "Invoice finalized and emailed to customer",
+        "metadata": {
+          "emailRecipients": ["accounts@transafrica.co.za"],
+          "pdfUrl": "https://cdn.snowva.com/invoices/250827101.pdf"
+        }
+      },
+      {
+        "id": "timeline_03",
+        "timestamp": "2025-01-05T11:02:00Z",
+        "actor": "payment-service",
+        "type": "payment-applied",
+        "summary": "R150,000 payment allocated",
+        "metadata": {
+          "paymentReference": "PAY-2025-01-005",
+          "allocation": [
+            {
+              "statementId": "stmt_2024-12",
+              "amount": 150000
+            }
+          ]
+        }
+      }
+    ],
+    "actions": {
+      "allowed": [
+        "sendInvoice",
+        "downloadPdf",
+        "duplicate",
+        "convertToCreditNote"
+      ],
+      "disabled": [
+        {
+          "action": "finalize",
+          "reason": "This invoice is already finalized"
+        }
+      ]
+    },
+    "guardrails": {
+      "blocking": [
+        "Missing branch VAT number",
+        "Outstanding draft quote changes detected"
+      ],
+      "warnings": ["Customer has exceeded credit limit by R3,000"]
+    }
+  },
+  "uiStates": {
+    "comparison": {
+      "display": "side-by-side",
+      "changeHighlights": true,
+      "showDiffMetrics": ["quantity", "unitPriceExVat", "lineTotalExVat"]
+    },
+    "documentActions": {
+      "email": {
+        "prePopulateRecipients": true,
+        "showHistory": true
+      },
+      "download": {
+        "formats": ["pdf"],
+        "requiresConfirmation": false
+      }
+    },
+    "errors": [
+      {
+        "code": "EMAIL_FAILURE",
+        "message": "We couldn't email the invoice. Try again or contact support.",
+        "recovery": "Offer retry and show contact link."
+      }
+    ]
+  }
+}

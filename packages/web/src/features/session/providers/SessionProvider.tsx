@@ -1,12 +1,12 @@
 'use client';
 
 import {
-  createContext,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
+    createContext,
+    PropsWithChildren,
+    useCallback,
+    useContext,
+    useMemo,
+    useState,
 } from 'react';
 
 const SESSION_DURATION_MS = 30 * 60 * 1000; // 30 minutes

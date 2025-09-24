@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { PropsWithChildren, useState } from 'react';
 import {
-  HydrationBoundary,
-  QueryClientProvider,
-  type DehydratedState,
+    HydrationBoundary,
+    QueryClientProvider,
+    type DehydratedState,
 } from '@tanstack/react-query';
+import { PropsWithChildren, useState } from 'react';
 import { Toaster } from 'sonner';
 
 import { SessionProvider } from '@/features/session/providers/SessionProvider';
