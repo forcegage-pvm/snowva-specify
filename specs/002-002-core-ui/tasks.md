@@ -53,7 +53,7 @@
 - [x] T040 [P] Create payment allocation mutation hook in `frontend/src/features/finance/api/usePaymentAllocationMutation.ts` handling FIFO/manual paths.
 - [x] T040a [P] Create payment allocation audit log query in `frontend/src/features/finance/api/usePaymentAllocationAuditLogQuery.ts` and wire it into the allocation panel timeline.
 - [x] T041 [P] Create statement history query hook in `frontend/src/features/finance/api/useStatementHistoryQuery.ts` with branch aggregations.
-- [ ] T042 Compose application shell layout in `frontend/src/app/(dashboard)/layout.tsx` adopting Tailwind sidebar shell and injecting providers/navigation.
+- [x] T042 Compose application shell layout in `frontend/src/app/(dashboard)/layout.tsx` adopting Tailwind sidebar shell and injecting providers/navigation.
 
 ## Phase 3.4: Integration & Performance
 
