@@ -38,7 +38,7 @@ type CustomerDirectoryListItem = {
   primaryContact: CustomerDirectoryContact | null;
 };
 
-type CustomerDirectoryResponse = {
+export type CustomerDirectoryResponse = {
   total: number;
   page: number;
   pageSize: number;
@@ -73,14 +73,6 @@ const DEFAULT_FILTERS: CustomerDirectoryFilters = {
   customerType: null,
   status: null,
   overdueOnly: false,
-};
-
-const DEFAULT_QUERY: NormalizedCustomerDirectoryQuery = {
-  search: null,
-  page: 1,
-  pageSize: 25,
-  sort: 'name',
-  filters: DEFAULT_FILTERS,
 };
 
 const clampPage = (value?: number) => {
