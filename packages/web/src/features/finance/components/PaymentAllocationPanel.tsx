@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
 import type { FC } from 'react';
+import { useMemo, useState } from 'react';
 
 import { usePaymentAllocationAuditLogQuery } from '@/features/finance/api/usePaymentAllocationAuditLogQuery';
 
