@@ -46,7 +46,7 @@
 - [x] T033 [P] Implement statement overview table in `frontend/src/features/finance/components/StatementOverview.tsx` with branch grouping and export triggers.
 - [x] T034 [P] Implement shared document timeline component in `frontend/src/features/shared/components/DocumentTimeline.tsx` with filter chips and accessibility roles.
 - [x] T035 Implement session timeout hook + modal in `frontend/src/features/session/useSessionTimeout.ts` and `frontend/src/features/session/components/SessionTimeoutModal.tsx` (auto-save + warning UX).
-- [ ] T036 Create customer directory data hooks in `frontend/src/features/customers/api/useCustomerDirectoryQuery.ts` with pagination + filter params.
+- [x] T036 Create customer directory data hooks in `frontend/src/features/customers/api/useCustomerDirectoryQuery.ts` with pagination + filter params.
 - [ ] T037 [P] Create branch detail data hook in `frontend/src/features/customers/api/useBranchDetailQuery.ts` including audit log fetch.
 - [ ] T038 [P] Create product catalog query hook in `frontend/src/features/products/api/useProductCatalogQuery.ts` supporting version snapshots.
 - [ ] T039 [P] Create quote/invoice mutation hooks in `frontend/src/features/sales/api/useQuoteToInvoiceMutation.ts` covering conversion flow.
