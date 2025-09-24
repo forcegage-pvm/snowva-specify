@@ -25,7 +25,7 @@
 - [x] T015 [P] Create Jest tests for statement overview table in `frontend/tests/components/finance/StatementOverview.spec.tsx` (branch grouping, export triggers).
 - [x] T016 [P] Create Jest tests for shared document timeline component in `frontend/tests/components/shared/DocumentTimeline.spec.tsx` (event rendering, filters, accessibility roles).
 - [x] T017 [P] Create Jest tests for session timeout hook in `frontend/tests/hooks/useSessionTimeout.spec.ts` (25-min warning, 30-min logout, draft auto-save callback).
-- [ ] T018 Author Cypress flow for dashboard quick insights in `frontend/tests/e2e/dashboard.cy.ts` (KPI tiles, shortcuts navigation).
+- [x] T018 Author Cypress flow for dashboard quick insights in `frontend/tests/e2e/dashboard.cy.ts` (KPI tiles, shortcuts navigation).
 - [ ] T019 [P] Author Cypress flow for customer & branch management in `frontend/tests/e2e/customer-branches.cy.ts` (search, branch edit, audit log view).
 - [ ] T020 [P] Author Cypress flow for seasonal price update workflow in `frontend/tests/e2e/pricing.cy.ts` (price edit, version diff, confirmation).
 - [ ] T021 [P] Author Cypress flow for quote creation to invoice preview in `frontend/tests/e2e/quote-to-invoice.cy.ts` (wizard, preview, conversion).
