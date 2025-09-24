@@ -30,7 +30,7 @@
 - [x] T020 [P] Author Cypress flow for seasonal price update workflow in `frontend/tests/e2e/pricing.cy.ts` (price edit, version diff, confirmation).
 - [x] T021 [P] Author Cypress flow for quote creation to invoice preview in `frontend/tests/e2e/quote-to-invoice.cy.ts` (wizard, preview, conversion).
 - [x] T022 [P] Author Cypress flow for invoice status tracking in `frontend/tests/e2e/invoice-tracking.cy.ts` (timeline, finalization lock, email action).
-- [ ] T023 [P] Author Cypress flow for payment allocation lifecycle in `frontend/tests/e2e/payment-allocation.cy.ts` (FIFO suggestion, manual override, audit log timeline visibility, balance update).
+- [x] T023 [P] Author Cypress flow for payment allocation lifecycle in `frontend/tests/e2e/payment-allocation.cy.ts` (FIFO suggestion, manual override, audit log timeline visibility, balance update).
 - [ ] T024 [P] Author Cypress flow for consolidated statement generation in `frontend/tests/e2e/statements.cy.ts` (filters, PDF export, due totals).
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
