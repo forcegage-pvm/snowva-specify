@@ -57,12 +57,12 @@
 
 ## Phase 3.4: Integration & Performance
 
-- [ ] T043 Wire dashboard page data loading in `frontend/src/app/(dashboard)/page.tsx` combining metrics tiles and quick shortcuts.
-- [ ] T044 [P] Implement reusable virtualized table container in `frontend/src/features/shared/components/VirtualizedTableContainer.tsx` with skeleton + empty states.
-- [ ] T045 [P] Implement document timeline event transformers in `frontend/src/features/shared/utils/eventTransformers.ts` to normalize audit payloads.
-- [ ] T046 [P] Implement autosave hooks for quote/invoice drafts in `frontend/src/features/sales/hooks/useDraftAutosave.ts` integrating with session timeout callbacks.
-- [ ] T047 Configure analytics + performance instrumentation in `frontend/src/lib/metrics/performanceMetrics.ts` (2 s list SLA, navigation <500 ms events).
-- [ ] T048 [P] Integrate email/download actions for invoices/statements using existing backend endpoints in `frontend/src/features/documents/actions.ts`.
+- [x] T043 Wire dashboard page data loading in `frontend/src/app/(dashboard)/page.tsx` combining metrics tiles and quick shortcuts.
+- [x] T044 [P] Implement reusable virtualized table container in `frontend/src/features/shared/components/VirtualizedTableContainer.tsx` with skeleton + empty states.
+- [x] T045 [P] Implement document timeline event transformers in `frontend/src/features/shared/utils/eventTransformers.ts` to normalize audit payloads.
+ - [x] T046 [P] Implement autosave hooks for quote/invoice drafts in `frontend/src/features/sales/hooks/useDraftAutosave.ts` integrating with session timeout callbacks.
+- [x] T047 Configure analytics + performance instrumentation in `frontend/src/lib/metrics/performanceMetrics.ts` (2 s list SLA, navigation <500 ms events).
+- [x] T048 [P] Integrate email/download actions for invoices/statements using existing backend endpoints in `frontend/src/features/documents/actions.ts`.
 
 ## Phase 3.5: Polish & Validation
 
