@@ -87,10 +87,10 @@ describe('useSessionTimeout', () => {
     expect(screen.getByTestId('warning-visible')).toHaveTextContent('true');
   });
 
-  it('auto-saves drafts before logging out at 30 minutes', () => {
+  it('auto-saves drafts before logging out at 30 minutes', async () => {
     const handleWarning = jest.fn();
     const handleTimeout = jest.fn();
-    const handleAutoSave = jest.fn();
+    const handleAutoSave = jest.fn().mockResolvedValue(undefined);
 
     renderHookWithProvider({
       onWarning: handleWarning,
@@ -106,8 +106,9 @@ describe('useSessionTimeout', () => {
     expect(handleAutoSave).not.toHaveBeenCalled();
     expect(handleTimeout).not.toHaveBeenCalled();
 
-    act(() => {
+    await act(async () => {
       jest.advanceTimersByTime(5 * 60 * 1000);
+      await Promise.resolve();
     });
 
     expect(handleAutoSave).toHaveBeenCalledTimes(1);

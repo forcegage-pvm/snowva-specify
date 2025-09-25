@@ -133,7 +133,11 @@ export const DashboardTile = ({
           {formattedValue}
         </p>
 
-        {trendCopy ? <span className={trendClassName}>{trendCopy}</span> : null}
+        {trendCopy ? (
+          <span data-testid="dashboard-tile-trend" className={trendClassName}>
+            {trendCopy}
+          </span>
+        ) : null}
 
         {typeof target === 'number' ? (
           <p className="text-xs text-slate-500">Target: {numberFormatter.format(target)}</p>

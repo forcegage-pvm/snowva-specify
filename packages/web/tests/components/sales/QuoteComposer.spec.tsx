@@ -33,6 +33,10 @@ const buildQuoteDraft = (overrides: Partial<QuoteDraft> = {}): QuoteDraft => ({
 });
 
 describe('QuoteComposerWizard', () => {
+  beforeEach(() => {
+    window.localStorage?.clear();
+  });
+
   it('progresses through wizard steps and surfaces review summary', () => {
     const quote = buildQuoteDraft();
     const handleStepChange = jest.fn();

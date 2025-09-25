@@ -1,7 +1,9 @@
 'use client';
 
 import type { FC } from 'react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+import { readDraftFromCache, useDraftAutosave } from '../hooks/useDraftAutosave';
 
 export type QuoteComposerStep = 'details' | 'items' | 'review';
 
@@ -62,14 +64,49 @@ export const QuoteComposerWizard: FC<QuoteComposerWizardProps> = ({
   onPreview,
   onCancel,
 }) => {
-  const normalizedSteps = ensureSteps(initialQuote.steps);
-  const defaultStep = normalizedSteps.includes(initialQuote.activeStep)
-    ? initialQuote.activeStep
-    : normalizedSteps[0];
+  const cachedDraft = useMemo(
+    () => readDraftFromCache<QuoteDraft>('quote', initialQuote.quoteId),
+    [initialQuote.quoteId],
+  );
 
-  const [quote, setQuote] = useState<QuoteDraft>({ ...initialQuote, steps: normalizedSteps, activeStep: defaultStep });
-  const [activeStep, setActiveStep] = useState<QuoteComposerStep>(defaultStep);
+  const deriveQuoteState = useMemo(() => {
+    const base = cachedDraft?.draft ? { ...initialQuote, ...cachedDraft.draft } : initialQuote;
+    const steps = ensureSteps(base.steps);
+    const activeStep = steps.includes(base.activeStep) ? base.activeStep : steps[0];
+
+    return {
+      quote: { ...base, steps, activeStep },
+      steps,
+      activeStep,
+    };
+  }, [cachedDraft, initialQuote]);
+
+  const [quote, setQuote] = useState<QuoteDraft>(deriveQuoteState.quote);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
+  useEffect(() => {
+    let changed = false;
+    const nextQuote = deriveQuoteState.quote;
+
+    setQuote((prev) => {
+      const prevSnapshot = JSON.stringify(prev);
+      const nextSnapshot = JSON.stringify(nextQuote);
+
+      if (prevSnapshot === nextSnapshot) {
+        return prev;
+      }
+
+      changed = true;
+      return nextQuote;
+    });
+
+    if (changed) {
+      setValidationErrors([]);
+    }
+  }, [deriveQuoteState]);
+
+  const normalizedSteps = quote.steps;
+  const activeStep = quote.activeStep;
 
   const currentStepIndex = normalizedSteps.indexOf(activeStep);
   const totalSteps = normalizedSteps.length;
@@ -103,8 +140,41 @@ export const QuoteComposerWizard: FC<QuoteComposerWizardProps> = ({
     };
   }, [quote.deliveryFee, quote.discounts, quote.lineItems]);
 
+  const autosaveEnabled = quote.status === 'Draft';
+
+  const { lastSavedAt, isSaving, status: autosaveStatus, clearDraft, saveNow } = useDraftAutosave<QuoteDraft>({
+    draft: quote,
+    draftId: quote.quoteId,
+    draftType: 'quote',
+    label: quote.customerName ?? 'Quote draft',
+    enabled: autosaveEnabled,
+    initialSavedState: cachedDraft,
+  });
+
+  const autosaveIndicator = useMemo(() => {
+    if (!autosaveEnabled) {
+      return 'Autosave paused';
+    }
+
+    if (isSaving) {
+      return 'Saving…';
+    }
+
+    if (autosaveStatus === 'error') {
+      return 'Autosave needs attention';
+    }
+
+    if (!lastSavedAt) {
+      return 'Autosave ready';
+    }
+
+    return `Saved ${new Intl.DateTimeFormat('en-ZA', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(lastSavedAt))}`;
+  }, [autosaveEnabled, autosaveStatus, isSaving, lastSavedAt]);
+
   const goToStep = (step: QuoteComposerStep) => {
-    setActiveStep(step);
     setQuote((prev) => ({ ...prev, activeStep: step }));
     setValidationErrors([]);
     onStepChange?.(step);
@@ -148,11 +218,19 @@ export const QuoteComposerWizard: FC<QuoteComposerWizardProps> = ({
       return;
     }
 
+    void saveNow('manual');
     onSubmit(quote);
+    clearDraft();
   };
 
   const handlePreview = () => {
+    void saveNow('manual');
     onPreview(quote);
+  };
+
+  const handleCancel = () => {
+    clearDraft();
+    onCancel?.();
   };
 
   return (
@@ -163,6 +241,9 @@ export const QuoteComposerWizard: FC<QuoteComposerWizardProps> = ({
           {quote.customerName ? (
             <p className="text-sm text-slate-500">{quote.customerName}</p>
           ) : null}
+          <p className="text-xs text-slate-400" data-testid="quote-autosave-indicator">
+            {autosaveIndicator}
+          </p>
         </div>
 
         <div
@@ -264,7 +345,7 @@ export const QuoteComposerWizard: FC<QuoteComposerWizardProps> = ({
         <div className="flex gap-2">
           <button
             type="button"
-            onClick={onCancel}
+            onClick={handleCancel}
             className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
           >
             Cancel

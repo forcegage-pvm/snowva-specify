@@ -7,7 +7,7 @@ import { useSession } from './providers/SessionProvider';
 export type UseSessionTimeoutOptions = {
   onWarning: (remainingMs: number) => void;
   onTimeout: () => void;
-  onAutoSaveDraft: () => void;
+  onAutoSaveDraft: () => Promise<void> | void;
 };
 
 export type UseSessionTimeoutResult = {
@@ -86,8 +86,13 @@ export const useSessionTimeout = ({
 
     timeoutRef.current = window.setTimeout(() => {
       setWarningVisible(false);
-      onAutoSaveDraft();
-      onTimeout();
+      Promise.resolve(onAutoSaveDraft())
+        .catch((error) => {
+          console.error('Failed to auto-save drafts before timeout', error);
+        })
+        .finally(() => {
+          onTimeout();
+        });
     }, timeoutDelay);
 
     return () => {

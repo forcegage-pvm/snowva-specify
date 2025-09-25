@@ -1,7 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
 import type { FC } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+import { readDraftFromCache, useDraftAutosave } from '../hooks/useDraftAutosave';
 
 export type InvoiceLineItem = {
   lineId: string;
@@ -75,7 +77,20 @@ export const InvoiceWorkspace: FC<InvoiceWorkspaceProps> = ({
   onReopen,
   onSendEmail,
 }) => {
-  const [finalizeGuard, setFinalizeGuard] = useState<string | null>(null);
+  const cachedDraft = useMemo(
+    () => readDraftFromCache<{
+      finalizeGuard: string | null;
+      vatNumber?: string;
+      orderReference?: string;
+      status: InvoiceWorkspaceState['status'];
+      paymentStatus: InvoiceWorkspaceState['paymentStatus'];
+    }>('invoice', invoice.invoiceId),
+    [invoice.invoiceId],
+  );
+
+  const [finalizeGuard, setFinalizeGuard] = useState<string | null>(
+    cachedDraft?.draft.finalizeGuard ?? null,
+  );
 
   const timeline = useMemo(
     () =>
@@ -87,6 +102,40 @@ export const InvoiceWorkspace: FC<InvoiceWorkspaceProps> = ({
 
   const canFinalize = invoice.status === 'Draft' && invoice.canFinalize && invoice.canEdit;
 
+  const autosaveEnabled = invoice.status === 'Draft' && invoice.canEdit;
+
+  const autosaveSnapshot = useMemo(
+    () => ({
+      finalizeGuard,
+      vatNumber: invoice.vatNumber ?? '',
+      orderReference: invoice.orderReference ?? '',
+      status: invoice.status,
+      paymentStatus: invoice.paymentStatus,
+    }),
+    [finalizeGuard, invoice.orderReference, invoice.paymentStatus, invoice.status, invoice.vatNumber],
+  );
+
+  const { lastSavedAt, isSaving, status: autosaveStatus, clearDraft, saveNow } = useDraftAutosave({
+    draft: autosaveSnapshot,
+    draftId: invoice.invoiceId,
+    draftType: 'invoice',
+    label: `Invoice ${invoice.invoiceId}`,
+    enabled: autosaveEnabled,
+    initialSavedState: cachedDraft,
+  });
+
+  useEffect(() => {
+    if (invoice.status !== 'Draft') {
+      setFinalizeGuard(null);
+      clearDraft();
+      return;
+    }
+
+    if (cachedDraft?.draft) {
+      setFinalizeGuard(cachedDraft.draft.finalizeGuard ?? null);
+    }
+  }, [cachedDraft, clearDraft, invoice.status]);
+
   const handleFinalize = () => {
     if (!invoice.vatNumber?.trim() || !invoice.orderReference?.trim()) {
       setFinalizeGuard('Add VAT number and customer order reference before finalizing.');
@@ -94,10 +143,13 @@ export const InvoiceWorkspace: FC<InvoiceWorkspaceProps> = ({
     }
 
     setFinalizeGuard(null);
+    void saveNow('manual');
     onFinalize?.(invoice);
+    clearDraft();
   };
 
   const handleReopen = () => {
+    clearDraft();
     onReopen?.(invoice.invoiceId);
   };
 
@@ -126,6 +178,20 @@ export const InvoiceWorkspace: FC<InvoiceWorkspaceProps> = ({
 
           <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
             Payment: {invoice.paymentStatus}
+          </span>
+          <span className="text-[11px] font-medium text-slate-400" data-testid="invoice-autosave-indicator">
+            {autosaveEnabled
+              ? isSaving
+                ? 'Saving…'
+                : autosaveStatus === 'error'
+                  ? 'Autosave needs attention'
+                  : lastSavedAt
+                    ? `Saved ${new Intl.DateTimeFormat('en-ZA', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      }).format(new Date(lastSavedAt))}`
+                    : 'Autosave ready'
+              : 'Autosave paused'}
           </span>
         </div>
       </header>
