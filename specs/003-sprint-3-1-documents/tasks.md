@@ -43,7 +43,7 @@
 - [X] T029 [P] Add Storybook stories in `packages/web/src/stories/features/documents/` (table, filters, preview modal, share-link banner) with accessibility notes.
 - [ ] T030 [P] Add visual regression baselines (Chromatic or Percy pipeline) or document manual snapshot process for the new components.
 - [ ] T031 Document operator workflows in `docs/components.md` covering documents workspace usage and archive hand-off.
-- [ ] T032 Run full validation suite from quickstart: lint, unit, contract, Cypress (`npm run lint`, `npm test`, `npm run cy:run -- --spec tests/e2e/documents-workspace.cy.ts`).
+- [X] T032 Run full validation suite from quickstart: lint, unit, contract, Cypress (`npm run lint`, `npm test`, `npm run cy:run -- --spec tests/e2e/documents-workspace.cy.ts`).
 - [ ] T033 Prepare implementation summary for changelog/spec update in `specs/003-sprint-3-1-documents/quickstart.md` (append release notes section).
 
 ## Dependencies
