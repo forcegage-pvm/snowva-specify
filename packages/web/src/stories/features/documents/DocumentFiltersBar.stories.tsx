@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { 
+import {
     DocumentFiltersBar,
-    type DocumentFiltersValue,
-    type DocumentFiltersChangeMeta 
+    type DocumentFiltersChangeMeta,
+    type DocumentFiltersValue
 } from '@/features/documents/components/DocumentFiltersBar';
 import {
-    withDocumentsQueryProvider,
     documentsStoryArgs,
+    withDocumentsQueryProvider,
 } from '../../../../.storybook/mocks/documents';
 
 const meta: Meta<typeof DocumentFiltersBar> = {

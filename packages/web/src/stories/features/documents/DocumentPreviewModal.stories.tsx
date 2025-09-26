@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { DocumentPreviewModal } from '@/features/documents/components/DocumentPreviewModal';
 import {
-    withDocumentsQueryProvider,
     documentExportScenarios,
+    withDocumentsQueryProvider,
 } from '../../../../.storybook/mocks/documents';
 
 const meta: Meta<typeof DocumentPreviewModal> = {
