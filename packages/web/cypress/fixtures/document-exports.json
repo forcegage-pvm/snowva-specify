@@ -1,0 +1,418 @@
+[
+  {
+    "id": "exp_stmt_2025_09_001",
+    "title": "September 2025 Statement",
+    "documentType": "statement",
+    "customerBranchId": "branch_cpt_hq",
+    "customerBranchName": "Cape Town HQ",
+    "createdAt": "2025-09-12T08:15:43Z",
+    "deliveredChannels": ["email", "portal"],
+    "status": "sent",
+    "lastDownloadedAt": "2025-09-12T09:04:11Z",
+    "fileSizeBytes": 325671,
+    "previewAssetUrl": "/mock/documents/exp_stmt_2025_09_001.pdf",
+    "shareLinkTokenId": "token_stmt_2025_09_001",
+    "shareLinkExpiresAt": "2025-10-12T08:15:43Z",
+    "auditTrail": [
+      {
+        "id": "audit_0001",
+        "timestamp": "2025-09-12T08:16:10Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["email", "portal"],
+          "recipient": "finance@capetownhq.co.za"
+        }
+      },
+      {
+        "id": "audit_0002",
+        "timestamp": "2025-09-12T09:04:11Z",
+        "actor": "system",
+        "action": "downloaded",
+        "context": {
+          "user": "kira.maseko@snowva.com"
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_invoice_2025_08_014",
+    "title": "Invoice 884210",
+    "documentType": "invoice",
+    "customerBranchId": "branch_dbn_port",
+    "customerBranchName": "Durban Port",
+    "createdAt": "2025-08-22T06:10:05Z",
+    "deliveredChannels": ["email"],
+    "status": "failed",
+    "failureReason": "Mailbox full",
+    "lastDownloadedAt": null,
+    "fileSizeBytes": 198443,
+    "previewAssetUrl": "/mock/documents/exp_invoice_2025_08_014.pdf",
+    "shareLinkTokenId": null,
+    "shareLinkExpiresAt": null,
+    "auditTrail": [
+      {
+        "id": "audit_0010",
+        "timestamp": "2025-08-22T06:10:45Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["email"],
+          "recipient": "accounts@harbourline.co.za"
+        }
+      },
+      {
+        "id": "audit_0011",
+        "timestamp": "2025-08-22T06:11:01Z",
+        "actor": "system",
+        "action": "failed",
+        "context": {
+          "reason": "Mailbox full"
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_quote_2025_07_031",
+    "title": "Quote Q-310725",
+    "documentType": "quote",
+    "customerBranchId": "branch_jhb_east",
+    "customerBranchName": "Johannesburg East",
+    "createdAt": "2025-07-15T14:33:22Z",
+    "deliveredChannels": ["portal"],
+    "status": "expired",
+    "lastDownloadedAt": "2025-08-16T08:42:17Z",
+    "fileSizeBytes": 154821,
+    "previewAssetUrl": "/mock/documents/exp_quote_2025_07_031.pdf",
+    "shareLinkTokenId": "token_quote_2025_07_031",
+    "shareLinkExpiresAt": "2025-08-14T14:33:22Z",
+    "auditTrail": [
+      {
+        "id": "audit_0020",
+        "timestamp": "2025-07-15T14:34:10Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["portal"],
+          "recipient": "sales@joburg-east.co.za"
+        }
+      },
+      {
+        "id": "audit_0021",
+        "timestamp": "2025-08-16T08:42:17Z",
+        "actor": "system",
+        "action": "downloaded",
+        "context": {
+          "user": "nomvula.khanye@snowva.com"
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_stmt_2025_06_021",
+    "title": "June 2025 Statement",
+    "documentType": "statement",
+    "customerBranchId": "branch_pe_warehouse",
+    "customerBranchName": "Port Elizabeth Warehouse",
+    "createdAt": "2025-06-30T05:23:09Z",
+    "deliveredChannels": ["email", "manual"],
+    "status": "sent",
+    "lastDownloadedAt": "2025-07-01T10:02:55Z",
+    "fileSizeBytes": 284533,
+    "previewAssetUrl": "/mock/documents/exp_stmt_2025_06_021.pdf",
+    "shareLinkTokenId": "token_stmt_2025_06_021",
+    "shareLinkExpiresAt": "2025-07-30T05:23:09Z",
+    "auditTrail": [
+      {
+        "id": "audit_0030",
+        "timestamp": "2025-06-30T05:23:45Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["email", "manual"],
+          "recipient": "pe.finance@warehouse.co.za"
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_compliance_2025_05_004",
+    "title": "Compliance Certificate CC-5523",
+    "documentType": "compliance",
+    "customerBranchId": "branch_pta_central",
+    "customerBranchName": "Pretoria Central",
+    "createdAt": "2025-05-11T09:18:00Z",
+    "deliveredChannels": ["portal", "email"],
+    "status": "sent",
+    "lastDownloadedAt": "2025-05-11T09:30:14Z",
+    "fileSizeBytes": 94511,
+    "previewAssetUrl": "/mock/documents/exp_compliance_2025_05_004.pdf",
+    "shareLinkTokenId": "token_compliance_2025_05_004",
+    "shareLinkExpiresAt": "2025-06-10T09:18:00Z",
+    "auditTrail": [
+      {
+        "id": "audit_0040",
+        "timestamp": "2025-05-11T09:18:24Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["portal", "email"]
+        }
+      },
+      {
+        "id": "audit_0041",
+        "timestamp": "2025-05-11T09:30:14Z",
+        "actor": "system",
+        "action": "downloaded",
+        "context": {
+          "user": "karabo.smith@snowva.com"
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_invoice_2025_04_019",
+    "title": "Invoice 775934",
+    "documentType": "invoice",
+    "customerBranchId": "branch_bloem_south",
+    "customerBranchName": "Bloemfontein South",
+    "createdAt": "2025-04-17T13:47:52Z",
+    "deliveredChannels": ["email"],
+    "status": "queued",
+    "lastDownloadedAt": null,
+    "fileSizeBytes": 168774,
+    "previewAssetUrl": "/mock/documents/exp_invoice_2025_04_019.pdf",
+    "shareLinkTokenId": null,
+    "shareLinkExpiresAt": null,
+    "auditTrail": [
+      {
+        "id": "audit_0050",
+        "timestamp": "2025-04-17T13:47:52Z",
+        "actor": "system",
+        "action": "queued",
+        "context": {
+          "channels": ["email"],
+          "expectedSend": "2025-04-17T14:05:00Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_statement_2025_03_008",
+    "title": "March 2025 Statement",
+    "documentType": "statement",
+    "customerBranchId": "branch_plk_north",
+    "customerBranchName": "Polokwane North",
+    "createdAt": "2025-03-05T10:22:51Z",
+    "deliveredChannels": ["portal"],
+    "status": "sent",
+    "lastDownloadedAt": "2025-03-06T06:14:02Z",
+    "fileSizeBytes": 257992,
+    "previewAssetUrl": "/mock/documents/exp_statement_2025_03_008.pdf",
+    "shareLinkTokenId": "token_statement_2025_03_008",
+    "shareLinkExpiresAt": "2025-04-04T10:22:51Z",
+    "auditTrail": [
+      {
+        "id": "audit_0060",
+        "timestamp": "2025-03-05T10:23:04Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["portal"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_invoice_2025_02_025",
+    "title": "Invoice 773410",
+    "documentType": "invoice",
+    "customerBranchId": "branch_upington",
+    "customerBranchName": "Upington",
+    "createdAt": "2025-02-20T07:55:30Z",
+    "deliveredChannels": ["manual"],
+    "status": "failed",
+    "failureReason": "Signature required",
+    "lastDownloadedAt": null,
+    "fileSizeBytes": 143221,
+    "previewAssetUrl": "/mock/documents/exp_invoice_2025_02_025.pdf",
+    "shareLinkTokenId": null,
+    "shareLinkExpiresAt": null,
+    "auditTrail": [
+      {
+        "id": "audit_0070",
+        "timestamp": "2025-02-20T07:55:44Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["manual"]
+        }
+      },
+      {
+        "id": "audit_0071",
+        "timestamp": "2025-02-20T09:00:00Z",
+        "actor": "lerato.ntuli@snowva.com",
+        "action": "failed",
+        "context": {
+          "reason": "Signature required"
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_compliance_2025_01_002",
+    "title": "Compliance Audit Jan 2025",
+    "documentType": "compliance",
+    "customerBranchId": "branch_nelspruit",
+    "customerBranchName": "Nelspruit",
+    "createdAt": "2025-01-18T11:49:14Z",
+    "deliveredChannels": ["portal", "email"],
+    "status": "sent",
+    "lastDownloadedAt": "2025-01-20T11:49:14Z",
+    "fileSizeBytes": 205337,
+    "previewAssetUrl": "/mock/documents/exp_compliance_2025_01_002.pdf",
+    "shareLinkTokenId": "token_compliance_2025_01_002",
+    "shareLinkExpiresAt": "2025-02-17T11:49:14Z",
+    "auditTrail": [
+      {
+        "id": "audit_0080",
+        "timestamp": "2025-01-18T11:49:30Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["portal", "email"]
+        }
+      },
+      {
+        "id": "audit_0081",
+        "timestamp": "2025-01-20T11:49:14Z",
+        "actor": "system",
+        "action": "downloaded",
+        "context": {
+          "user": "hezron.malele@snowva.com"
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_statement_2024_12_015",
+    "title": "December 2024 Statement",
+    "documentType": "statement",
+    "customerBranchId": "branch_polish_town",
+    "customerBranchName": "Polish Town",
+    "createdAt": "2024-12-10T05:41:11Z",
+    "deliveredChannels": ["portal"],
+    "status": "sent",
+    "lastDownloadedAt": "2025-01-02T10:05:41Z",
+    "fileSizeBytes": 233019,
+    "previewAssetUrl": "/mock/documents/exp_statement_2024_12_015.pdf",
+    "shareLinkTokenId": "token_statement_2024_12_015",
+    "shareLinkExpiresAt": "2025-01-09T05:41:11Z",
+    "auditTrail": [
+      {
+        "id": "audit_0090",
+        "timestamp": "2024-12-10T05:41:40Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["portal"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_archive_2024_07_001",
+    "title": "July 2024 Statement",
+    "documentType": "statement",
+    "customerBranchId": "branch_ct_archive",
+    "customerBranchName": "Cape Town Archive",
+    "createdAt": "2024-07-05T08:02:33Z",
+    "deliveredChannels": ["email", "portal"],
+    "status": "sent",
+    "lastDownloadedAt": "2024-07-07T12:14:22Z",
+    "fileSizeBytes": 217654,
+    "previewAssetUrl": "/mock/documents/exp_archive_2024_07_001.pdf",
+    "shareLinkTokenId": null,
+    "shareLinkExpiresAt": null,
+    "archiveReference": {
+      "exportId": "exp_archive_2024_07_001",
+      "archiveLocation": "cold://document-exports/2024/07/cpt-archive",
+      "requestedBy": null,
+      "requestedAt": null,
+      "status": "pending",
+      "deliveryEtaDays": null
+    },
+    "auditTrail": [
+      {
+        "id": "audit_0100",
+        "timestamp": "2024-07-05T08:03:00Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["email", "portal"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_invoice_2024_06_099",
+    "title": "Invoice 660199",
+    "documentType": "invoice",
+    "customerBranchId": "branch_soweto_central",
+    "customerBranchName": "Soweto Central",
+    "createdAt": "2024-06-28T15:42:00Z",
+    "deliveredChannels": ["email"],
+    "status": "expired",
+    "lastDownloadedAt": "2024-07-30T09:02:33Z",
+    "fileSizeBytes": 167223,
+    "previewAssetUrl": "/mock/documents/exp_invoice_2024_06_099.pdf",
+    "shareLinkTokenId": "token_invoice_2024_06_099",
+    "shareLinkExpiresAt": "2024-07-28T15:42:00Z",
+    "auditTrail": [
+      {
+        "id": "audit_0110",
+        "timestamp": "2024-06-28T15:42:20Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["email"]
+        }
+      },
+      {
+        "id": "audit_0111",
+        "timestamp": "2024-07-30T09:02:33Z",
+        "actor": "system",
+        "action": "downloaded",
+        "context": {
+          "user": "support@soweto-central.co.za"
+        }
+      }
+    ]
+  },
+  {
+    "id": "exp_quote_2024_05_044",
+    "title": "Quote Q-440524",
+    "documentType": "quote",
+    "customerBranchId": "branch_rustenburg",
+    "customerBranchName": "Rustenburg",
+    "createdAt": "2024-05-19T10:10:10Z",
+    "deliveredChannels": ["email", "portal"],
+    "status": "sent",
+    "lastDownloadedAt": "2024-05-20T08:18:01Z",
+    "fileSizeBytes": 128990,
+    "previewAssetUrl": "/mock/documents/exp_quote_2024_05_044.pdf",
+    "shareLinkTokenId": "token_quote_2024_05_044",
+    "shareLinkExpiresAt": "2024-06-18T10:10:10Z",
+    "auditTrail": [
+      {
+        "id": "audit_0120",
+        "timestamp": "2024-05-19T10:10:50Z",
+        "actor": "system",
+        "action": "sent",
+        "context": {
+          "channels": ["email", "portal"]
+        }
+      }
+    ]
+  }
+]

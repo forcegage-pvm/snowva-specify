@@ -4,32 +4,32 @@
 **Prerequisites**: plan.md (required), research.md, data-model.md, contracts/, quickstart.md
 
 ## Phase 3.1 – Setup
-- [ ] T001 Add `@tanstack/react-virtual` dependency in `packages/web/package.json` and align lockfile & TypeScript config for virtualization support.
-- [ ] T002 Seed Cypress fixture dataset in `packages/web/cypress/fixtures/document-exports.json` representing 365-day history with varied statuses and archive edge cases.
+- [X] T001 Add `@tanstack/react-virtual` dependency in `packages/web/package.json` and align lockfile & TypeScript config for virtualization support.
+- [X] T002 Seed Cypress fixture dataset in `packages/web/cypress/fixtures/document-exports.json` representing 365-day history with varied statuses and archive edge cases.
 
 ## Phase 3.2 – Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
-- [ ] T003 [P] Flesh out `packages/web/tests/contract/documents.test.ts` covering list, detail, resend, share-link, and audit endpoints per contract schema.
-- [ ] T004 Create failing Cypress spec skeleton in `packages/web/tests/e2e/documents-workspace.cy.ts` for initial load, search highlighting, and pagination smoke.
-- [ ] T005 Extend the Cypress spec to cover combined filters, virtualization threshold, and empty-state messaging.
-- [ ] T006 Extend the Cypress spec to validate preview modal metadata, share-link copy UX, and resend flow audit entries.
-- [ ] T007 Extend the Cypress spec to assert archived (>365 days) banner, expired share-link regeneration, and simulated error retry handling.
-- [ ] T008 [P] Author accessibility spec in `packages/web/tests/accessibility/documents.a11y.spec.tsx` checking keyboard focus order, ARIA labelling, and contrast tokens for table + modal components.
-- [ ] T009 [P] Add unit tests in `packages/web/tests/unit/DocumentExportService.test.ts` for list filtering, share-link expiry math, and audit trail logging behaviors.
+- [X] T003 [P] Flesh out `packages/web/tests/contract/documents.test.ts` covering list, detail, resend, share-link, and audit endpoints per contract schema.
+- [X] T004 Create failing Cypress spec skeleton in `packages/web/tests/e2e/documents-workspace.cy.ts` for initial load, search highlighting, and pagination smoke.
+- [X] T005 Extend the Cypress spec to cover combined filters, virtualization threshold, and empty-state messaging.
+- [X] T006 Extend the Cypress spec to validate preview modal metadata, share-link copy UX, and resend flow audit entries.
+- [X] T007 Extend the Cypress spec to assert archived (>365 days) banner, expired share-link regeneration, and simulated error retry handling.
+- [X] T008 [P] Author accessibility spec in `packages/web/tests/accessibility/documents.a11y.spec.tsx` checking keyboard focus order, ARIA labelling, and contrast tokens for table + modal components.
+- [X] T009 [P] Add unit tests in `packages/web/tests/unit/DocumentExportService.test.ts` for list filtering, share-link expiry math, and audit trail logging behaviors.
 
 ## Phase 3.3 – Core Implementation (ONLY after tests are failing)
-- [ ] T010 Create `packages/web/src/features/documents/types.ts` defining data-model entities (DocumentExportRecord, ShareLinkToken, AuditEvent, ShareLinkAccessEvent, FilterState, DocumentArchiveReference).
-- [ ] T011 Populate deterministic fixtures in `packages/web/src/services/mocks/documentExportFixtures.ts` for 365-day history, share-link tokens, and archive references.
-- [ ] T012 Implement `packages/web/src/services/DocumentExportService.ts` with list, detail, resend, share-link, and audit-access methods backed by fixtures and enforcing business rules.
-- [ ] T013 Extend `packages/web/src/services/AuditTrailService.ts` to recognize document export events (preview, download, share, resend) and emit telemetry to `performanceMetrics.ts`.
-- [ ] T014 Build GET `/api/v1/document-exports` handler in `packages/web/src/app/api/v1/document-exports/route.ts` returning paginated filtered results and virtualization hints.
-- [ ] T015 Build GET `/api/v1/document-exports/[exportId]/route.ts` returning preview metadata and audit snapshot.
-- [ ] T016 Build POST `/api/v1/document-exports/[exportId]/resend/route.ts` performing resend validation, status transition, and audit entry.
-- [ ] T017 Build POST `/api/v1/document-exports/[exportId]/share-link/route.ts` generating 30-day public tokens and warning metadata.
-- [ ] T018 Build GET `/api/v1/document-exports/[exportId]/audit/route.ts` returning paginated audit events with cursor support.
-- [ ] T019 Create React Query hooks in `packages/web/src/features/documents/hooks/useDocumentExports.ts` for list and detail fetching with caching + retention filters.
-- [ ] T020 Implement `packages/web/src/features/documents/components/DocumentExportsTable.tsx` using TanStack Virtual, sort chips, and inline status indicators.
-- [ ] T021 Implement `packages/web/src/features/documents/components/DocumentFiltersBar.tsx` providing search, multi-select filters, and saved filter state restoration.
-- [ ] T022 Implement `packages/web/src/features/documents/components/DocumentPreviewModal.tsx` with metadata summary, PDF preview slot, share-link banner, resend action, and audit trail tab.
+- [X] T010 Create `packages/web/src/features/documents/types.ts` defining data-model entities (DocumentExportRecord, ShareLinkToken, AuditEvent, ShareLinkAccessEvent, FilterState, DocumentArchiveReference).
+- [X] T011 Populate deterministic fixtures in `packages/web/src/services/mocks/documentExportFixtures.ts` for 365-day history, share-link tokens, and archive references.
+- [X] T012 Implement `packages/web/src/services/DocumentExportService.ts` with list, detail, resend, share-link, and audit-access methods backed by fixtures and enforcing business rules.
+- [X] T013 Extend `packages/web/src/services/AuditTrailService.ts` to recognize document export events (preview, download, share, resend) and emit telemetry to `performanceMetrics.ts`.
+- [X] T014 Build GET `/api/v1/document-exports` handler in `packages/web/src/app/api/v1/document-exports/route.ts` returning paginated filtered results and virtualization hints.
+- [X] T015 Build GET `/api/v1/document-exports/[exportId]/route.ts` returning preview metadata and audit snapshot.
+- [X] T016 Build POST `/api/v1/document-exports/[exportId]/resend/route.ts` performing resend validation, status transition, and audit entry.
+- [X] T017 Build POST `/api/v1/document-exports/[exportId]/share-link/route.ts` generating 30-day public tokens and warning metadata.
+- [X] T018 Build GET `/api/v1/document-exports/[exportId]/audit/route.ts` returning paginated audit events with cursor support.
+- [X] T019 Create React Query hooks in `packages/web/src/features/documents/hooks/useDocumentExports.ts` for list and detail fetching with caching + retention filters.
+- [X] T020 Implement `packages/web/src/features/documents/components/DocumentExportsTable.tsx` using TanStack Virtual, sort chips, and inline status indicators.
+- [X] T021 Implement `packages/web/src/features/documents/components/DocumentFiltersBar.tsx` providing search, multi-select filters, and saved filter state restoration.
+- [X] T022 Implement `packages/web/src/features/documents/components/DocumentPreviewModal.tsx` with metadata summary, PDF preview slot, share-link banner, resend action, and audit trail tab.
 - [ ] T023 Add `packages/web/src/features/documents/components/PublicLinkWarning.tsx` surfaced wherever share links are copied.
 - [ ] T024 Compose `/documents` workspace page in `packages/web/src/app/(dashboard)/documents/page.tsx` wiring hooks, components, archive banner, and loading/error states.
 
