@@ -1,136 +1,295 @@
-# Snowva Operations Console – Implementation Roadmap
+# Snowva Operations Console – Development Roadmap
 
 _Last updated: 2025-09-26_
 
-## 1. Context & Objectives
-- **Product vision**: Deliver a unified console for Snowva's finance, sales, and operations teams to manage customers, pricing, quotes, invoices, statements, and payments.
-- **Current status**: Core layout and navigation are live under the Next.js App Router. High-fidelity workspaces exist for customer branches, invoice lifecycle, payment allocation, seasonal pricing, quote composer, and finance statements. Root route now redirects to `/dashboard` with KPIs, shortcuts, and branch spotlight panels. **NEW: Documents workspace fully implemented** with complete UI, API layer, performance monitoring, and accessibility compliance. Cypress E2E specs provide behavioral expectations for every major workspace.
-- **Goal for next phases**: Convert the remaining mocked experiences into production-ready applications with resilient API layers, complete UI coverage, and automated quality gates. Operations Console – Implementation Roadmap
+## 1. Product Vision & Current Status
 
-_Last updated: 2025-09-26_
+### Vision
+Deliver a unified console for Snowva's finance, sales, and operations teams to manage customers, pricing, quotes, invoices, statements, and payments.
 
-## 1. Context & Objectives
-- **Product vision**: Deliver a unified console for Snowva’s finance, sales, and operations teams to manage customers, pricing, quotes, invoices, statements, and payments.
-- **Current status**: Core layout and navigation are live under the Next.js App Router. High-fidelity workspaces exist for customer branches, invoice lifecycle, payment allocation, seasonal pricing, quote composer, and finance statements. Root route now redirects to `/dashboard` with KPIs, shortcuts, and branch spotlight panels. Cypress E2E specs provide behavioral expectations for every major workspace.
-- **Goal for next phases**: Convert the mocked experience into a production-ready application with resilient API layers, complete UI coverage, and automated quality gates.
+### Current Status ✅
+- [x] **Core Foundation**: Next.js 15 App Router, TypeScript 5.1+, Tailwind CSS 3.4
+- [x] **Dashboard Layout**: Navigation, KPIs, shortcuts, branch spotlight panels
+- [x] **Existing Workspaces**: Customer branches, invoice lifecycle, payment allocation, seasonal pricing, quote composer, finance statements
+- [x] **Documents Workspace**: Complete implementation with API layer, performance optimization, accessibility compliance
+- [x] **E2E Testing Framework**: Cypress specs for major workspace behaviors
+
+### Next Phase Goals
+Convert remaining mocked experiences into production-ready applications with resilient API layers, complete UI coverage, and automated quality gates.
 
 ---
 
-## 2. Workstream Overview
+## 2. Development Workstreams
+
 | Workstream | Purpose | Success Criteria |
 | --- | --- | --- |
-| **UI Completion** | Replace placeholder pages (documents, quotes index, invoice index, etc.) with spec-compliant React screens. | All navigation links land on functional pages with test IDs referenced by E2E specs. |
-| **Mock API Consolidation** | Serve deterministic fixtures via `/api/v1/*` routes that mirror spec contract. | Pages consume shared services; errors/empty states are demonstrated in Storybook / Cypress. |
-| **Automated Quality** | Ensure lint, type-check, and Cypress run locally and in CI. | GitHub Action (or equivalent) fails builds on regression; green status required for merge. |
-| **Design System Hardening** | Normalize layout primitives and theme tokens. | Shared components documented in Storybook; visual consistency maintained across workspaces. |
-| **Real Data Integration (stretch)** | Replace mocks with production APIs / Firebase per platform roadmap. | Feature toggles allow staged rollout; React Query caches persist between routes. |
+| **UI Completion** | Replace placeholder pages with spec-compliant React screens | All navigation links land on functional pages with test IDs |
+| **API Consolidation** | Serve deterministic fixtures via `/api/v1/*` routes | Pages consume shared services; error states demonstrated |
+| **Quality Automation** | Ensure lint, type-check, and Cypress run in CI | GitHub Actions fail builds on regression |
+| **Design System** | Normalize layout primitives and theme tokens | Shared components documented in Storybook |
+| **Data Integration** | Replace mocks with production APIs/Firebase | Feature toggles allow staged rollout |
 
 ---
 
-## 3. Execution Plan by Sprint
-### ✅ Sprint 3 – "Documents workspace & API foundations" (COMPLETED)
-**Delivered Sprint 003-sprint-3-1-documents (T001-T033):**
-1. **✅ Documents workspace implementation**
-   - Complete `/documents` page with searchable export history, advanced filters, preview modal
-   - DocumentExportsTable with TanStack Virtual for performance (1000+ records)
-   - DocumentFiltersBar with date ranges, status, type, and search filters
-   - DocumentPreviewModal with share link generation and copy functionality
-   - PublicLinkWarning component for security compliance
-2. **✅ Production-grade API layer**
-   - Full REST API at `/api/v1/document-exports/*` (GET, POST, PUT, DELETE, PATCH)
-   - TanStack Query integration with optimistic updates and error handling
-   - Comprehensive mock data with 50+ realistic document exports
-3. **✅ Quality foundations**
-   - 38 Storybook stories with comprehensive component coverage
-   - Performance monitoring with React.memo and useMemo optimizations
-   - WCAG 2.1 AA accessibility compliance with axe-core validation
-   - TypeScript 5.1+ strict mode with comprehensive error handling
-4. **✅ Testing & documentation**
-   - Complete component test suite with edge cases and error scenarios
-   - Comprehensive documentation for all components and API endpoints
-   - Navigation integration in dashboard layout
+## 3. Sprint Planning & Execution
 
-### Sprint 4 – "Remaining workspace implementations"
-1. **Complete remaining workspace implementations**
-   - `/quotes` index: recent quotes, status chips, CTA into composer.
-   - `/invoices` index: timeline feed, bulk actions, jump into `/invoices/[id]`.
-   - `/payments` index: list of allocation cases linking to existing detail view.
+### ✅ Sprint 003 – Documents Workspace (COMPLETED)
+**Sprint Goal**: Implement production-ready documents workspace with advanced filtering, virtualization, and API integration.
 
-### Sprint 4 – "Design system & interactive polish"
-1. Extract shared primitives (cards, tables, modals, toasts) into `@/components/ui`.
-2. Implement global loading & error banners with React Query state.
-3. Add Storybook stories for key flows (quote wizard steps, payment allocation table, statements diff modal).
-4. Accessibility audit (axe) and color/contrast fixes.
+#### Phase 1: Foundation ✅
+- [x] T001: Technical architecture planning and component design
+- [x] T002: TypeScript interfaces and data model definitions  
+- [x] T003: Project structure setup and dependency integration
+- [x] T004: Development environment configuration
+- [x] T005: Performance requirements and accessibility planning
 
-### Sprint 5 – "Data integration & release readiness"
-1. Replace mock fetches with real API/Firebase calls behind service layer.
-2. Introduce optimistic updates, skeletons, and retry patterns.
-3. End-to-end regression with real backend (or contract tests if backend unavailable).
-4. Build release checklist: environment variables, security review, load testing.
+#### Phase 2: UI/API Contracts ✅
+- [x] T006: DocumentExportsTable component interface design
+- [x] T007: DocumentFiltersBar component specification
+- [x] T008: DocumentPreviewModal component architecture
+- [x] T009: API endpoint contracts and data flow design
+- [x] T010: State management architecture with TanStack Query
 
----
+#### Phase 3: Core Implementation ✅
+- [x] T011: DocumentExportsTable with virtualization
+- [x] T012: DocumentFiltersBar with advanced filtering
+- [x] T013: DocumentPreviewModal with share functionality
+- [x] T014: PublicLinkWarning security component
+- [x] T015: API routes implementation
 
-## 4. Task Backlog (Updated)
-### ✅ Completed (Sprint 003-sprint-3-1-documents)
-- [x] **Documents workspace UI & API** - Complete implementation with advanced filtering, virtualization, and preview functionality
-- [x] **Shared mock data layer & typed adapters** - TanStack Query integration with comprehensive mock data
-- [x] **API route enhancements** - Full REST API with error states, pagination, and comprehensive CRUD operations
-- [x] **Storybook bootstrap & stories** - 38 comprehensive stories covering all document components and scenarios
-- [x] **Accessibility compliance** - WCAG 2.1 AA compliance with axe-core validation and screen reader support
-- [x] **Performance optimization** - TanStack Virtual, React.memo, and useMemo for handling 1000+ records
+#### Phase 4: Integration & Wiring ✅
+- [x] T016: Component integration and data flow
+- [x] T017: Error handling and loading states
+- [x] T018: Performance optimization and monitoring
+- [x] T019: Navigation integration in dashboard
+- [x] T020: End-to-end workflow testing
 
-### 🔄 Active Development
-- [ ] **Quotes index page** with filtering and spec-aligned data test IDs.
-- [ ] **Invoices index** list + timeline summary.
-- [ ] **Payments index** overview.
-- [ ] **Cypress CI workflow** definition and E2E test updates.
-- [ ] **Real API client** scaffolding (React Query service wrappers).
+#### Phase 5: Polish & Validation ✅
+- [x] T021: Accessibility compliance (WCAG 2.1 AA)
+- [x] T022: Comprehensive Storybook stories (38 stories)
+- [x] T023: Performance testing and optimization
+- [x] T024: Code review and quality assurance
+- [x] T025: Documentation and deployment preparation
 
-(Transfer each checkbox into issue tracker tickets aligned with sprint scope.)
+**Sprint Results**: Complete documents workspace with TanStack Virtual performance, REST API, accessibility compliance, and comprehensive testing.
 
 ---
 
-## 5. Risks & Mitigations
-| Risk | Impact | Mitigation |
-| --- | --- | --- |
-| Divergence between mocks and eventual backend contracts | Broken flows on integration | Develop TypeScript types shared between mocks and real client; add contract tests. |
-| Cypress flakiness blocking CI | Delivery delays | Use deterministic fixtures, disable unnecessary animations in tests, run tests in parallel shards. |
-| Design creep with bespoke components | UI inconsistency | Enforce design tokens and shared primitives during Sprint 4; conduct weekly design QA. |
-| Performance hit from large data tables | Poor UX for ops team | Implement virtualization (react-virtual) and pagination early once real data size confirmed. |
+### 🔄 Sprint 004 – Quotes Index Workspace (IN PROGRESS)
+**Sprint Goal**: Implement quotes listing page with filtering, status management, and integration with existing quote composer.
+
+#### Phase 1: Foundation & Planning
+- [ ] **T034**: Analyze existing quote composer integration points
+- [ ] **T035**: Design QuotesTable component architecture with virtualization
+- [ ] **T036**: Define quote status workflow and filtering requirements
+- [ ] **T037**: Plan API endpoints for quotes listing and management
+- [ ] **T038**: TypeScript interfaces for quote data models
+
+#### Phase 2: Core Components
+- [ ] **T039**: Implement QuotesTable with sorting and selection
+- [ ] **T040**: Build QuoteFiltersBar (status, date range, customer, amount)
+- [ ] **T041**: Create QuoteStatusBadge component with workflow states
+- [ ] **T042**: Develop QuoteActionsMenu (edit, duplicate, convert, archive)
+- [ ] **T043**: Build QuickPreviewCard for quote summary
+
+#### Phase 3: API Integration
+- [ ] **T044**: Implement `/api/v1/quotes` REST endpoints
+- [ ] **T045**: Add pagination and search functionality
+- [ ] **T046**: Integrate with existing quote composer navigation
+- [ ] **T047**: Add bulk operations support (status updates, exports)
+- [ ] **T048**: Implement quote archiving and restoration
+
+#### Phase 4: UX Polish & Testing
+- [ ] **T049**: Add empty states and loading skeletons
+- [ ] **T050**: Implement quote duplicate functionality
+- [ ] **T051**: Add export to PDF/Excel functionality
+- [ ] **T052**: Create Storybook stories for all quote components
+- [ ] **T053**: Accessibility testing and WCAG compliance
+
+#### Phase 5: Integration & Validation
+- [ ] **T054**: Navigation integration in dashboard layout
+- [ ] **T055**: E2E testing with Cypress specs
+- [ ] **T056**: Performance testing with large quote datasets
+- [ ] **T057**: Integration testing with quote composer
+- [ ] **T058**: Documentation and code review
 
 ---
 
-## 6. Deliverables & Checkpoints
-- **✅ End Sprint 3 (003-sprint-3-1-documents)**: Documents workspace fully implemented with production-grade API layer, performance optimization, accessibility compliance, and comprehensive testing. Navigation integration complete. Storybook catalog established with 38+ stories.
-- **End Sprint 4**: Complete remaining workspace implementations (quotes, invoices, payments indexes); Cypress suite updates; shared component library hardening.
-- **End Sprint 5**: Deployed beta backed by real data source; release checklist signed off.
+### 📋 Sprint 005 – Invoices Index Workspace (PLANNED)
+**Sprint Goal**: Build invoices listing with timeline view, bulk operations, and integration with existing invoice detail pages.
+
+#### Phase 1: Foundation
+- [ ] **T059**: Analyze existing invoice detail page integration
+- [ ] **T060**: Design InvoicesTable with timeline and list views
+- [ ] **T061**: Plan invoice status workflow and bulk operations
+- [ ] **T062**: Define filtering and search requirements
+- [ ] **T063**: TypeScript interfaces for invoice data models
+
+#### Phase 2: Core Components
+- [ ] **T064**: Implement InvoicesTable with dual view modes
+- [ ] **T065**: Build InvoiceFiltersBar (status, date, customer, amount)
+- [ ] **T066**: Create InvoiceTimelineView component
+- [ ] **T067**: Develop InvoiceBulkActions (status updates, exports)
+- [ ] **T068**: Build InvoiceStatusBadge with workflow states
+
+#### Phase 3: Advanced Features
+- [ ] **T069**: Implement payment status integration
+- [ ] **T070**: Add aging analysis and overdue highlighting  
+- [ ] **T071**: Build invoice batch processing
+- [ ] **T072**: Create invoice reminders functionality
+- [ ] **T073**: Add invoice-to-statement linking
+
+#### Phase 4: API & Integration
+- [ ] **T074**: Implement `/api/v1/invoices` REST endpoints
+- [ ] **T075**: Integrate with existing payment allocation
+- [ ] **T076**: Add invoice generation from quotes
+- [ ] **T077**: Implement invoice PDF generation and email
+- [ ] **T078**: Navigation and routing integration
+
+#### Phase 5: Testing & Polish
+- [ ] **T079**: Comprehensive Storybook stories
+- [ ] **T080**: E2E testing and Cypress specs
+- [ ] **T081**: Performance optimization for large datasets
+- [ ] **T082**: Accessibility compliance validation
+- [ ] **T083**: Documentation and deployment
 
 ---
 
+### 📋 Sprint 006 – Payments Index Workspace (PLANNED)  
+**Sprint Goal**: Create payments overview with allocation tracking and integration with existing payment detail views.
+
+#### Phase 1: Foundation
+- [ ] **T084**: Analyze payment allocation integration points
+- [ ] **T085**: Design PaymentsTable with allocation status
+- [ ] **T086**: Plan payment matching and allocation workflow
+- [ ] **T087**: Define filtering by allocation status and methods
+- [ ] **T088**: TypeScript interfaces for payment data models
+
+#### Phase 2: Core Components
+- [ ] **T089**: Implement PaymentsTable with allocation indicators
+- [ ] **T090**: Build PaymentFiltersBar (method, status, date, amount)
+- [ ] **T091**: Create PaymentAllocationBadge component
+- [ ] **T092**: Develop UnallocatedPaymentsAlert component
+- [ ] **T093**: Build PaymentMatchingSuggestions
+
+#### Phase 3: Allocation Features
+- [ ] **T094**: Implement payment matching algorithms
+- [ ] **T095**: Add bulk allocation functionality
+- [ ] **T096**: Create allocation history tracking
+- [ ] **T097**: Build payment reconciliation tools
+- [ ] **T098**: Add payment method analysis
+
+#### Phase 4: API & Integration
+- [ ] **T099**: Implement `/api/v1/payments` REST endpoints
+- [ ] **T100**: Integrate with existing allocation detail views
+- [ ] **T101**: Add payment import/export functionality
+- [ ] **T102**: Implement bank reconciliation features
+- [ ] **T103**: Navigation and routing integration
+
+#### Phase 5: Testing & Polish
+- [ ] **T104**: Comprehensive Storybook stories
+- [ ] **T105**: E2E testing and Cypress specs
+- [ ] **T106**: Performance optimization and virtualization
+- [ ] **T107**: Accessibility compliance validation
+- [ ] **T108**: Documentation and deployment
+
 ---
 
-## 7. Implementation Details
+## 4. Design System & Shared Components
 
-### Sprint 003-sprint-3-1-documents Technical Summary
-- **Architecture**: Next.js 15 App Router with TypeScript 5.1+ strict mode
-- **State Management**: TanStack Query for server state, React hooks for local state
-- **Performance**: TanStack Virtual for large data sets, React.memo for component optimization
-- **UI Framework**: Tailwind CSS 3.4+ with Headless UI for accessible components
-- **Testing**: Comprehensive Storybook stories, axe-core accessibility testing
-- **API Layer**: Complete REST endpoints at `/api/v1/document-exports/*`
-- **Components Delivered**:
-  - `DocumentExportsTable` - Virtualized data table with sorting and selection
-  - `DocumentFiltersBar` - Advanced filtering with date ranges and search
-  - `DocumentPreviewModal` - Document preview with share link generation
-  - `PublicLinkWarning` - Security compliance component
-- **Development Standards**: WCAG 2.1 AA compliance, comprehensive error handling, performance monitoring
+### Sprint 007 – Component Library Hardening (PLANNED)
+- [ ] **T109**: Extract shared table components (`DataTable`, `FilterBar`)
+- [ ] **T110**: Create unified modal system (`Modal`, `Dialog`, `Drawer`)
+- [ ] **T111**: Build status badge system with consistent styling
+- [ ] **T112**: Implement loading skeleton components
+- [ ] **T113**: Create error boundary and error state components
+- [ ] **T114**: Build toast notification system
+- [ ] **T115**: Design consistent form components
+- [ ] **T116**: Create accessibility testing utilities
+- [ ] **T117**: Build Storybook design token documentation
+- [ ] **T118**: Implement responsive layout utilities
 
 ---
 
-## 8. References
-- [`docs/system-current/`](./system-current/) for the latest domain PDFs and extracted text.
-- Cypress specs in `packages/web/tests/e2e/` for expected UI behaviors.
-- Sprint implementation details in `.github/copilot-instructions.md` (auto-updated).
-- Storybook documentation at `http://localhost:6006` for component catalog.
+## 5. Quality & Testing Infrastructure
 
-*Keep this document updated at the close of each sprint to reflect scope changes, blockers, and new deliverables.*
+### Automated Testing Checklist
+- [ ] **Jest Unit Tests**: Component logic and utility functions
+- [ ] **React Testing Library**: Component integration tests
+- [ ] **Storybook Stories**: Visual component documentation
+- [ ] **Cypress E2E**: Complete user workflows
+- [ ] **Accessibility Testing**: axe-core validation
+- [ ] **Performance Testing**: Large dataset handling
+- [ ] **API Contract Testing**: Mock/real API alignment
+
+### CI/CD Pipeline Checklist
+- [ ] **GitHub Actions Setup**: Automated testing on PR
+- [ ] **Lint & Type Check**: ESLint and TypeScript validation
+- [ ] **Test Coverage**: Maintain >80% coverage
+- [ ] **Visual Regression**: Chromatic integration
+- [ ] **Performance Monitoring**: Bundle size and runtime metrics
+- [ ] **Accessibility Gates**: Automated axe-core checks
+- [ ] **Deploy Preview**: Vercel/Netlify integration
+
+---
+
+## 6. Implementation Guidelines
+
+### Development Standards
+- **TypeScript**: Strict mode, comprehensive error handling
+- **Performance**: TanStack Virtual for 1000+ records, React.memo optimization
+- **Accessibility**: WCAG 2.1 AA compliance, keyboard navigation
+- **Testing**: Component stories, integration tests, E2E workflows
+- **API Design**: REST endpoints, pagination, filtering, error states
+- **Documentation**: Component props, usage examples, API contracts
+
+### Sprint Success Criteria
+1. **All tasks completed** and marked with ✅
+2. **Navigation integration** in dashboard layout
+3. **Storybook stories** for all components (minimum 10 per sprint)
+4. **API endpoints** with comprehensive CRUD operations
+5. **Accessibility compliance** with axe-core validation
+6. **Performance benchmarks** met (TanStack Virtual for large datasets)
+7. **Documentation** complete for operators and developers
+
+---
+
+## 7. Delivery Timeline
+
+| Sprint | Duration | Deliverable | Status |
+|--------|----------|-------------|--------|
+| **003** | 2 weeks | Documents Workspace | ✅ Complete |
+| **004** | 2 weeks | Quotes Index | 🔄 In Progress |
+| **005** | 2 weeks | Invoices Index | 📋 Planned |
+| **006** | 2 weeks | Payments Index | 📋 Planned |
+| **007** | 1.5 weeks | Design System | 📋 Planned |
+| **008** | 1 week | CI/CD & Testing | 📋 Planned |
+
+**Target Completion**: 10.5 weeks from Sprint 004 start
+
+---
+
+## 8. Risk Management
+
+| Risk | Impact | Probability | Mitigation |
+|------|--------|-------------|------------|
+| **API Contract Changes** | High | Medium | Shared TypeScript types, contract tests |
+| **Performance Issues** | High | Low | Early virtualization, performance testing |
+| **Accessibility Gaps** | Medium | Medium | Automated axe-core testing, keyboard navigation |
+| **Design Inconsistency** | Medium | Medium | Shared component library, design tokens |
+| **Testing Flakiness** | Medium | High | Deterministic fixtures, stable selectors |
+
+---
+
+## 9. References & Resources
+
+- **System Documentation**: [`docs/system-current/`](./system-current/)
+- **E2E Test Specs**: `packages/web/tests/e2e/`
+- **Component Catalog**: Storybook at `http://localhost:6006`
+- **Sprint Implementation**: `.github/copilot-instructions.md`
+- **API Documentation**: Generated from OpenAPI specs
+- **Accessibility Guidelines**: [WCAG 2.1 AA Standards](https://www.w3.org/WAI/WCAG21/quickref/)
+
+---
+
+*This roadmap is updated at the end of each sprint. Use checkboxes to track progress and maintain sprint momentum.*
