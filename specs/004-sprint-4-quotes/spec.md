@@ -36,6 +36,17 @@
 
 ---
 
+## Clarifications
+
+### Session 2025-09-26
+- Q: What is the expected data volume for quote records that the system needs to handle efficiently? → A: Small scale: <1,000 quotes total
+- Q: What should happen when multiple users attempt to edit the same quote simultaneously? → A: Last save wins (overwrite previous changes)
+- Q: What are the specific page load time requirements for the quotes listing page? → A: Under 1 second for initial load
+- Q: Which user roles should have permission to archive or delete quotes? → A: All users (sales, finance, operations, managers)
+- Q: What should happen when the quote composer integration is temporarily unavailable? → A: Allow viewing only, disable create/edit
+
+---
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### Primary User Story
@@ -64,6 +75,7 @@ As a sales manager, I need to view and manage all quotes in our system so I can 
 - What occurs when attempting to edit a quote that has been converted to an invoice?
 - How are archived quotes handled in the listing?
 - What happens when quote data is loading or fails to load?
+- When multiple users edit the same quote, the last saved version overwrites previous changes (no conflict resolution)
 
 ## Requirements *(mandatory)*
 
@@ -81,6 +93,8 @@ As a sales manager, I need to view and manage all quotes in our system so I can 
 - **FR-011**: System MUST show appropriate empty states when no quotes match current filters
 - **FR-012**: System MUST display loading states during data retrieval operations
 - **FR-013**: System MUST handle error states gracefully with user-friendly messages and retry options
+- **FR-023**: System MUST gracefully handle quote composer unavailability by allowing viewing operations while disabling create/edit actions
+- **FR-021**: System MUST load the initial quotes listing page in under 1 second
 - **FR-014**: System MUST provide quote preview functionality without full navigation to composer
 - **FR-015**: System MUST maintain filter and sort preferences during user session
 - **FR-016**: System MUST support sorting by quote number, customer name, amount, creation date, and status
@@ -88,9 +102,10 @@ As a sales manager, I need to view and manage all quotes in our system so I can 
 - **FR-018**: System MUST provide quick navigation back to dashboard and other workspaces
 - **FR-019**: System MUST display quote conversion status (linked invoices) when applicable
 - **FR-020**: System MUST support quote archiving with ability to view archived quotes separately
+- **FR-022**: System MUST allow all user roles (sales, finance, operations, managers) to archive quotes
 
 ### Key Entities *(include if feature involves data)*
-- **Quote**: Core business entity representing a price proposal with unique identifier, line items, customer association, total amount, status workflow (Draft → Pending → Approved/Rejected → Converted/Archived), creation and expiry dates, terms and conditions
+- **Quote**: Core business entity representing a price proposal with unique identifier, line items, customer association, total amount, status workflow (Draft → Pending → Approved/Rejected → Converted/Archived), creation and expiry dates, terms and conditions. System designed for <1,000 total quotes with standard pagination (25-50 per page)
 - **Customer**: Associated entity containing customer information (name, contact details, billing address) linked to quotes for filtering and display purposes
 - **Quote Status**: Enumerated workflow states that track quote lifecycle progress with specific business rules for status transitions
 - **Quote Line Item**: Individual products/services within a quote with quantities, unit prices, and descriptions
