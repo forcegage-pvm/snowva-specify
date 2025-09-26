@@ -30,8 +30,8 @@
 - [X] T020 Implement `packages/web/src/features/documents/components/DocumentExportsTable.tsx` using TanStack Virtual, sort chips, and inline status indicators.
 - [X] T021 Implement `packages/web/src/features/documents/components/DocumentFiltersBar.tsx` providing search, multi-select filters, and saved filter state restoration.
 - [X] T022 Implement `packages/web/src/features/documents/components/DocumentPreviewModal.tsx` with metadata summary, PDF preview slot, share-link banner, resend action, and audit trail tab.
-- [ ] T023 Add `packages/web/src/features/documents/components/PublicLinkWarning.tsx` surfaced wherever share links are copied.
-- [ ] T024 Compose `/documents` workspace page in `packages/web/src/app/(dashboard)/documents/page.tsx` wiring hooks, components, archive banner, and loading/error states.
+- [X] T023 Add `packages/web/src/features/documents/components/PublicLinkWarning.tsx` surfaced wherever share links are copied.
+- [X] T024 Compose `/documents` workspace page in `packages/web/src/app/(dashboard)/documents/page.tsx` wiring hooks, components, archive banner, and loading/error states.
 
 ## Phase 3.4 – Integration & Wiring
 - [ ] T025 Update `packages/web/src/lib/metrics/performanceMetrics.ts` and related telemetry utilities to track document export interactions and filter response timings.
