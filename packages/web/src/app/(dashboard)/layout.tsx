@@ -2,19 +2,19 @@
 
 import { Dialog, Transition } from '@headlessui/react';
 import {
-  ArrowRightOnRectangleIcon,
-  Bars3Icon,
-  BellIcon,
-  ChartPieIcon,
-  CubeIcon,
-  CurrencyDollarIcon,
-  DocumentArrowDownIcon,
-  DocumentDuplicateIcon,
-  DocumentTextIcon,
-  QueueListIcon,
-  SparklesIcon,
-  UsersIcon,
-  XMarkIcon,
+    ArrowRightOnRectangleIcon,
+    Bars3Icon,
+    BellIcon,
+    ChartPieIcon,
+    CubeIcon,
+    CurrencyDollarIcon,
+    DocumentArrowDownIcon,
+    DocumentDuplicateIcon,
+    DocumentTextIcon,
+    QueueListIcon,
+    SparklesIcon,
+    UsersIcon,
+    XMarkIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -36,19 +36,19 @@ const navigation = [
   {
     name: 'Products',
     description: 'Catalog entries, price lists, and overrides',
-    href: '/products',
+    href: '/products/pricing',
     icon: CubeIcon,
   },
   {
     name: 'Quotes',
     description: 'Quote composer wizard and approvals',
-    href: '/quotes',
+    href: '/sales/quote-composer',
     icon: DocumentDuplicateIcon,
   },
   {
     name: 'Invoices',
     description: 'Invoice lifecycle and timelines',
-    href: '/invoices',
+    href: '/invoices/inv_250827101',
     icon: DocumentTextIcon,
   },
   {
@@ -60,13 +60,13 @@ const navigation = [
   {
     name: 'Statements',
     description: 'Consolidated statements and exports',
-    href: '/statements',
+    href: '/finance/statements',
     icon: QueueListIcon,
   },
   {
     name: 'Payments',
     description: 'Allocation workflows and audit logs',
-    href: '/payments',
+    href: '/finance/payments/pay_2025_01_020',
     icon: CurrencyDollarIcon,
   },
 ];

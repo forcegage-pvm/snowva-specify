@@ -111,6 +111,16 @@ export const CustomerDirectoryTable = ({
     return meta;
   }, [filteredCustomers]);
 
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }),
+    [],
+  );
+
   if (isLoading) {
     return (
       <div
@@ -135,16 +145,6 @@ export const CustomerDirectoryTable = ({
   const handleRowActivate = (customerId: string) => {
     onRowSelect?.(customerId);
   };
-
-  const currencyFormatter = useMemo(
-    () =>
-      new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0,
-      }),
-    [],
-  );
 
   const renderHeader = () => (
     <thead className="bg-slate-50" role="rowgroup">

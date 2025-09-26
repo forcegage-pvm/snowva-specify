@@ -7,7 +7,7 @@ describe('Customer & Branch Management', () => {
   beforeEach(() => {
     cy.viewportPreset('desktop');
 
-    cy.intercept('GET', '/api/customers*', {
+  cy.intercept('GET', '**/api/v1/customers*', {
       statusCode: 200,
       body: {
         total: 152,
@@ -38,7 +38,7 @@ describe('Customer & Branch Management', () => {
       },
     }).as('fetchCustomers');
 
-    cy.intercept('GET', '/api/customers/cust_sportsmans/workspace', {
+  cy.intercept('GET', '**/api/v1/customers/cust_sportsmans/workspace', {
       statusCode: 200,
       body: {
         customer: {
@@ -93,7 +93,7 @@ describe('Customer & Branch Management', () => {
       },
     }).as('fetchWorkspace');
 
-    cy.intercept('GET', '/api/branches/branch_tokai/audit', {
+  cy.intercept('GET', '**/api/v1/branches/branch_tokai/audit', {
       statusCode: 200,
       body: {
         events: [
@@ -148,7 +148,7 @@ describe('Customer & Branch Management', () => {
   });
 
   it('allows inline editing of branch contact details with confirmation', () => {
-    cy.intercept('PATCH', '/api/branches/branch_tokai', (req) => {
+  cy.intercept('PATCH', '**/api/v1/branches/branch_tokai', (req) => {
       expect(req.body).to.deep.equal({
         billingAddress: {
           line1: '18 Forest Avenue',

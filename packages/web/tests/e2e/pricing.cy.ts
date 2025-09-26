@@ -7,7 +7,7 @@ describe('Seasonal Price Update Workflow', () => {
   beforeEach(() => {
     cy.viewportPreset('desktop');
 
-    cy.intercept('GET', '/api/products*', {
+  cy.intercept('GET', '**/api/v1/products*', {
       statusCode: 200,
       body: {
         filters: {
@@ -52,7 +52,7 @@ describe('Seasonal Price Update Workflow', () => {
       },
     }).as('fetchProducts');
 
-    cy.intercept('GET', '/api/price-lists/plv_2025_q1/diff', {
+  cy.intercept('GET', '**/api/v1/price-lists/plv_2025_q1/diff', {
       statusCode: 200,
       body: {
         version: {
@@ -100,7 +100,7 @@ describe('Seasonal Price Update Workflow', () => {
   });
 
   it('edits seasonal retail pricing and submits for approval', () => {
-    cy.intercept('PATCH', '/api/products/prod_ice_maker/pricing', (req) => {
+  cy.intercept('PATCH', '**/api/v1/products/prod_ice_maker/pricing', (req) => {
       expect(req.body).to.deep.equal({
         retailPrice: 33000,
         consumerPrice: 41800,

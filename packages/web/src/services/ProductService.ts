@@ -1,10 +1,8 @@
 // packages/web/src/services/ProductService.ts
-import { mockPricelists, mockProducts } from '@/data/mock';
+import { mockPricelists } from '@/data/mock';
 import { Pricelist } from '@/models/Pricelist';
-import { Product } from '@/models/Product';
 
 // Mock data
-const products: Product[] = mockProducts;
 const pricelists: Pricelist[] = mockPricelists;
 
 export const ProductService = {

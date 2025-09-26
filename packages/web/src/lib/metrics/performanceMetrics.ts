@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 'use client';
 
 const LIST_LOAD_SLA_MS = 2_000;

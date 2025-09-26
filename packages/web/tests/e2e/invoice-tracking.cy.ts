@@ -7,7 +7,7 @@ describe('Invoice Status Tracking', () => {
   beforeEach(() => {
     cy.viewportPreset('desktop');
 
-    cy.intercept('GET', '/api/invoices/250827101/workspace', {
+  cy.intercept('GET', '**/api/v1/invoices/250827101/workspace', {
       statusCode: 200,
       body: {
         invoice: {
@@ -47,7 +47,7 @@ describe('Invoice Status Tracking', () => {
       },
     }).as('fetchInvoiceWorkspace');
 
-    cy.intercept('GET', '/api/invoices/250827101/timeline', {
+  cy.intercept('GET', '**/api/v1/invoices/250827101/timeline', {
       statusCode: 200,
       body: {
         events: [
@@ -76,7 +76,7 @@ describe('Invoice Status Tracking', () => {
       },
     }).as('fetchInvoiceTimeline');
 
-    cy.intercept('POST', '/api/invoices/250827101/email', (req) => {
+  cy.intercept('POST', '**/api/v1/invoices/250827101/email', (req) => {
       expect(req.body).to.deep.equal({
         recipients: ['accounts@transafrica.co.za'],
         includeAttachments: true,

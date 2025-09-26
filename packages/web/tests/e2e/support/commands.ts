@@ -26,10 +26,8 @@ Cypress.Commands.add('viewportPreset', (preset: ViewportPresetName) => {
 
 export { VIEWPORT_PRESETS };
 
-declare global {
-  namespace Cypress {
-    interface Chainable {
-      viewportPreset(preset: ViewportPresetName): Chainable<void>;
-    }
+declare module 'cypress' {
+  interface Chainable<Subject = unknown> {
+    viewportPreset(preset: ViewportPresetName): Chainable<Subject>;
   }
 }

@@ -7,7 +7,7 @@ export const PDFService = {
   generateQuotePDF(quote: Quote): Promise<Buffer> {
     return new Promise((resolve) => {
       const doc = new PDFDocument();
-      const buffers: any[] = [];
+      const buffers: Buffer[] = [];
 
       doc.on('data', buffers.push.bind(buffers));
       doc.on('end', () => {
@@ -24,7 +24,7 @@ export const PDFService = {
   generateInvoicePDF(invoice: Invoice): Promise<Buffer> {
     return new Promise((resolve) => {
       const doc = new PDFDocument();
-      const buffers: any[] = [];
+      const buffers: Buffer[] = [];
 
       doc.on('data', buffers.push.bind(buffers));
       doc.on('end', () => {

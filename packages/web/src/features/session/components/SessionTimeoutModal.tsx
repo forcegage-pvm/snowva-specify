@@ -50,7 +50,7 @@ export const SessionTimeoutModal: FC<SessionTimeoutModalProps> = ({
             Your session is about to expire
           </h2>
           <p className="text-sm text-slate-600">
-            No activity has been detected for a while. We'll automatically sign you out soon
+            No activity has been detected for a while. We&apos;ll automatically sign you out soon
             to keep your information secure.
           </p>
         </div>

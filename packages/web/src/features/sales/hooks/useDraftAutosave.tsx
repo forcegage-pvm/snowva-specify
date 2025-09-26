@@ -129,7 +129,7 @@ const buildStorageKey = (draftType: DraftEntityType, draftId: string) =>
 const stringifyDraft = (draft: unknown) => {
   try {
     return JSON.stringify(draft);
-  } catch (error) {
+  } catch {
     return undefined;
   }
 };
@@ -171,7 +171,7 @@ export const readDraftFromCache = <TDraft,>(
       savedAt: parsed.savedAt,
       schemaVersion: parsed.schemaVersion ?? DEFAULT_SCHEMA_VERSION,
     } satisfies DraftCacheEntry<TDraft>;
-  } catch (error) {
+  } catch {
     return null;
   }
 };
@@ -292,29 +292,6 @@ export const useDraftAutosave = <TDraft,>(
     window.localStorage.removeItem(storageKey);
   }, [storageKey]);
 
-  useEffect(() => {
-    currentDraftRef.current = draft;
-    const fingerprint = stringifyDraft(draft);
-    currentFingerprintRef.current = fingerprint;
-
-    if (!enabled) {
-      dirtyRef.current = false;
-      clearPendingTimeout();
-      return;
-    }
-
-    const lastSavedFingerprint = lastSavedFingerprintRef.current;
-    const isDirty = fingerprint !== lastSavedFingerprint;
-
-    if (isDirty) {
-      dirtyRef.current = true;
-      clearPendingTimeout();
-      pendingTimeoutRef.current = window.setTimeout(() => {
-        void save('interval');
-      }, autosaveIntervalMs);
-    }
-  }, [autosaveIntervalMs, clearPendingTimeout, draft, enabled]);
-
   useEffect(() => () => clearPendingTimeout(), [clearPendingTimeout]);
 
   const save = useCallback(
@@ -422,6 +399,29 @@ export const useDraftAutosave = <TDraft,>(
     },
     [clearPendingTimeout, draftId, draftType, enabled, onSaveError, onSaveSuccess, schemaVersion, writeCache],
   );
+
+  useEffect(() => {
+    currentDraftRef.current = draft;
+    const fingerprint = stringifyDraft(draft);
+    currentFingerprintRef.current = fingerprint;
+
+    if (!enabled) {
+      dirtyRef.current = false;
+      clearPendingTimeout();
+      return;
+    }
+
+    const lastSavedFingerprint = lastSavedFingerprintRef.current;
+    const isDirty = fingerprint !== lastSavedFingerprint;
+
+    if (isDirty) {
+      dirtyRef.current = true;
+      clearPendingTimeout();
+      pendingTimeoutRef.current = window.setTimeout(() => {
+        void save('interval');
+      }, autosaveIntervalMs);
+    }
+  }, [autosaveIntervalMs, clearPendingTimeout, draft, enabled, save]);
 
   useEffect(() => {
     if (!enabled) {

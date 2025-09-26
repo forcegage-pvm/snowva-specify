@@ -66,11 +66,11 @@
 
 ## Phase 3.5: Polish & Validation
 
-- [ ] T049 Run accessibility regression tests (Axe/Lighthouse) via `frontend/tests/accessibility/dashboard.a11y.spec.ts` and address violations.
-- [ ] T050 [P] Add Storybook stories for all new components under `frontend/.storybook/stories/**/*.stories.tsx` with knobs for breakpoints.
-- [ ] T051 [P] Document end-to-end runbook in `specs/002-002-core-ui/quickstart.md` (setup, test commands, launch instructions).
-- [ ] T052 [P] Capture Lighthouse performance report and archive results in `docs/system-current/ui-performance/002-core-ui.md`.
-- [ ] T053 Final manual QA sign-off checklist in `specs/002-002-core-ui/qa-signoff.md` (links to Cypress runs, accessibility reports).
+- [x] T049 Run accessibility regression tests (Axe/Lighthouse) via `frontend/tests/accessibility/dashboard.a11y.spec.ts` and address violations.
+- [x] T050 [P] Add Storybook stories for all new components under `frontend/.storybook/stories/**/*.stories.tsx` with knobs for breakpoints.
+- [x] T051 [P] Document end-to-end runbook in `specs/002-002-core-ui/quickstart.md` (setup, test commands, launch instructions).
+- [x] T052 [P] Capture Lighthouse performance report and archive results in `docs/system-current/ui-performance/002-core-ui.md`.
+- [x] T053 Final manual QA sign-off checklist in `specs/002-002-core-ui/qa-signoff.md` (links to Cypress runs, accessibility reports).
 
 ## Dependencies
 

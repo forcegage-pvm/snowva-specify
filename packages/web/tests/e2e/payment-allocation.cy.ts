@@ -7,7 +7,7 @@ describe('Payment Allocation Lifecycle', () => {
   beforeEach(() => {
     cy.viewportPreset('desktop');
 
-    cy.intercept('GET', '/api/payments/pay_2025_01_020/allocation-view', {
+  cy.intercept('GET', '**/api/v1/payments/pay_2025_01_020/allocation-view', {
       statusCode: 200,
       body: {
         payment: {
@@ -65,7 +65,7 @@ describe('Payment Allocation Lifecycle', () => {
       },
     }).as('fetchPaymentAllocation');
 
-    cy.intercept('GET', '/api/payments/pay_2025_01_020/audit-log', {
+  cy.intercept('GET', '**/api/v1/payments/pay_2025_01_020/audit-log', {
       statusCode: 200,
       body: {
         events: [
@@ -83,7 +83,7 @@ describe('Payment Allocation Lifecycle', () => {
       },
     }).as('fetchPaymentAudit');
 
-    cy.intercept('POST', '/api/payments/pay_2025_01_020/apply-allocation', (req) => {
+  cy.intercept('POST', '**/api/v1/payments/pay_2025_01_020/apply-allocation', (req) => {
       expect(req.body).to.deep.equal({
         allocations: [
           {
@@ -118,7 +118,7 @@ describe('Payment Allocation Lifecycle', () => {
       });
     }).as('applyAllocation');
 
-    cy.intercept('POST', '/api/payments/pay_2025_01_020/manual-override', (req) => {
+  cy.intercept('POST', '**/api/v1/payments/pay_2025_01_020/manual-override', (req) => {
       expect(req.body).to.deep.equal({
         invoiceId: 'inv_tokai_101',
         amount: 800000,

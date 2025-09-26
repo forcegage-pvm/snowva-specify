@@ -195,14 +195,17 @@ export default function DashboardPage() {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div
+          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+          data-testid="branch-spotlight"
+        >
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <QueueListIcon aria-hidden className="h-5 w-5 text-slate-400" />
               <h2 className="text-base font-semibold text-slate-900">Branch statement spotlight</h2>
             </div>
             <Link
-              href="/statements"
+              href="/finance/statements"
               className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-slate-900"
             >
               Open workspace
@@ -223,6 +226,8 @@ export default function DashboardPage() {
                 <li
                   key={branch.branchId}
                   className="flex items-start justify-between gap-4 rounded-xl border border-slate-100 bg-slate-50/70 px-4 py-3"
+                  data-testid="branch-spotlight-item"
+                  data-branch-id={branch.branchId}
                 >
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">

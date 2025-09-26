@@ -7,7 +7,7 @@ describe('Quote Creation to Invoice Preview', () => {
   beforeEach(() => {
     cy.viewportPreset('desktop');
 
-    cy.intercept('GET', '/api/quotes/wizard/bootstrap', {
+  cy.intercept('GET', '**/api/v1/quotes/wizard/bootstrap', {
       statusCode: 200,
       body: {
         customers: [
@@ -62,7 +62,7 @@ describe('Quote Creation to Invoice Preview', () => {
       },
     }).as('bootstrapWizard');
 
-    cy.intercept('POST', '/api/quotes/draft', (req) => {
+  cy.intercept('POST', '**/api/v1/quotes/draft', (req) => {
       expect(req.body).to.deep.equal({
         customerId: 'cust_transafrica',
         branchId: 'branch_main',
@@ -96,7 +96,7 @@ describe('Quote Creation to Invoice Preview', () => {
       });
     }).as('saveDraft');
 
-    cy.intercept('GET', '/api/quotes/draft_001/preview', {
+  cy.intercept('GET', '**/api/v1/quotes/draft_001/preview', {
       statusCode: 200,
       body: {
         url: 'https://cdn.snowva.com/previews/draft_001.pdf',
@@ -104,7 +104,7 @@ describe('Quote Creation to Invoice Preview', () => {
       },
     }).as('fetchPreview');
 
-    cy.intercept('POST', '/api/quotes/draft_001/convert', (req) => {
+  cy.intercept('POST', '**/api/v1/quotes/draft_001/convert', (req) => {
       expect(req.body).to.deep.equal({
         sendEmail: true,
         emailRecipients: ['accounts@transafrica.co.za'],
@@ -120,7 +120,7 @@ describe('Quote Creation to Invoice Preview', () => {
       });
     }).as('convertQuote');
 
-    cy.intercept('GET', '/api/quotes/draft_001/timeline', {
+  cy.intercept('GET', '**/api/v1/quotes/draft_001/timeline', {
       statusCode: 200,
       body: {
         events: [
@@ -142,8 +142,8 @@ describe('Quote Creation to Invoice Preview', () => {
   it('walks through quote wizard and previews VAT-inclusive totals', () => {
     cy.findByRole('combobox', { name: /select customer/i }).select('Trans Africa Self Drive Adventures');
     cy.findByRole('combobox', { name: /branch/i }).select('Cape Town HQ');
-    cy.findByLabelText(/purchase order number/i).type('PO-78421');
-    cy.findByLabelText(/internal reference/i).type('TA-QUOTE-2024-12');
+  cy.findByLabelText(/purchase order number/i).type('PO-78421');
+  cy.findByLabelText(/internal reference/i).clear().type('TA-QUOTE-2024-12');
     cy.findByRole('button', { name: /continue to line items/i }).click();
 
     cy.contains('[data-testid="catalog-product"]', 'Snowva Ultimate Ice Maker').within(() => {
@@ -176,8 +176,8 @@ describe('Quote Creation to Invoice Preview', () => {
   it('converts a validated quote into an invoice with audit timeline', () => {
     cy.findByRole('combobox', { name: /select customer/i }).select('Trans Africa Self Drive Adventures');
     cy.findByRole('combobox', { name: /branch/i }).select('Cape Town HQ');
-    cy.findByLabelText(/purchase order number/i).type('PO-78421');
-    cy.findByLabelText(/internal reference/i).type('TA-QUOTE-2024-12');
+  cy.findByLabelText(/purchase order number/i).type('PO-78421');
+  cy.findByLabelText(/internal reference/i).clear().type('TA-QUOTE-2024-12');
     cy.findByRole('button', { name: /continue to line items/i }).click();
 
     cy.contains('[data-testid="catalog-product"]', 'Snowva Ultimate Ice Maker').within(() => {
@@ -191,7 +191,7 @@ describe('Quote Creation to Invoice Preview', () => {
     cy.wait('@fetchTimeline');
     cy.get('[data-testid="quote-timeline"]').should('contain.text', 'Draft saved with 2 line items');
 
-    cy.findByLabelText(/send PDF to/i).type('accounts@transafrica.co.za');
+  cy.findByLabelText(/send PDF to/i).clear().type('accounts@transafrica.co.za');
     cy.findByRole('button', { name: /convert to invoice/i }).click();
 
     cy.wait('@convertQuote');

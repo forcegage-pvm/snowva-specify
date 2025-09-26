@@ -7,7 +7,7 @@ describe('Consolidated Statement Generation', () => {
   beforeEach(() => {
     cy.viewportPreset('desktop');
 
-    cy.intercept('GET', '/api/statements/overview*', (req) => {
+  cy.intercept('GET', '**/api/v1/statements/history*', (req) => {
       const baseResponse = {
         summary: {
           totalStatements: 12,
@@ -84,7 +84,7 @@ describe('Consolidated Statement Generation', () => {
       req.reply(baseResponse);
     }).as('fetchStatements');
 
-    cy.intercept('POST', '/api/statements/generate', (req) => {
+  cy.intercept('POST', '**/api/v1/statements/generate', (req) => {
       expect(req.body).to.deep.equal({
         scope: 'consolidated',
         includeBranches: true,
@@ -102,12 +102,12 @@ describe('Consolidated Statement Generation', () => {
           statementId: 'stmt_sportsmans_2025_01',
           issuedOn: '2025-01-21',
           dueOn: '2025-02-21',
-          redirectUrl: '/statements/stm_sportsmans_2025_01',
+          redirectUrl: '/finance/statements/stm_sportsmans_2025_01',
         },
       });
     }).as('generateStatement');
 
-    cy.intercept('POST', '/api/statements/stmt_sportsmans_2025_01/export', (req) => {
+  cy.intercept('POST', '**/api/v1/statements/stmt_sportsmans_2025_01/export', (req) => {
       expect(req.body).to.deep.equal({
         format: 'pdf',
         includeEmail: true,
