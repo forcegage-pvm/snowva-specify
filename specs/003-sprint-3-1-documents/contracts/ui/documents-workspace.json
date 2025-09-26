@@ -1,0 +1,182 @@
+{
+  "title": "Documents Workspace UI Contract",
+  "version": "0.1.0",
+  "updated": "2025-09-26",
+  "summary": "Defines the data contracts powering the /documents workspace: export history table, filters, preview modal, and public share link workflow.",
+  "requests": {
+    "listDocumentExports": {
+      "description": "Fetches paginated export history constrained to the last 365 days with combined filters applied.",
+      "query": {
+        "search": "string | null (matches title, documentId, branch name)",
+        "page": "number (>=1)",
+        "pageSize": "number (10-100, default 25)",
+        "sort": "'createdAt' | 'status' | 'title' | 'lastDownloadedAt'",
+        "filters": {
+          "type": "object",
+          "properties": {
+            "documentTypes": "array<'statement'|'invoice'|'quote'|'compliance'>",
+            "statuses": "array<'queued'|'sent'|'failed'|'expired'>",
+            "channels": "array<'email'|'portal'|'manual'>"
+          }
+        }
+      }
+    },
+    "getDocumentExport": {
+      "description": "Returns full detail for a single export, including preview asset metadata and audit trail snapshot.",
+      "params": {
+        "exportId": "string"
+      }
+    },
+    "postResendExport": {
+      "description": "Triggers resend/regeneration for failed or expired exports and returns updated status.",
+      "method": "POST",
+      "params": {
+        "exportId": "string"
+      }
+    },
+    "postShareLink": {
+      "description": "Creates or refreshes a public share link signed token valid for 30 days.",
+      "method": "POST",
+      "params": {
+        "exportId": "string"
+      }
+    },
+    "getAuditTrail": {
+      "description": "Returns paginated audit events for a document export.",
+      "params": {
+        "exportId": "string"
+      },
+      "query": {
+        "cursor": "string | null",
+        "limit": "number (default 20)"
+      }
+    }
+  },
+  "responseSamples": {
+    "listDocumentExports": {
+      "page": 1,
+      "pageSize": 25,
+      "total": 240,
+      "items": [
+        {
+          "id": "exp_stmt_2025-03-15_tokai",
+          "title": "March 2025 Statement",
+          "documentType": "statement",
+          "customerBranch": {
+            "id": "branch_tokai",
+            "name": "Tokai"
+          },
+          "createdAt": "2025-03-15T07:45:12Z",
+          "deliveredChannels": ["email", "portal"],
+          "status": "sent",
+          "lastDownloadedAt": "2025-03-16T09:02:01Z",
+          "fileSizeBytes": 289531,
+          "shareLink": {
+            "active": true,
+            "expiresAt": "2025-04-14T07:45:12Z"
+          }
+        }
+      ]
+    },
+    "getDocumentExport": {
+      "id": "exp_invoice_250827101",
+      "title": "Invoice 250827101",
+      "documentType": "invoice",
+      "customerBranch": {
+        "id": "branch_tokai",
+        "name": "Tokai"
+      },
+      "createdAt": "2025-02-28T11:03:17Z",
+      "deliveredChannels": ["email"],
+      "status": "failed",
+      "failureReason": "Recipient mailbox full",
+      "preview": {
+        "assetUrl": "https://assets.snowva.dev/previews/exp_invoice_250827101.pdf",
+        "mimeType": "application/pdf",
+        "fileSizeBytes": 198443
+      },
+      "shareLink": {
+        "token": "https://app.snowva.com/share/da3cb6f4bdb24f4490a492b712",
+        "expiresAt": "2025-03-30T11:03:17Z",
+        "public": true
+      },
+      "auditTrail": [
+        {
+          "id": "audit_001",
+          "timestamp": "2025-02-28T11:04:05Z",
+          "actor": "system",
+          "action": "sent",
+          "context": {
+            "channels": ["email"],
+            "recipient": "kim.peterson@sportsmans.co.za"
+          }
+        }
+      ]
+    },
+    "postResendExport": {
+      "status": "sent",
+      "resentAt": "2025-02-28T11:47:54Z",
+      "deliveredChannels": ["email"],
+      "auditEventId": "audit_004"
+    },
+    "postShareLink": {
+      "token": "https://app.snowva.com/share/6fa12bdac0df4e9b9c4f4a9c1",
+      "expiresAt": "2025-03-30T11:03:17Z"
+    },
+    "getAuditTrail": {
+      "items": [
+        {
+          "id": "audit_004",
+          "timestamp": "2025-02-28T11:47:54Z",
+          "actor": "nadiya@snowva.com",
+          "action": "resent",
+          "context": {
+            "channels": ["email"],
+            "status": "queued"
+          }
+        }
+      ],
+      "nextCursor": null
+    }
+  },
+  "uiStates": {
+    "loading": {
+      "skeletonRows": 12,
+      "showFilterSkeleton": true
+    },
+    "empty": {
+      "title": "No document exports found",
+      "body": "Try adjusting your filters or clearing the search term.",
+      "supportingCta": {
+        "label": "Clear filters",
+        "action": "dispatch('documents/clearFilters')"
+      }
+    },
+    "error": {
+      "title": "We couldn't load export history",
+      "supporting": "Retry shortly or contact support if the issue persists.",
+      "retryAction": "dispatch('documents/retryFetch')"
+    },
+    "archived": {
+      "title": "Looking for older documents?",
+      "body": "Exports older than one year are archived. Submit a retrieval request and we'll notify you when it's ready.",
+      "cta": {
+        "label": "Request archive retrieval",
+        "href": "/support/document-archive-request"
+      }
+    }
+  },
+  "performance": {
+    "initialLoadBudgetMs": 2000,
+    "filterResponseBudgetMs": 300,
+    "virtualizationThreshold": 100,
+    "maxDailyExports": 50,
+    "retentionDays": 365
+  },
+  "notes": [
+    "Public share links expire after 30 days and must be regenerated thereafter.",
+    "Every preview/download/share action must append to the audit trail and emit telemetry via performanceMetrics.",
+    "Virtualization layer must preserve keyboard navigation and screen reader ordering.",
+    "Status chips reuse existing design tokens from statements workspace."
+  ]
+}
