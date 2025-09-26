@@ -2,6 +2,8 @@
 
 const LIST_LOAD_SLA_MS = 2_000;
 const NAVIGATION_SLA_MS = 500;
+const DOCUMENT_INTERACTION_SLA_MS = 1_000;
+const DOCUMENT_FILTER_SLA_MS = 300;
 
 type MetricStatus = 'pass' | 'warn';
 
@@ -28,7 +30,25 @@ export type NavigationPerformanceMetric = BasePerformanceMetric & {
   navigationType?: string;
 };
 
-export type PerformanceMetric = ListLoadPerformanceMetric | NavigationPerformanceMetric;
+export type DocumentExportInteractionMetric = BasePerformanceMetric & {
+  kind: 'document-export-interaction';
+  action: 'preview' | 'resend' | 'share-link-copy' | 'filter-apply';
+  exportId?: string;
+  resultCount?: number;
+};
+
+export type DocumentFilterResponseMetric = BasePerformanceMetric & {
+  kind: 'document-filter-response';
+  filterTypes: string[];
+  searchLength?: number;
+  resultCount: number;
+};
+
+export type PerformanceMetric = 
+  | ListLoadPerformanceMetric 
+  | NavigationPerformanceMetric 
+  | DocumentExportInteractionMetric 
+  | DocumentFilterResponseMetric;
 
 export type PerformanceMetricListener = (metric: PerformanceMetric) => void;
 
@@ -44,8 +64,20 @@ const createConsoleLabel = (metric: PerformanceMetric) => {
   if (metric.kind === 'list-load') {
     return metric.label;
   }
-
-  return metric.name;
+  
+  if (metric.kind === 'navigation') {
+    return metric.name;
+  }
+  
+  if (metric.kind === 'document-export-interaction') {
+    return `${metric.action}${metric.exportId ? ` (${metric.exportId})` : ''}`;
+  }
+  
+  if (metric.kind === 'document-filter-response') {
+    return `filter (${metric.filterTypes.join(', ')})`;
+  }
+  
+  return 'unknown';
 };
 
 const emitMetric = (metric: PerformanceMetric) => {
@@ -192,6 +224,84 @@ export const recordNavigationMetric = ({
   navigationType?: string;
 }) => {
   const metric = buildNavigationMetric(name, durationMs, thresholdMs, metadata, url, navigationType);
+  emitMetric(metric);
+  return metric;
+};
+
+const buildDocumentExportInteractionMetric = (
+  action: DocumentExportInteractionMetric['action'],
+  durationMs: number,
+  thresholdMs: number,
+  metadata?: MetricMetadata,
+  exportId?: string,
+  resultCount?: number,
+): DocumentExportInteractionMetric => ({
+  kind: 'document-export-interaction',
+  action,
+  exportId,
+  resultCount,
+  durationMs,
+  thresholdMs,
+  status: durationMs <= thresholdMs ? 'pass' : 'warn',
+  timestamp: Date.now(),
+  metadata,
+});
+
+const buildDocumentFilterResponseMetric = (
+  filterTypes: string[],
+  durationMs: number,
+  thresholdMs: number,
+  resultCount: number,
+  metadata?: MetricMetadata,
+  searchLength?: number,
+): DocumentFilterResponseMetric => ({
+  kind: 'document-filter-response',
+  filterTypes,
+  searchLength,
+  resultCount,
+  durationMs,
+  thresholdMs,
+  status: durationMs <= thresholdMs ? 'pass' : 'warn',
+  timestamp: Date.now(),
+  metadata,
+});
+
+export const recordDocumentExportInteractionMetric = ({
+  action,
+  durationMs,
+  thresholdMs = DOCUMENT_INTERACTION_SLA_MS,
+  metadata,
+  exportId,
+  resultCount,
+}: {
+  action: DocumentExportInteractionMetric['action'];
+  durationMs: number;
+  thresholdMs?: number;
+  metadata?: MetricMetadata;
+  exportId?: string;
+  resultCount?: number;
+}) => {
+  const metric = buildDocumentExportInteractionMetric(action, durationMs, thresholdMs, metadata, exportId, resultCount);
+  emitMetric(metric);
+  return metric;
+};
+
+export const recordDocumentFilterResponseMetric = ({
+  filterTypes,
+  durationMs,
+  resultCount,
+  thresholdMs = DOCUMENT_FILTER_SLA_MS,
+  metadata,
+  searchLength,
+}: {
+  filterTypes: string[];
+  durationMs: number;
+  resultCount: number;
+  thresholdMs?: number;
+  metadata?: MetricMetadata;
+  searchLength?: number;
+}) => {
+  const metric = buildDocumentFilterResponseMetric(filterTypes, durationMs, thresholdMs, resultCount, metadata, searchLength);
   emitMetric(metric);
   return metric;
 };

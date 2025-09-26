@@ -1,11 +1,10 @@
 'use client';
 
-import React from 'react';
-import { 
-  ExclamationTriangleIcon, 
-  ClockIcon, 
-  ShieldExclamationIcon, 
-  ArrowTopRightOnSquareIcon 
+import {
+    ArrowTopRightOnSquareIcon,
+    ClockIcon,
+    ExclamationTriangleIcon,
+    ShieldExclamationIcon
 } from '@heroicons/react/24/outline';
 
 interface PublicLinkWarningProps {

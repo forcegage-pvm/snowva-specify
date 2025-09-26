@@ -7,6 +7,10 @@ import type {
     DocumentExportType,
 } from '@/features/documents/types';
 
+import {
+    recordDocumentExportInteractionMetric,
+    recordDocumentFilterResponseMetric
+} from '@/lib/metrics/performanceMetrics';
 import { appendDocumentEvent } from './AuditTrailService';
 import {
     DOCUMENT_EXPORT_FIXTURES,
@@ -206,6 +210,8 @@ function matchesFilters(record: DocumentExportRecord, filters?: DocumentExportFi
 export async function listDocumentExports(
   params: DocumentExportListParams = {}
 ): Promise<DocumentExportListResult> {
+  const startTime = performance.now();
+  
   const {
     page = 1,
     pageSize: requestedPageSize,
@@ -234,6 +240,30 @@ export async function listDocumentExports(
         }
       : undefined;
 
+  // Record filter response metrics
+  const filterTypes: string[] = [];
+  if (filters?.documentTypes?.length) filterTypes.push('documentTypes');
+  if (filters?.statuses?.length) filterTypes.push('statuses');
+  if (filters?.channels?.length) filterTypes.push('channels');
+  if (search?.trim()) filterTypes.push('search');
+  if (sort !== 'createdAt') filterTypes.push('sort');
+
+  if (filterTypes.length > 0 || search?.trim()) {
+    const durationMs = performance.now() - startTime;
+    recordDocumentFilterResponseMetric({
+      filterTypes,
+      durationMs,
+      resultCount: total,
+      searchLength: search?.trim()?.length,
+      metadata: {
+        page,
+        pageSize,
+        sort,
+        hasVirtualization: !!virtualization
+      }
+    });
+  }
+
   return {
     items: pageItems,
     total,
@@ -244,6 +274,8 @@ export async function listDocumentExports(
 }
 
 export async function getDocumentExport(exportId: string): Promise<DocumentExportRecord> {
+  const startTime = performance.now();
+  
   const record = exportStore.find((item) => item.id === exportId);
 
   if (!record) {
@@ -257,6 +289,19 @@ export async function getDocumentExport(exportId: string): Promise<DocumentExpor
     }
   }
 
+  // Record preview interaction metric
+  const durationMs = performance.now() - startTime;
+  recordDocumentExportInteractionMetric({
+    action: 'preview',
+    durationMs,
+    exportId,
+    metadata: {
+      status: record.status,
+      documentType: record.documentType,
+      hasShareLink: !!record.shareLink
+    }
+  });
+
   return cloneRecord(record);
 }
 
@@ -266,6 +311,8 @@ export async function resendDocumentExport(exportId: string): Promise<{
   deliveredChannels: DocumentExportChannel[];
   auditEventId: string;
 }> {
+  const startTime = performance.now();
+  
   const record = exportStore.find((item) => item.id === exportId);
 
   if (!record) {
@@ -303,6 +350,19 @@ export async function resendDocumentExport(exportId: string): Promise<{
     },
   });
 
+  // Record resend interaction metric
+  const durationMs = performance.now() - startTime;
+  recordDocumentExportInteractionMetric({
+    action: 'resend',
+    durationMs,
+    exportId,
+    metadata: {
+      previousStatus,
+      newStatus: record.status,
+      channelCount: record.deliveredChannels.length
+    }
+  });
+
   return {
     status: record.status,
     resentAt,
@@ -312,6 +372,8 @@ export async function resendDocumentExport(exportId: string): Promise<{
 }
 
 export async function generateShareLink(exportId: string): Promise<ShareLinkSummary> {
+  const startTime = performance.now();
+  
   const record = exportStore.find((item) => item.id === exportId);
 
   if (!record) {
@@ -348,11 +410,23 @@ export async function generateShareLink(exportId: string): Promise<ShareLinkSumm
 
   await appendDocumentEvent({
     exportId,
-    action: 'share_link_regenerated',
+    action: 'regenerated',
     timestamp: now.toISOString(),
     context: {
       expiresAt: record.shareLink.expiresAt,
     },
+  });
+
+  // Record share-link interaction metric
+  const durationMs = performance.now() - startTime;
+  recordDocumentExportInteractionMetric({
+    action: 'share-link-copy',
+    durationMs,
+    exportId,
+    metadata: {
+      expiresAt: record.shareLink.expiresAt,
+      tokenGenerated: true
+    }
   });
 
   return {

@@ -34,10 +34,10 @@
 - [X] T024 Compose `/documents` workspace page in `packages/web/src/app/(dashboard)/documents/page.tsx` wiring hooks, components, archive banner, and loading/error states.
 
 ## Phase 3.4 – Integration & Wiring
-- [ ] T025 Update `packages/web/src/lib/metrics/performanceMetrics.ts` and related telemetry utilities to track document export interactions and filter response timings.
-- [ ] T026 Update navigation and access guards (`packages/web/src/app/(dashboard)/layout.tsx` & related config) to route to the new `/documents` workspace and ensure role coverage messaging.
-- [ ] T027 Extend `packages/web/tests/e2e/support/commands.ts` with helpers for document export interactions and share-link assertions.
-- [ ] T028 Wire Storybook mock providers for document components in `packages/web/.storybook/mocks/documents.ts` (and register in `.storybook/main.ts`).
+- [X] T025 Update `packages/web/src/lib/metrics/performanceMetrics.ts` and related telemetry utilities to track document export interactions and filter response timings.
+- [X] T026 Update navigation and access guards (`packages/web/src/app/(dashboard)/layout.tsx` & related config) to route to the new `/documents` workspace and ensure role coverage messaging.
+- [X] T027 Extend `packages/web/tests/e2e/support/commands.ts` with helpers for document export interactions and share-link assertions.
+- [X] T028 Wire Storybook mock providers for document components in `packages/web/.storybook/mocks/documents.ts` (and register in `.storybook/main.ts`).
 
 ## Phase 3.5 – Polish & Validation
 - [ ] T029 [P] Add Storybook stories in `packages/web/src/stories/features/documents/` (table, filters, preview modal, share-link banner) with accessibility notes.
