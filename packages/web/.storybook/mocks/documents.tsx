@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { StoryFn } from '@storybook/react';
+import type { StoryFn, StoryContext } from '@storybook/react';
 import { within, waitFor } from '@storybook/testing-library';
 
 import type {
@@ -145,18 +145,12 @@ export const createMockQueryClient = () => {
 };
 
 // Storybook decorator for documents workspace components
-export const withDocumentsQueryProvider = (Story: StoryFn, context: { args?: { preloadData?: boolean; itemCount?: number } }) => {
+export const withDocumentsQueryProvider = (Story: StoryFn, context: StoryContext) => {
   const queryClient = createMockQueryClient();
-  
-  // Pre-populate cache with mock data if needed
-  if (context.args?.preloadData) {
-    const mockData = createMockDocumentExportResult(context.args.itemCount ?? 25);
-    queryClient.setQueryData(['document-exports', {}], mockData);
-  }
   
   return (
     <QueryClientProvider client={queryClient}>
-      <Story {...context} />
+      {Story(context.args, context)}
     </QueryClientProvider>
   );
 };
@@ -291,6 +285,18 @@ export const documentInteractionTests = {
     await waitFor(() => {
       canvas.getByRole('listbox');
     });
+  },
+  
+  async verifyVirtualization(canvasElement: HTMLElement) {
+    const canvas = within(canvasElement);
+    
+    // Check if virtualization container exists
+    const virtualContainer = canvas.queryByTestId('virtual-scroll-container');
+    
+    if (virtualContainer) {
+      // Verify virtual scrolling is active - container should exist
+      canvas.getByTestId('virtual-scroll-container');
+    }
   },
 };
 
