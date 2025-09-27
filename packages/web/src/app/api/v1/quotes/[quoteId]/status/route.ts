@@ -1,16 +1,4 @@
-// packages/interface RouteParams {
-  params: Promise<{
-    quoteId: string;
-  }>;
-}
-
-// T044: PATCH /api/v1/quotes/[quoteId]/status endpoint
-export async function PATCH(
-  request: NextRequest,
-  { params }: RouteParams
-) {
-  try {
-    const { quoteId } = await params;pi/v1/quotes/[quoteId]/status/route.ts
+// packages/web/src/app/api/v1/quotes/[quoteId]/status/route.ts
 import { QuoteServiceFactory } from '@/services/quotes/QuoteService';
 import { QuoteStatus } from '@/types/quotes/QuoteStatus';
 import { NextRequest, NextResponse } from 'next/server';
@@ -23,9 +11,9 @@ const StatusUpdateSchema = z.object({
 });
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     quoteId: string;
-  };
+  }>;
 }
 
 // T046: PATCH /api/v1/quotes/[quoteId]/status endpoint
@@ -34,7 +22,7 @@ export async function PATCH(
   { params }: RouteParams
 ) {
   try {
-    const { quoteId } = params;
+    const { quoteId } = await params;
 
     if (!quoteId) {
       return NextResponse.json({
@@ -102,7 +90,7 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
-    const { quoteId } = params;
+    const { quoteId } = await params;
 
     if (!quoteId) {
       return NextResponse.json({

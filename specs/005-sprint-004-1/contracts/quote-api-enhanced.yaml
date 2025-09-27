@@ -1,0 +1,303 @@
+openapi: 3.0.3
+info:
+  title: Snowva Quote API Error Handling
+  description: API contract for Sprint 004.1 - Enhanced error handling across quote endpoints
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Development server
+
+paths:
+  /quotes/{quoteId}:
+    get:
+      summary: Get quote by ID
+      description: Retrieve quote details with enhanced error handling
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Quote retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    put:
+      summary: Update quote
+      description: Update quote with validation and error handling
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuoteUpdateRequest"
+      responses:
+        "200":
+          description: Quote updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /quotes/{quoteId}/convert:
+    post:
+      summary: Convert quote
+      description: Convert quote with proper async parameter handling
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConvertQuoteRequest"
+      responses:
+        "201":
+          description: Quote converted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConvertResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /quotes/{quoteId}/duplicate:
+    post:
+      summary: Duplicate quote
+      description: Duplicate quote with proper parameter handling
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DuplicateQuoteRequest"
+      responses:
+        "201":
+          description: Quote duplicated successfully
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+components:
+  schemas:
+    Quote:
+      type: object
+      properties:
+        id:
+          type: string
+        customerId:
+          type: string
+        customerName:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    QuoteUpdateRequest:
+      type: object
+      properties:
+        customerName:
+          type: string
+          maxLength: 255
+        lineItems:
+          type: array
+          items:
+            type: object
+        terms:
+          type: string
+        notes:
+          type: string
+
+    ConvertQuoteRequest:
+      type: object
+      required:
+        - convertTo
+      properties:
+        convertTo:
+          type: string
+          enum: [invoice, order]
+          default: invoice
+        preserveLineItems:
+          type: boolean
+          default: true
+        preserveTerms:
+          type: boolean
+          default: true
+
+    DuplicateQuoteRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+        customerName:
+          type: string
+        preserveLineItems:
+          type: boolean
+          default: true
+        preserveTerms:
+          type: boolean
+          default: true
+
+    ConvertResponse:
+      type: object
+      properties:
+        originalQuoteId:
+          type: string
+        convertedDocument:
+          type: object
+        message:
+          type: string
+
+    ValidationError:
+      allOf:
+        - $ref: "#/components/schemas/ApiError"
+        - type: object
+          properties:
+            details:
+              type: object
+              properties:
+                issues:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      path:
+                        type: array
+                        items:
+                          type: string
+                      message:
+                        type: string
+                input:
+                  description: Sanitized input that failed validation
+
+    ApiError:
+      type: object
+      required:
+        - error
+        - message
+        - statusCode
+        - timestamp
+        - path
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        statusCode:
+          type: integer
+          minimum: 400
+          maximum: 599
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+        details:
+          description: Optional additional error context
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          example:
+            error: "BAD_REQUEST"
+            message: "Invalid request parameters"
+            statusCode: 400
+            timestamp: "2025-09-27T10:30:00.000Z"
+            path: "/api/v1/quotes/invalid-id"
+
+    ValidationError:
+      description: Validation error - request data failed validation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ValidationError"
+          example:
+            error: "VALIDATION_ERROR"
+            message: "Request validation failed"
+            statusCode: 400
+            timestamp: "2025-09-27T10:30:00.000Z"
+            path: "/api/v1/quotes/123/convert"
+            details:
+              issues:
+                - code: "invalid_enum_value"
+                  path: ["convertTo"]
+                  message: "Invalid enum value. Expected 'invoice' | 'order', received 'pdf'"
+              input:
+                convertTo: "pdf"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          example:
+            error: "NOT_FOUND"
+            message: "Quote not found"
+            statusCode: 404
+            timestamp: "2025-09-27T10:30:00.000Z"
+            path: "/api/v1/quotes/nonexistent"
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          example:
+            error: "INTERNAL_ERROR"
+            message: "An unexpected error occurred"
+            statusCode: 500
+            timestamp: "2025-09-27T10:30:00.000Z"
+            path: "/api/v1/quotes/123"

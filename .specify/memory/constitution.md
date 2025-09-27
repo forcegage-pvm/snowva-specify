@@ -36,6 +36,10 @@ All UI MUST follow the established Tailwind CSS design tokens for colors, spacin
 
 Page load times MUST be <3s, navigation <500ms. Implement Next.js optimization features: Image optimization, dynamic imports, and static generation where applicable. All interactive elements MUST meet WCAG 2.1 AA standards with proper ARIA labels, keyboard navigation, and screen reader support. Bundle size monitoring REQUIRED with alerts for significant increases. Lighthouse score ≥90 for Performance, Accessibility, and Best Practices.
 
+### VI. IMMEDIATE Task Tracking (CRITICAL REQUIREMENT)
+
+**MANDATORY**: Every task completion MUST be immediately updated in the task list (tasks.md) with [x] marking and timestamp. This prevents hallucination, ensures accurate progress tracking, and eliminates the need to re-analyze completed work. NO EXCEPTIONS - update task status DIRECTLY after completing each task implementation. This requirement applies to ALL agents, workflows, and implementation contexts.
+
 ## Development Standards
 
 ### Technology Stack Requirements

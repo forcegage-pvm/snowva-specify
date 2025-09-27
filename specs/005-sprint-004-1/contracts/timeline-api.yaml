@@ -1,0 +1,212 @@
+openapi: 3.0.3
+info:
+  title: Snowva Quote Timeline API
+  description: API contract for Sprint 004.1 Technical Debt Resolution - Timeline endpoint
+  version: 1.0.0
+  contact:
+    name: Snowva Development Team
+
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Development server
+
+paths:
+  /quotes/{quoteId}/timeline:
+    get:
+      summary: Get quote timeline events
+      description: Retrieve chronological events for a specific quote
+      operationId: getQuoteTimeline
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          description: Unique identifier for the quote
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9\-_]+$'
+            example: "draft-1758957581111-khgfvimb6"
+      responses:
+        "200":
+          description: Timeline events retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimelineResponse"
+              example:
+                events:
+                  - id: "1"
+                    type: "created"
+                    title: "Quote created"
+                    description: "Draft quote initiated"
+                    timestamp: "2025-09-27T10:30:00.000Z"
+                    user:
+                      name: "Current User"
+                      avatar: null
+                quoteId: "draft-1758957581111-khgfvimb6"
+                total: 1
+        "400":
+          description: Invalid quote ID format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+              example:
+                error: "INVALID_QUOTE_ID"
+                message: "Quote ID format is invalid"
+                statusCode: 400
+                timestamp: "2025-09-27T10:30:00.000Z"
+                path: "/api/v1/quotes/invalid-id/timeline"
+        "404":
+          description: Quote not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+              example:
+                error: "QUOTE_NOT_FOUND"
+                message: "Quote with the specified ID was not found"
+                statusCode: 404
+                timestamp: "2025-09-27T10:30:00.000Z"
+                path: "/api/v1/quotes/nonexistent/timeline"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+              example:
+                error: "INTERNAL_ERROR"
+                message: "Failed to fetch quote timeline"
+                statusCode: 500
+                timestamp: "2025-09-27T10:30:00.000Z"
+                path: "/api/v1/quotes/draft-123/timeline"
+
+components:
+  schemas:
+    TimelineResponse:
+      type: object
+      required:
+        - events
+        - quoteId
+        - total
+      properties:
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/TimelineEvent"
+          description: Array of timeline events in chronological order
+        quoteId:
+          type: string
+          description: Quote identifier
+          example: "draft-1758957581111-khgfvimb6"
+        total:
+          type: integer
+          minimum: 0
+          description: Total number of events
+          example: 1
+
+    TimelineEvent:
+      type: object
+      required:
+        - id
+        - type
+        - title
+        - description
+        - timestamp
+        - user
+      properties:
+        id:
+          type: string
+          description: Unique event identifier
+          example: "1"
+        type:
+          type: string
+          enum:
+            [created, updated, status_changed, converted, duplicated, archived]
+          description: Event category
+          example: "created"
+        title:
+          type: string
+          maxLength: 255
+          description: Human-readable event title
+          example: "Quote created"
+        description:
+          type: string
+          maxLength: 1000
+          description: Detailed event description
+          example: "Draft quote initiated"
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp when event occurred
+          example: "2025-09-27T10:30:00.000Z"
+        user:
+          $ref: "#/components/schemas/UserInfo"
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Optional event-specific data
+          example: {}
+
+    UserInfo:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          description: User display name
+          example: "Current User"
+        avatar:
+          type: string
+          format: uri
+          nullable: true
+          description: Optional avatar URL
+          example: null
+        id:
+          type: string
+          description: Optional user ID for future use
+          example: "user-123"
+
+    ApiError:
+      type: object
+      required:
+        - error
+        - message
+        - statusCode
+        - timestamp
+        - path
+      properties:
+        error:
+          type: string
+          description: Error type/category
+          example: "QUOTE_NOT_FOUND"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Quote with the specified ID was not found"
+        statusCode:
+          type: integer
+          minimum: 400
+          maximum: 599
+          description: HTTP status code
+          example: 404
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 error timestamp
+          example: "2025-09-27T10:30:00.000Z"
+        path:
+          type: string
+          description: API endpoint path
+          example: "/api/v1/quotes/nonexistent/timeline"
+        details:
+          description: Optional additional error context
+          example: null
+
+  securitySchemes: {}
+
+tags:
+  - name: Timeline
+    description: Quote timeline operations

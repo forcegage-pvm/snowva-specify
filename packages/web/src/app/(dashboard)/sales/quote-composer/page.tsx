@@ -258,15 +258,22 @@ export default function QuoteComposerPage() {
       setDraftQuote(payload.quote);
       setStep("summary");
 
-      const timelineResponse = await fetch(`/api/v1/quotes/${payload.quote.id}/timeline`, {
-        cache: "no-store",
-      });
+      // Load quote timeline with proper error handling
+      try {
+        const timelineResponse = await fetch(`/api/v1/quotes/${payload.quote.id}/timeline`, {
+          cache: "no-store",
+        });
 
-      if (timelineResponse.ok) {
+        if (!timelineResponse.ok) {
+          throw new Error(`Timeline API error: ${timelineResponse.status}`);
+        }
+
         const timelinePayload = (await timelineResponse.json()) as QuoteTimelineResponse;
         setTimeline(timelinePayload);
-      } else {
-        setTimeline(null);
+      } catch (error) {
+        console.error('Failed to load quote timeline:', error);
+        // Set empty timeline rather than null to maintain UI consistency
+        setTimeline({ events: [] });
       }
     } catch {
       setToast("Unable to save draft quote. Try again.");

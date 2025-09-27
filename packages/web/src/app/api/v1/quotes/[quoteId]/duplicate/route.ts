@@ -1,16 +1,4 @@
-// packages/weinterface RouteParams {
-  params: Promise<{
-    quoteId: string;
-  }>;
-}
-
-// T049: POST /api/v1/quotes/[quoteId]/duplicate endpoint
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams
-) {
-  try {
-    const { quoteId } = await params;/v1/quotes/[quoteId]/duplicate/route.ts
+// packages/web/src/app/api/v1/quotes/[quoteId]/duplicate/route.ts
 import { QuoteServiceFactory } from '@/services/quotes/QuoteService';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -25,9 +13,9 @@ const DuplicateQuoteSchema = z.object({
 });
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     quoteId: string;
-  };
+  }>;
 }
 
 // T047: POST /api/v1/quotes/[quoteId]/duplicate endpoint
@@ -36,7 +24,7 @@ export async function POST(
   { params }: RouteParams
 ) {
   try {
-    const { quoteId } = params;
+    const { quoteId } = await params;
 
     if (!quoteId) {
       return NextResponse.json({

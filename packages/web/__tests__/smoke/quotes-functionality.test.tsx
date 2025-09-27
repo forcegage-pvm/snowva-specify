@@ -5,13 +5,54 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import QuotesPage from '../../src/app/(dashboard)/quotes/page';
 
+// Extend Jest matchers
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toBeInTheDocument(): R;
+      toHaveValue(value: string): R;
+      toBeDisabled(): R;
+    }
+  }
+}
+
+// Mock Next.js App Router
+const mockPush = jest.fn();
+const mockBack = jest.fn();
+const mockForward = jest.fn();
+const mockRefresh = jest.fn();
+const mockReplace = jest.fn();
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    back: mockBack,
+    forward: mockForward,
+    refresh: mockRefresh,
+    replace: mockReplace,
+    prefetch: jest.fn(),
+  }),
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: () => '/quotes',
+}));
+
 // Mock the hooks
 jest.mock('../../src/hooks/quotes/useQuoteOperations', () => ({
   useQuotes: () => ({
     data: {
-      quotes: [],
-      totalCount: 0,
-      totalPages: 0,
+      quotes: [
+        {
+          id: 'QUO-2024-001',
+          quoteNumber: 'QUO-2024-001',
+          customerName: 'Test Company',
+          totalAmount: 1000.00,
+          status: 'Draft',
+          createdAt: '2024-09-27T00:00:00Z',
+          expiryDate: '2024-10-27T00:00:00Z'
+        }
+      ],
+      totalCount: 1,
+      totalPages: 1,
       currentPage: 1
     },
     isLoading: false,
@@ -44,7 +85,7 @@ describe('Quotes Page Functionality Smoke Tests', () => {
     renderWithProvider(<QuotesPage />);
     
     // Check main UI elements exist
-    expect(screen.getByText('Quotes')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Quotes' })).toBeTruthy();
     expect(screen.getByRole('button', { name: /refresh/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /new quote/i })).toBeInTheDocument();
     expect(screen.getByText('Filters')).toBeInTheDocument();

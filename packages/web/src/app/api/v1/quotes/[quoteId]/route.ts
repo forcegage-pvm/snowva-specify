@@ -1,3 +1,11 @@
+/**
+ * Quote API Route Implementation
+ * Sprint 004.1 - Technical Debt Resolution
+ * 
+ * Addresses TD005: Async parameters not handled properly in Next.js 15
+ * Addresses TD006: PDF generation error handling
+ */
+
 // packages/web/src/app/api/v1/quotes/[quoteId]/route.ts
 import { QuoteServiceFactory } from '@/services/quotes/QuoteService';
 import { NextRequest, NextResponse } from 'next/server';
@@ -31,17 +39,42 @@ interface RouteParams {
   }>;
 }
 
-// T043: GET /api/v1/quotes/[quoteId] endpoint
+/**
+ * GET /api/v1/quotes/[quoteId] - Get quote details
+ * Addresses TD005: Async parameters not handled properly in Next.js 15
+ */
 export async function GET(
   request: NextRequest,
   { params }: RouteParams
 ) {
   try {
+    // Handle async parameters in Next.js 15
+    // Addresses TD005: Async parameters not handled properly in Next.js 15
     const { quoteId } = await params;
 
     if (!quoteId) {
       return NextResponse.json({
-        error: 'Quote ID is required'
+        error: {
+          code: 'VALIDATION_FAILED',
+          message: 'Quote ID is required',
+          timestamp: new Date().toISOString(),
+          statusCode: 400
+        },
+        success: false
+      }, { status: 400 });
+    }
+
+    // Validate UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(quoteId)) {
+      return NextResponse.json({
+        error: {
+          code: 'VALIDATION_FAILED',
+          message: 'Invalid quote ID format',
+          timestamp: new Date().toISOString(),
+          statusCode: 400
+        },
+        success: false
       }, { status: 400 });
     }
 

@@ -157,9 +157,11 @@ export default function InvoiceWorkspacePage({
         }
 
         setTimeline(payload);
-  } catch {
+      } catch (error) {
         if (!controller.signal.aborted && isActive) {
-          setTimeline(null);
+          console.error('Failed to load invoice timeline:', error);
+          // Set empty timeline rather than null to maintain UI consistency
+          setTimeline({ events: [] });
         }
       } finally {
         if (isActive) {
