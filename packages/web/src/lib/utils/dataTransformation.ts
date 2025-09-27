@@ -11,12 +11,14 @@ interface RawCustomer {
   id: string;
   name: string;
   type: 'Retail' | 'Consumer';
+  parentCompanyId?: string;
   addresses: Array<{
     id: string;
     type: string;
     isPrimary: boolean;
     addressLine1: string;
     addressLine2: string;
+    city?: string;
     country: string;
   }>;
   vatNumber: string;
@@ -87,25 +89,60 @@ interface RawPayment {
 }
 
 /**
- * Transform raw customer data to bootstrap customer format
+ * Transform raw customer data to bootstrap customer format with proper parent/child relationships
  */
 export function transformCustomersToBootstrap(customersData: Record<string, RawCustomer>) {
-  return Object.values(customersData).map(customer => ({
-    id: customer.id,
-    displayName: customer.name,
-    customerType: customer.type === 'Retail' ? 'Business' : 'Consumer',
-    creditLimit: calculateCreditLimit(customer.type),
-    outstandingBalance: Math.random() * 5000, // Would come from unpaid invoices in real system
-    branches: [
-      {
-        id: `branch-${customer.id}`,
-        displayName: customer.addresses.find(addr => addr.isPrimary)?.addressLine1 || 'Main Office',
-        default: true,
-        vatNumber: customer.vatNumber
+  const customers = Object.values(customersData);
+  
+  // Find parent companies (those without parentCompanyId)
+  const parentCompanies = customers.filter(customer => !customer.parentCompanyId);
+  
+  // Group branches by parent company
+  const branchesByParent = customers
+    .filter(customer => customer.parentCompanyId)
+    .reduce((acc, branch) => {
+      if (!acc[branch.parentCompanyId!]) {
+        acc[branch.parentCompanyId!] = [];
       }
-    ],
-    recentDocuments: {}
-  }));
+      acc[branch.parentCompanyId!].push(branch);
+      return acc;
+    }, {} as Record<string, RawCustomer[]>);
+  
+  return parentCompanies.map(parentCompany => {
+    const branches = branchesByParent[parentCompany.id] || [];
+    
+    // Create branches array - include parent as default branch plus all child branches
+    const branchesArray = [
+      // Parent company as main branch
+      {
+        id: parentCompany.id,
+        displayName: parentCompany.addresses.find(addr => addr.isPrimary)?.addressLine1 || 'Head Office',
+        default: true,
+        vatNumber: parentCompany.vatNumber
+      },
+      // Child branches
+      ...branches.map(branch => ({
+        id: branch.id,
+        displayName: branch.name.replace(parentCompany.name + ' - ', '') || 
+                    branch.addresses.find(addr => addr.isPrimary)?.addressLine1 || 
+                    branch.addresses.find(addr => addr.isPrimary)?.city || 
+                    'Branch',
+        default: false,
+        vatNumber: branch.vatNumber,
+        branchNumber: (branch as any).branchNumber
+      }))
+    ];
+    
+    return {
+      id: parentCompany.id,
+      displayName: parentCompany.name,
+      customerType: parentCompany.type === 'Retail' ? 'Business' : 'Consumer',
+      creditLimit: calculateCreditLimit(parentCompany.type, branches.length),
+      outstandingBalance: Math.random() * 5000, // Would come from unpaid invoices in real system
+      branches: branchesArray,
+      recentDocuments: {}
+    };
+  });
 }
 
 /**
@@ -234,8 +271,11 @@ export function generateQuotesFromRealData(
 }
 
 // Helper functions
-function calculateCreditLimit(customerType: string): number {
-  return customerType === 'Retail' ? Math.floor(Math.random() * 100000) + 50000 : Math.floor(Math.random() * 25000) + 10000;
+function calculateCreditLimit(customerType: string, branchCount: number = 1): number {
+  const baseLimit = customerType === 'Retail' ? Math.floor(Math.random() * 100000) + 50000 : Math.floor(Math.random() * 25000) + 10000;
+  // Increase credit limit based on number of branches (more locations = higher limit)
+  const branchMultiplier = 1 + (branchCount * 0.2);
+  return Math.floor(baseLimit * branchMultiplier);
 }
 
 function shuffleArray<T>(array: T[]): T[] {

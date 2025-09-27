@@ -1,6 +1,6 @@
 // packages/web/src/app/api/v1/quotes/wizard/bootstrap/route.ts
-import { NextRequest, NextResponse } from 'next/server';
 import { getRealBootstrapData } from '@/lib/utils/realDataLoader';
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * GET /api/v1/quotes/wizard/bootstrap

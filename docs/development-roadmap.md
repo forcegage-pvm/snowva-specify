@@ -171,8 +171,8 @@ Convert remaining mocked experiences into production-ready applications with res
 **Sprint Goal**: Address technical debt identified during Sprint 004 to ensure stable foundation for future development.
 
 #### High Priority Issues
-- [ ] **TD001**: Fix quote timeline API endpoint (`/api/v1/quotes/[quoteId]/timeline`)
-- [ ] **TD002**: Fix quote conversion API async parameter handling (`await params`)
+- [x] **TD001**: Fix quote timeline API endpoint (`/api/v1/quotes/[quoteId]/timeline`) ✅ *Completed Sep 27, 2025*
+- [x] **TD002**: Fix quote conversion API async parameter handling (`await params`) ✅ *Completed Sep 27, 2025*
 - [ ] **TD003**: Enhance error handling across all quote API endpoints
 - [ ] **TD004**: Implement comprehensive API contract validation with Zod schemas
 

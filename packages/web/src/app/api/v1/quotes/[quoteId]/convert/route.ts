@@ -15,9 +15,9 @@ const ConvertQuoteSchema = z.object({
 });
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     quoteId: string;
-  };
+  }>;
 }
 
 // T048: POST /api/v1/quotes/[quoteId]/convert endpoint
@@ -26,7 +26,7 @@ export async function POST(
   { params }: RouteParams
 ) {
   try {
-    const { quoteId } = params;
+    const { quoteId } = await params;
 
     if (!quoteId) {
       return NextResponse.json({

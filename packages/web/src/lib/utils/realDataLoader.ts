@@ -5,10 +5,10 @@
 
 import { promises as fs } from 'fs';
 import path from 'path';
-import { 
-  transformCustomersToBootstrap, 
-  transformProductsToCatalog, 
-  generateQuotesFromRealData 
+import {
+    generateQuotesFromRealData,
+    transformCustomersToBootstrap,
+    transformProductsToCatalog
 } from './dataTransformation';
 
 // Cache for loaded data to avoid repeated file I/O

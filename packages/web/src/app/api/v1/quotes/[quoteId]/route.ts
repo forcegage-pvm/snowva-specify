@@ -26,9 +26,9 @@ const UpdateQuoteSchema = z.object({
 });
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     quoteId: string;
-  };
+  }>;
 }
 
 // T043: GET /api/v1/quotes/[quoteId] endpoint
@@ -37,7 +37,7 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
-    const { quoteId } = params;
+    const { quoteId } = await params;
 
     if (!quoteId) {
       return NextResponse.json({
@@ -70,7 +70,7 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
-    const { quoteId } = params;
+    const { quoteId } = await params;
 
     if (!quoteId) {
       return NextResponse.json({
@@ -116,7 +116,7 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    const { quoteId } = params;
+    const { quoteId } = await params;
 
     if (!quoteId) {
       return NextResponse.json({

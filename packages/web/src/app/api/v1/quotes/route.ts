@@ -1,8 +1,8 @@
 // packages/web/src/app/api/v1/quotes/route.ts
+import { getRealQuotesData } from '@/lib/utils/realDataLoader';
 import { QuoteServiceFactory } from '@/services/quotes/QuoteService';
 import { QuoteStatus } from '@/types/quotes/QuoteStatus';
 import { NextRequest, NextResponse } from 'next/server';
-import { getRealQuotesData } from '@/lib/utils/realDataLoader';
 import { z } from 'zod';
 
 const QuoteCreateSchema = z.object({
