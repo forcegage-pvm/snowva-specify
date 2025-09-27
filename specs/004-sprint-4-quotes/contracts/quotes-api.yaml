@@ -1,0 +1,791 @@
+openapi: 3.0.3
+info:
+  title: Quotes Index Workspace API
+  version: 1.0.0
+  description: API contracts for quotes listing, filtering, and management operations
+
+servers:
+  - url: /api/v1
+    description: Next.js API routes
+
+paths:
+  /quotes:
+    get:
+      summary: List quotes with filtering and pagination
+      description: Retrieve paginated list of quotes with optional filtering by status, date range, customer, etc.
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 25
+          description: Number of quotes per page
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum:
+              [
+                createdAt,
+                updatedAt,
+                totalAmount,
+                quoteNumber,
+                customerName,
+                status,
+              ]
+            default: createdAt
+          description: Field to sort by
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Sort order
+        - name: status
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/QuoteStatus"
+          description: Filter by quote status (multiple values allowed)
+        - name: customerId
+          in: query
+          schema:
+            type: string
+          description: Filter by specific customer ID
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search in quote number and customer name
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter quotes created after this date
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter quotes created before this date
+        - name: includeArchived
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: Include archived quotes in results
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quotes:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/QuoteListItem"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+                  summary:
+                    $ref: "#/components/schemas/QuotesSummary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    post:
+      summary: Create new quote
+      description: Create a new quote in draft status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuoteRequest"
+      responses:
+        "201":
+          description: Quote created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /quotes/{quoteId}:
+    get:
+      summary: Get quote details
+      description: Retrieve complete quote information including line items
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique quote identifier
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    put:
+      summary: Update quote
+      description: Update existing quote (full replacement)
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQuoteRequest"
+      responses:
+        "200":
+          description: Quote updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      summary: Archive quote
+      description: Archive quote (soft delete)
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Quote archived successfully
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /quotes/{quoteId}/status:
+    patch:
+      summary: Update quote status
+      description: Change quote status with validation of allowed transitions
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  $ref: "#/components/schemas/QuoteStatus"
+                reason:
+                  type: string
+                  description: Optional reason for status change
+              required:
+                - status
+      responses:
+        "200":
+          description: Status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Invalid status transition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /quotes/{quoteId}/duplicate:
+    post:
+      summary: Duplicate quote
+      description: Create a copy of existing quote in draft status
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Quote duplicated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /quotes/{quoteId}/convert:
+    post:
+      summary: Convert quote to invoice
+      description: Convert approved quote to invoice (external system integration)
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Quote converted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invoiceId:
+                    type: string
+                    description: ID of created invoice
+                  quote:
+                    $ref: "#/components/schemas/Quote"
+        "400":
+          description: Quote cannot be converted (wrong status)
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /quotes/export:
+    post:
+      summary: Export quotes
+      description: Export filtered quotes to PDF or Excel format
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                format:
+                  type: string
+                  enum: [pdf, excel]
+                quoteIds:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific quotes to export (optional)
+                filters:
+                  type: object
+                  description: Same filters as GET /quotes (optional)
+              required:
+                - format
+      responses:
+        "200":
+          description: Export file generated
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /quotes/bulk-actions:
+    patch:
+      summary: Bulk operations on multiple quotes
+      description: Perform status updates or archive operations on multiple quotes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quoteIds:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                action:
+                  type: string
+                  enum: [updateStatus, archive, restore]
+                status:
+                  $ref: "#/components/schemas/QuoteStatus"
+                  description: Required for updateStatus action
+                reason:
+                  type: string
+                  description: Optional reason for bulk operation
+              required:
+                - quoteIds
+                - action
+      responses:
+        "200":
+          description: Bulk operation completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  successful:
+                    type: array
+                    items:
+                      type: string
+                    description: IDs of successfully updated quotes
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        quoteId:
+                          type: string
+                        error:
+                          type: string
+                    description: IDs and errors for failed updates
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+components:
+  schemas:
+    QuoteStatus:
+      type: string
+      enum:
+        - draft
+        - pending
+        - approved
+        - rejected
+        - converted
+        - archived
+      description: Quote workflow status
+
+    QuoteListItem:
+      type: object
+      description: Lightweight quote info for listing view
+      properties:
+        id:
+          type: string
+        quoteNumber:
+          type: string
+        customerId:
+          type: string
+        customerName:
+          type: string
+        totalAmount:
+          type: number
+          format: decimal
+        currency:
+          type: string
+        status:
+          $ref: "#/components/schemas/QuoteStatus"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        expiryDate:
+          type: string
+          format: date-time
+        linkedInvoiceId:
+          type: string
+          nullable: true
+        lineItemCount:
+          type: integer
+          description: Number of line items for display
+      required:
+        - id
+        - quoteNumber
+        - customerId
+        - customerName
+        - totalAmount
+        - currency
+        - status
+        - createdAt
+        - updatedAt
+        - expiryDate
+        - lineItemCount
+
+    Quote:
+      type: object
+      description: Complete quote with all details
+      properties:
+        id:
+          type: string
+        quoteNumber:
+          type: string
+        customerId:
+          type: string
+        customerName:
+          type: string
+        subtotal:
+          type: number
+          format: decimal
+        taxRate:
+          type: number
+          format: decimal
+        taxAmount:
+          type: number
+          format: decimal
+        totalAmount:
+          type: number
+          format: decimal
+        currency:
+          type: string
+        status:
+          $ref: "#/components/schemas/QuoteStatus"
+        statusHistory:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuoteStatusChange"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        expiryDate:
+          type: string
+          format: date-time
+        validUntil:
+          type: string
+          format: date-time
+        lineItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuoteLineItem"
+        terms:
+          type: string
+        notes:
+          type: string
+        linkedInvoiceId:
+          type: string
+          nullable: true
+        originalQuoteId:
+          type: string
+          nullable: true
+        createdBy:
+          type: string
+        lastModifiedBy:
+          type: string
+        version:
+          type: integer
+      required:
+        - id
+        - quoteNumber
+        - customerId
+        - customerName
+        - subtotal
+        - taxRate
+        - taxAmount
+        - totalAmount
+        - currency
+        - status
+        - statusHistory
+        - createdAt
+        - updatedAt
+        - expiryDate
+        - validUntil
+        - lineItems
+        - terms
+        - notes
+        - createdBy
+        - lastModifiedBy
+        - version
+
+    QuoteLineItem:
+      type: object
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+          nullable: true
+        description:
+          type: string
+        quantity:
+          type: number
+          format: decimal
+        unitPrice:
+          type: number
+          format: decimal
+        lineTotal:
+          type: number
+          format: decimal
+        taxRate:
+          type: number
+          format: decimal
+        taxAmount:
+          type: number
+          format: decimal
+        category:
+          type: string
+          nullable: true
+        order:
+          type: integer
+      required:
+        - id
+        - description
+        - quantity
+        - unitPrice
+        - lineTotal
+        - taxRate
+        - taxAmount
+        - order
+
+    QuoteStatusChange:
+      type: object
+      properties:
+        fromStatus:
+          $ref: "#/components/schemas/QuoteStatus"
+        toStatus:
+          $ref: "#/components/schemas/QuoteStatus"
+        timestamp:
+          type: string
+          format: date-time
+        userId:
+          type: string
+        reason:
+          type: string
+          nullable: true
+      required:
+        - fromStatus
+        - toStatus
+        - timestamp
+        - userId
+
+    CreateQuoteRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+        lineItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuoteLineItemInput"
+          minItems: 1
+        terms:
+          type: string
+        notes:
+          type: string
+        expiryDate:
+          type: string
+          format: date-time
+      required:
+        - customerId
+        - lineItems
+        - expiryDate
+
+    UpdateQuoteRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+        lineItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuoteLineItemInput"
+          minItems: 1
+        terms:
+          type: string
+        notes:
+          type: string
+        expiryDate:
+          type: string
+          format: date-time
+        version:
+          type: integer
+          description: For optimistic locking
+      required:
+        - customerId
+        - lineItems
+        - expiryDate
+        - version
+
+    QuoteLineItemInput:
+      type: object
+      properties:
+        productId:
+          type: string
+          nullable: true
+        description:
+          type: string
+        quantity:
+          type: number
+          format: decimal
+        unitPrice:
+          type: number
+          format: decimal
+        taxRate:
+          type: number
+          format: decimal
+        category:
+          type: string
+          nullable: true
+      required:
+        - description
+        - quantity
+        - unitPrice
+        - taxRate
+
+    PaginationInfo:
+      type: object
+      properties:
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalItems:
+          type: integer
+        totalPages:
+          type: integer
+        hasNextPage:
+          type: boolean
+        hasPreviousPage:
+          type: boolean
+      required:
+        - page
+        - pageSize
+        - totalItems
+        - totalPages
+        - hasNextPage
+        - hasPreviousPage
+
+    QuotesSummary:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        statusCounts:
+          type: object
+          additionalProperties:
+            type: integer
+        totalValue:
+          type: number
+          format: decimal
+        averageValue:
+          type: number
+          format: decimal
+      required:
+        - totalCount
+        - statusCounts
+        - totalValue
+        - averageValue
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - error
+        - message
+        - timestamp
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid parameters or request body
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Unauthorized:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Conflict:
+      description: Conflict - resource state conflict or version mismatch
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: session
+      description: Session-based authentication
+
+security:
+  - sessionAuth: []

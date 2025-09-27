@@ -30,12 +30,25 @@ type QuoteComposerBootstrap = {
 };
 
 type DraftQuoteResponse = {
-  draftId: string;
-  totals: {
-    subtotalExVat: number;
-    vatAmount: number;
-    totalIncVat: number;
+  success: boolean;
+  quote: {
+    id: string;
+    customerId: string;
+    branchId: string;
+    lineItems: Array<any>;
+    totals: {
+      subtotalExVat: number;
+      vatAmount: number;
+      total: number;
+    };
+    vatRate: number;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    notes: string;
+    validUntil: string;
   };
+  message: string;
 };
 
 type QuotePreviewResponse = {
@@ -98,7 +111,7 @@ export default function QuoteComposerPage() {
   const [reference, setReference] = useState<string>("TA-QUOTE-2024-12");
   const [lineItems, setLineItems] = useState<QuoteLineItem[]>([]);
   const [quantityDrafts, setQuantityDrafts] = useState<Record<string, number>>({});
-  const [draftQuote, setDraftQuote] = useState<DraftQuoteResponse | null>(null);
+  const [draftQuote, setDraftQuote] = useState<DraftQuoteResponse['quote'] | null>(null);
   const [timeline, setTimeline] = useState<QuoteTimelineResponse | null>(null);
   const [preview, setPreview] = useState<QuotePreviewResponse | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -242,10 +255,10 @@ export default function QuoteComposerPage() {
       }
 
       const payload = (await response.json()) as DraftQuoteResponse;
-      setDraftQuote(payload);
+      setDraftQuote(payload.quote);
       setStep("summary");
 
-      const timelineResponse = await fetch(`/api/v1/quotes/${payload.draftId}/timeline`, {
+      const timelineResponse = await fetch(`/api/v1/quotes/${payload.quote.id}/timeline`, {
         cache: "no-store",
       });
 
@@ -266,7 +279,7 @@ export default function QuoteComposerPage() {
     }
 
     try {
-      const response = await fetch(`/api/v1/quotes/${draftQuote.draftId}/preview`, {
+      const response = await fetch(`/api/v1/quotes/${draftQuote.id}/preview`, {
         cache: "no-store",
       });
 
@@ -288,7 +301,7 @@ export default function QuoteComposerPage() {
     }
 
     try {
-      const response = await fetch(`/api/v1/quotes/${draftQuote.draftId}/convert`, {
+      const response = await fetch(`/api/v1/quotes/${draftQuote.id}/convert`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -536,7 +549,7 @@ export default function QuoteComposerPage() {
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-wide text-slate-400">Total</p>
-                    <p className="text-base font-semibold text-slate-900">{formatCurrency(draftQuote.totals.totalIncVat)}</p>
+                    <p className="text-base font-semibold text-slate-900">{formatCurrency(draftQuote.totals.total)}</p>
                   </div>
                 </div>
 

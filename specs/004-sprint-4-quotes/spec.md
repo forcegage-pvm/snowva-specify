@@ -1,6 +1,6 @@
 # Feature Specification: Quotes Index Workspace
 
-**Feature Branch**: `005-sprint-4-quotes`  
+**Feature Branch**: `004-sprint-4-quotes`  
 **Created**: 2025-09-26  
 **Status**: Draft  
 **Input**: User description: "Implement quotes listing page with filtering, status management, and integration with existing quote composer."
@@ -70,12 +70,12 @@ As a sales manager, I need to view and manage all quotes in our system so I can 
 8. **Given** I want to duplicate a successful quote, **When** I click "Duplicate" on a quote, **Then** a new quote is created in the composer with the same items and customer
 
 ### Edge Cases
-- What happens when there are no quotes to display (empty state with call-to-action)?
-- How does system handle quotes with missing customer information?
-- What occurs when attempting to edit a quote that has been converted to an invoice?
-- How are archived quotes handled in the listing?
-- What happens when quote data is loading or fails to load?
-- When multiple users edit the same quote, the last saved version overwrites previous changes (no conflict resolution)
+- **Empty state**: When no quotes match filters, display empty state with "Create New Quote" call-to-action button
+- **Missing customer information**: Display "Unknown Customer" placeholder with option to edit quote to add customer details  
+- **Converted quotes**: Show read-only status with "View Invoice" link, disable edit actions but allow duplication
+- **Archived quotes**: Hidden by default, shown only when "Include Archived" filter is enabled
+- **Loading/error states**: Show skeleton loading during data fetch, display retry button on network errors
+- **Concurrent editing**: Last saved version overwrites previous changes (no conflict resolution, as clarified)
 
 ## Requirements *(mandatory)*
 

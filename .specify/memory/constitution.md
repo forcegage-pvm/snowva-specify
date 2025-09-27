@@ -22,7 +22,7 @@ Every UI feature MUST be built as reusable, composable components following Tail
 
 ### II. Test-First Development (NON-NEGOTIABLE)
 
-TDD mandatory for all business logic: Unit tests written → Tests fail → Implementation → Tests pass. Integration tests MUST cover complete user workflows (quote-to-invoice-to-payment). E2E tests MUST validate critical business scenarios with realistic data. No PR merges without test coverage ≥90% for new code. Mock data MUST reflect real business scenarios from extracted PDF documents.
+TDD mandatory for all business logic: Unit tests written → Tests fail → Implementation → Tests pass. MUST follow Test Pyramid Strategy: 70% Unit Tests (hooks, validation, state management), 20% Integration Tests (API mocking, component integration), 10% E2E Tests (critical user journeys). No PR merges without test coverage ≥90% for new code. All state management hooks MUST have unit tests covering edge cases, debouncing, and error scenarios. Validation schemas MUST be tested with property-based testing using invalid inputs. Mock data MUST reflect real business scenarios from extracted PDF documents.
 
 ### III. Business Data Integrity
 
@@ -74,8 +74,10 @@ Page load times MUST be <3s, navigation <500ms. Implement Next.js optimization f
 
 ### Development Gates
 
-- Unit tests MUST pass with ≥90% coverage for new code
-- Integration tests MUST validate complete user workflows
+- Unit tests MUST pass with ≥90% coverage for new code, including all state management hooks and validation logic
+- Integration tests MUST validate complete user workflows with proper API mocking and service layer verification
+- Property-based testing REQUIRED for validation schemas with comprehensive edge case coverage
+- Console error monitoring in tests - no unexpected console.error calls allowed
 - TypeScript compilation MUST succeed with zero errors
 - ESLint MUST pass with zero warnings in production builds
 - Component documentation MUST be updated in Storybook

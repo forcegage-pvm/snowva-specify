@@ -41,8 +41,8 @@ const navigation = [
   },
   {
     name: 'Quotes',
-    description: 'Quote composer wizard and approvals',
-    href: '/sales/quote-composer',
+    description: 'Quote management, filtering, and status tracking',
+    href: '/quotes',
     icon: DocumentDuplicateIcon,
   },
   {

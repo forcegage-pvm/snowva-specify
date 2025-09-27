@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -17,7 +17,11 @@
     "test:e2e": "npm run cy:run",
     "test:playwright": "playwright test",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build"
+    "storybook:build": "storybook build",
+    "analyze:quotes": "node scripts/analyze-quotes-bundle.js",
+    "analyze:quotes:detailed": "node scripts/analyze-quotes-bundle.js --detailed",
+    "analyze:quotes:json": "node scripts/analyze-quotes-bundle.js --json",
+    "analyze:quotes:csv": "node scripts/analyze-quotes-bundle.js --csv"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -27,6 +31,7 @@
     "@types/nodemailer": "^7.0.1",
     "@types/pdfkit": "^0.17.3",
     "express-rate-limit": "^8.1.0",
+    "lucide-react": "^0.544.0",
     "next": "15.5.4",
     "nodemailer": "^7.0.6",
     "pdfkit": "^0.17.2",
@@ -57,18 +62,18 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "axe-core": "^4.10.3",
+    "babel-loader": "^9.2.1",
     "cypress": "^13.12.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
     "jest": "^30.1.3",
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^30.1.2",
-    "babel-loader": "^9.2.1",
     "swc-loader": "^0.2.6",
     "tailwindcss": "^4",
-    "tsconfig-paths-webpack-plugin": "^4.1.0",
     "ts-jest": "^29.4.4",
     "ts-loader": "^9.5.4",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5"
   }
 }
