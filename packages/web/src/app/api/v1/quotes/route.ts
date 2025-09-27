@@ -2,6 +2,7 @@
 import { QuoteServiceFactory } from '@/services/quotes/QuoteService';
 import { QuoteStatus } from '@/types/quotes/QuoteStatus';
 import { NextRequest, NextResponse } from 'next/server';
+import { getRealQuotesData } from '@/lib/utils/realDataLoader';
 import { z } from 'zod';
 
 const QuoteCreateSchema = z.object({
@@ -66,9 +67,96 @@ export async function GET(request: NextRequest) {
       ...(search && { search }),
     };
 
-    const result = await quoteService.getQuotes(filters);
-
-    return NextResponse.json(result, { status: 200 });
+    // Use real data for now, bypass service layer
+    try {
+      const allQuotes = await getRealQuotesData();
+      
+      // Apply basic filtering
+      let filteredQuotes = allQuotes;
+      
+      if (status) {
+        filteredQuotes = filteredQuotes.filter(quote => quote.status === status);
+      }
+      
+      if (customerId) {
+        filteredQuotes = filteredQuotes.filter(quote => quote.customerId === customerId);
+      }
+      
+      if (search) {
+        const searchLower = search.toLowerCase();
+        filteredQuotes = filteredQuotes.filter(quote => 
+          quote.customerName.toLowerCase().includes(searchLower) ||
+          quote.quoteNumber.toLowerCase().includes(searchLower) ||
+          quote.notes.toLowerCase().includes(searchLower)
+        );
+      }
+      
+      // Apply sorting
+      if (sortBy) {
+        filteredQuotes.sort((a, b) => {
+          let aVal: any, bVal: any;
+          
+          switch (sortBy) {
+            case 'createdAt':
+            case 'updatedAt':
+              aVal = new Date(a[sortBy]).getTime();
+              bVal = new Date(b[sortBy]).getTime();
+              break;
+            case 'totalAmount':
+              aVal = a.totalAmount;
+              bVal = b.totalAmount;
+              break;
+            case 'quoteNumber':
+            case 'customerName':
+            case 'status':
+              aVal = a[sortBy];
+              bVal = b[sortBy];
+              break;
+            default:
+              aVal = a.createdAt;
+              bVal = b.createdAt;
+          }
+          
+          if (sortOrder === 'asc') {
+            return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+          } else {
+            return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+          }
+        });
+      }
+      
+      // Apply pagination
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedQuotes = filteredQuotes.slice(startIndex, endIndex);
+      
+      const result = {
+        quotes: paginatedQuotes,
+        pagination: {
+          page,
+          pageSize: limit,
+          totalItems: filteredQuotes.length,
+          totalPages: Math.ceil(filteredQuotes.length / limit)
+        },
+        summary: {
+          totalQuotes: filteredQuotes.length,
+          totalAmount: filteredQuotes.reduce((sum, quote) => sum + quote.totalAmount, 0),
+          averageAmount: filteredQuotes.length > 0 ? filteredQuotes.reduce((sum, quote) => sum + quote.totalAmount, 0) / filteredQuotes.length : 0,
+          statusCounts: filteredQuotes.reduce((acc, quote) => {
+            acc[quote.status] = (acc[quote.status] || 0) + 1;
+            return acc;
+          }, {} as Record<string, number>)
+        }
+      };
+      
+      return NextResponse.json(result, { status: 200 });
+    } catch (realDataError) {
+      console.warn('Failed to load real quotes data, falling back to service:', realDataError);
+      
+      // Fallback to service layer
+      const result = await quoteService.getQuotes(filters);
+      return NextResponse.json(result, { status: 200 });
+    }
   } catch (error) {
     console.error('Error fetching quotes:', error);
     return NextResponse.json({ 

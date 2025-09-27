@@ -1,11 +1,45 @@
 # Snowva Operations Console – Development Roadmap
 
-_Last updated: 2025-09-26_
+_Last updated: 2025-09-27_
 
 ## 1. Product Vision & Current Status
 
 ### Vision
-Deliver a unified console for Snowva's finance, sales, and operations teams to manage customers, pricing, quotes, invoices, statements, and payments.
+Deliver a un**Estimated Duration**: 3-5 days  
+**Impact**: Improved stability, better developer experience, reduced future debugging
+
+---
+
+### 📋 Sprint 004.2 – Complete Quotes Index Workspace (PLANNED)
+**Sprint Goal**: Complete the remaining unfinished tasks from Sprint 004 to deliver a fully functional quotes workspace.
+
+#### Remaining Core Components
+- [ ] **T041**: Create QuoteStatusBadge component with workflow states
+- [ ] **T042**: Develop QuoteActionsMenu (edit, duplicate, convert, archive)
+- [ ] **T043**: Build QuickPreviewCard for quote summary
+
+#### Remaining API Integration
+- [ ] **T045**: Add pagination and search functionality to quotes listing
+- [ ] **T047**: Add bulk operations support (status updates, exports)
+- [ ] **T048**: Implement quote archiving and restoration
+
+#### UX Polish & Missing Features
+- [ ] **T049**: Add empty states and loading skeletons
+- [ ] **T050**: Implement quote duplicate functionality
+- [ ] **T051**: Add export to PDF/Excel functionality
+- [ ] **T053**: Accessibility testing and WCAG compliance
+
+#### Testing & Validation
+- [ ] **T055**: E2E testing with Cypress specs
+- [ ] **T056**: Performance testing with large quote datasets
+
+**Estimated Duration**: 1-1.5 weeks  
+**Priority**: High - needed to complete quotes workspace before moving to invoices  
+**Dependencies**: Should be done after Sprint 004.1 (technical debt resolution)
+
+---
+
+### 📋 Sprint 005 – Invoices Index Workspace (PLANNED)console for Snowva's finance, sales, and operations teams to manage customers, pricing, quotes, invoices, statements, and payments.
 
 ### Current Status ✅
 - [x] **Core Foundation**: Next.js 15 App Router, TypeScript 5.1+, Tailwind CSS 3.4
@@ -75,47 +109,91 @@ Convert remaining mocked experiences into production-ready applications with res
 
 ---
 
-### 🔄 Sprint 004 – Quotes Index Workspace (IN PROGRESS)
+### 🟡 Sprint 004 – Quotes Index Workspace (PARTIALLY COMPLETED)
 **Sprint Goal**: Implement quotes listing page with filtering, status management, and integration with existing quote composer.
 
-#### Phase 1: Foundation & Planning
-- [ ] **T034**: Analyze existing quote composer integration points
-- [ ] **T035**: Design QuotesTable component architecture with virtualization
-- [ ] **T036**: Define quote status workflow and filtering requirements
-- [ ] **T037**: Plan API endpoints for quotes listing and management
-- [ ] **T038**: TypeScript interfaces for quote data models
+#### Phase 1: Foundation & Planning ✅
+- [x] **T034**: Analyze existing quote composer integration points
+- [x] **T035**: Design QuotesTable component architecture with virtualization
+- [x] **T036**: Define quote status workflow and filtering requirements
+- [x] **T037**: Plan API endpoints for quotes listing and management
+- [x] **T038**: TypeScript interfaces for quote data models
 
-#### Phase 2: Core Components
-- [ ] **T039**: Implement QuotesTable with sorting and selection
-- [ ] **T040**: Build QuoteFiltersBar (status, date range, customer, amount)
+#### Phase 2: Core Components 🟡
+- [x] **T039**: Implement QuotesTable with sorting and selection
+- [x] **T040**: Build QuoteFiltersBar (status, date range, customer, amount)
 - [ ] **T041**: Create QuoteStatusBadge component with workflow states
 - [ ] **T042**: Develop QuoteActionsMenu (edit, duplicate, convert, archive)
 - [ ] **T043**: Build QuickPreviewCard for quote summary
 
-#### Phase 3: API Integration
-- [ ] **T044**: Implement `/api/v1/quotes` REST endpoints
+#### Phase 3: API Integration 🟡
+- [x] **T044**: Implement `/api/v1/quotes` REST endpoints (partial - bootstrap & draft only)
 - [ ] **T045**: Add pagination and search functionality
-- [ ] **T046**: Integrate with existing quote composer navigation
+- [x] **T046**: Integrate with existing quote composer navigation
 - [ ] **T047**: Add bulk operations support (status updates, exports)
 - [ ] **T048**: Implement quote archiving and restoration
 
-#### Phase 4: UX Polish & Testing
+#### Phase 4: UX Polish & Testing ❌
 - [ ] **T049**: Add empty states and loading skeletons
 - [ ] **T050**: Implement quote duplicate functionality
 - [ ] **T051**: Add export to PDF/Excel functionality
-- [ ] **T052**: Create Storybook stories for all quote components
+- [x] **T052**: Create Storybook stories for all quote components
 - [ ] **T053**: Accessibility testing and WCAG compliance
 
-#### Phase 5: Integration & Validation
-- [ ] **T054**: Navigation integration in dashboard layout
+#### Phase 5: Integration & Validation 🟡
+- [x] **T054**: Navigation integration in dashboard layout
 - [ ] **T055**: E2E testing with Cypress specs
 - [ ] **T056**: Performance testing with large quote datasets
-- [ ] **T057**: Integration testing with quote composer
-- [ ] **T058**: Documentation and code review
+- [x] **T057**: Integration testing with quote composer
+- [x] **T058**: Documentation and code review
+
+**Sprint Results**: **Partial completion** - Fixed 5 critical functionality issues (quick filters, search clearing, clear filters button, refresh button, New Quote navigation) and created basic quote composer integration. **Many planned features remain unimplemented** including table virtualization, status badges, actions menu, bulk operations, export functionality, and comprehensive testing.
+
+#### Technical Debt Identified 🔧
+- **Quote Timeline API**: Timeline endpoint returns 404 - needs implementation for quote history tracking
+- **Quote Conversion API**: Convert endpoint has async parameter issue - needs `await params` fix for Next.js 15 compatibility
+- **Error Handling**: Some API endpoints need more robust error handling and validation
+- **Type Safety**: DraftQuoteResponse type needed updates during development - indicates need for stronger API contract validation
+- **Performance**: Quote composer triggers Fast Refresh full reloads - investigate React state optimization
+- **Testing Coverage**: E2E tests for quote composer workflow need expansion
+
+#### Sprint 004 Lessons Learned 📚
+- **Scope Creep**: Initially focused on fixing 5 critical bugs, but sprint plan was overly ambitious with 25 tasks
+- **Time Management**: Spent majority of time on bug fixes and basic integration, leaving advanced features unimplemented
+- **Planning Gap**: Need better distinction between "fix existing functionality" vs "build new features" in sprint goals
+- **API Development**: Creating robust API endpoints takes longer than estimated, especially with proper error handling
+- **Testing Overhead**: Comprehensive testing (Storybook, E2E, accessibility) requires dedicated time allocation
+- **Component Complexity**: Table virtualization, status badges, and action menus are significant undertakings requiring focused sprints
 
 ---
 
-### 📋 Sprint 005 – Invoices Index Workspace (PLANNED)
+### � Sprint 004.1 – Technical Debt Resolution (RECOMMENDED)
+**Sprint Goal**: Address technical debt identified during Sprint 004 to ensure stable foundation for future development.
+
+#### High Priority Issues
+- [ ] **TD001**: Fix quote timeline API endpoint (`/api/v1/quotes/[quoteId]/timeline`)
+- [ ] **TD002**: Fix quote conversion API async parameter handling (`await params`)
+- [ ] **TD003**: Enhance error handling across all quote API endpoints
+- [ ] **TD004**: Implement comprehensive API contract validation with Zod schemas
+
+#### Medium Priority Issues  
+- [ ] **TD005**: Optimize React state management to prevent Fast Refresh full reloads
+- [ ] **TD006**: Expand E2E test coverage for complete quote composer workflows
+- [ ] **TD007**: Add proper loading states and error boundaries
+- [ ] **TD008**: Implement quote preview and PDF generation endpoints
+
+#### Code Quality Improvements
+- [ ] **TD009**: Standardize API response types across all quote endpoints  
+- [ ] **TD010**: Add comprehensive unit tests for quote service layer
+- [ ] **TD011**: Implement proper TypeScript strict mode compliance
+- [ ] **TD012**: Add API documentation with OpenAPI specs
+
+**Estimated Duration**: 3-5 days  
+**Impact**: Improved stability, better developer experience, reduced future debugging
+
+---
+
+### �📋 Sprint 005 – Invoices Index Workspace (PLANNED)
 **Sprint Goal**: Build invoices listing with timeline view, bulk operations, and integration with existing invoice detail pages.
 
 #### Phase 1: Foundation
@@ -259,13 +337,15 @@ Convert remaining mocked experiences into production-ready applications with res
 | Sprint | Duration | Deliverable | Status |
 |--------|----------|-------------|--------|
 | **003** | 2 weeks | Documents Workspace | ✅ Complete |
-| **004** | 2 weeks | Quotes Index | 🔄 In Progress |
+| **004** | 2 weeks | Quotes Index | 🟡 Partial |
+| **004.1** | 3-5 days | Technical Debt Resolution | 🔧 Recommended |
+| **004.2** | 1-1.5 weeks | Complete Quotes Index | 📋 Planned |
 | **005** | 2 weeks | Invoices Index | 📋 Planned |
 | **006** | 2 weeks | Payments Index | 📋 Planned |
 | **007** | 1.5 weeks | Design System | 📋 Planned |
 | **008** | 1 week | CI/CD & Testing | 📋 Planned |
 
-**Target Completion**: 10.5 weeks from Sprint 004 start
+**Target Completion**: 10 weeks from Sprint 004.1 start
 
 ---
 
