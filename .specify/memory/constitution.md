@@ -2,7 +2,7 @@
 
 **Document Version**: 1.2  
 **Created**: September 28, 2025  
-**Updated**: September 28, 2025 - Added Mandate 6 (Sole Developer Accountability), Success Validation Protocol, Tool-Driven Validation Hierarchy
+**Updated**: September 28, 2025 - Added Mandate 6 (Sole Developer Accountability), Mandate 7 (Mandatory Task Progress Tracking), Success Validation Protocol, Tool-Driven Validation Hierarchy
 **Purpose**: Establish inviolable principles that prevent development hallucination and ensure brutally honest progress reporting
 
 ---
@@ -168,6 +168,36 @@
 3. **Fix or Document**: Either resolve ERRORS immediately or create tracked issue for WARNINGS
 4. **Validate Fix**: Ensure fix doesn't introduce new problems
 5. **Resume Development**: Only after ERROR-free state achieved (WARNINGS can be deferred with documentation)
+
+### MANDATE 7: MANDATORY TASK PROGRESS TRACKING
+
+**MUST DO** (Mandate 7):
+- ✅ IMMEDIATELY update tasks.md with [x] after completing each task - NO EXCEPTIONS
+- ✅ Document completion timestamp and validation evidence for each completed task
+- ✅ When constitutional requirements flag issues, document them in task completion comments
+- ✅ Record any deviations, problems, or lessons learned during task execution
+- ✅ Update task status before moving to next task to prevent progress hallucination
+- ✅ Include actual validation steps taken (tests run, MCP browser verification, etc.)
+- ✅ Link to specific files, commits, or artifacts created during task completion
+
+**MUST NOT DO** (Mandate 7):
+- ❌ NEVER mark tasks complete without updating the tasks.md file immediately
+- ❌ NEVER assume task completion without explicit validation evidence
+- ❌ NEVER skip task documentation due to "time pressure" or "obvious completion"
+- ❌ NEVER mark multiple tasks complete in bulk without individual validation
+- ❌ NEVER proceed to next task without documenting current task completion
+
+**Task Completion Documentation Format**:
+```
+- [x] T001 Task description
+  Completed: [timestamp]
+  Validation: [specific validation steps taken]
+  Issues: [any problems encountered or constitutional flags]
+  Artifacts: [files created/modified, tests run, etc.]
+```
+
+**Sprint Context Awareness**:
+When working within a development sprint context (e.g., `specs/006-quotes-technical-debt/tasks.md`), this mandate becomes CRITICAL for preventing development hallucination and ensuring accurate progress tracking throughout the entire sprint lifecycle.
 
 ---
 

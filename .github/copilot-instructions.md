@@ -41,10 +41,65 @@ See .specify/memory/constitution.md and .specify/memory/testing-strategy.md for 
 
 ## Recent Changes
 
+- 006-quotes-technical-debt: Added comprehensive quotes system restoration with constitutional compliance requirements, evidence-first development, and anti-hallucination protocols (September 28, 2025)
 - 005-sprint-004-1: Added TypeScript 5.1+, Node.js 18+ + Next.js 15 App Router, React 18, Zod validation, TanStack Query
 
 - 004-sprint-4-quotes: Added TypeScript 5.1+ with Next.js 15 App Router, React 18 + TanStack Query v5, TanStack Virtual v3, Tailwind CSS 3.4, Headless UI, Zod validation
 - 003-sprint-3-1-documents: Added TypeScript 5.1+ (strict mode) + Next.js 15 App Router, React 18, Tailwind CSS 3.4, TanStack Query, TanStack Virtual, Zod
 
 <!-- MANUAL ADDITIONS START -->
+
+## Quotes Technical Debt - Constitutional Requirements
+
+**CRITICAL**: All quote system work MUST follow constitutional development principles:
+
+### Anti-Hallucination Protocol
+
+```typescript
+// ❌ FORBIDDEN - Console.log placeholders:
+const handleEdit = () => console.log("Edit:", id);
+
+// ✅ REQUIRED - Actual business logic:
+const handleEdit = async () => {
+  try {
+    setLoading(true);
+    await onEdit(quote.id);
+    toast.success("Quote opened for editing");
+  } catch (error) {
+    toast.error("Failed to open quote");
+  } finally {
+    setLoading(false);
+  }
+};
+```
+
+### Evidence-First Development
+
+- All components MUST achieve LEVEL 4+ constitutional status
+- Progress claims MUST be validated with `node .specify/tools/constitutional-checker.js`
+- UI functionality MUST be verified with MCP browser testing
+- Test coverage MUST be ≥90% with passing tests
+
+### Quote System Patterns
+
+- **Progressive Loading**: Skeleton states for 1,000+ quotes
+- **Export System**: PDF individual, Excel bulk (not both formats for both)
+- **Bulk Operations**: Simple progress bar with cancel option
+- **Performance**: 100ms response times maintained
+- **Accessibility**: WCAG 2.1 AA compliance required
+
+See `specs/006-quotes-technical-debt/quickstart.md` for detailed implementation patterns.
+
+### Mandatory Task Progress Tracking
+
+**CONSTITUTIONAL MANDATE 7**: During development sprints, task progress MUST be updated immediately after each task completion:
+
+- Update `specs/006-quotes-technical-debt/tasks.md` with [x] marking
+- Document completion timestamp and validation evidence
+- Record any constitutional compliance issues encountered
+- Include links to actual artifacts (files, tests, commits) created
+- NEVER proceed to next task without updating current task status
+
+This prevents development hallucination and ensures accurate sprint progress tracking.
+
 <!-- MANUAL ADDITIONS END -->
