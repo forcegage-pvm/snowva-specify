@@ -37,6 +37,20 @@ TypeScript 5.0+, Node.js 18+: Follow constitutional principles - Component-First
 
 **MANDATORY**: ALL component status reports MUST pass constitutional validation using: `node .specify/tools/constitutional-checker.js [status-file.md]`. Reports failing constitutional validation MUST be remediated. See `.specify/templates/component-status-template.md` for reporting format.
 
+**CONSTITUTIONAL ENFORCEMENT ACTIVE**: Constitutional Amendments 1-3 are ENFORCED with automated tools:
+
+- **Amendment 1**: Mandatory validation gates prevent task completion without evidence
+- **Amendment 2**: MCP browser testing required for ALL UI functionality claims
+- **Amendment 3**: Automated constitutional audit blocks development when compliance < 80%
+
+**ENFORCEMENT TOOLS**:
+
+- Pre-task validation: `node .specify/tools/pre-task-check.js [taskId]`
+- Post-task validation: `node .specify/tools/post-task-validation.js [taskId]`
+- MCP evidence validation: `node .specify/tools/mcp-evidence-validator.js [evidenceDir] [taskId]`
+- Constitutional audit: `node .specify/tools/constitutional-audit.js`
+- Full enforcement: `node .specify/tools/constitutional-enforcement.js`
+
 See .specify/memory/constitution.md and .specify/memory/testing-strategy.md for complete guidelines.
 
 ## Recent Changes
@@ -101,5 +115,27 @@ See `specs/006-quotes-technical-debt/quickstart.md` for detailed implementation 
 - NEVER proceed to next task without updating current task status
 
 This prevents development hallucination and ensures accurate sprint progress tracking.
+
+### Constitutional Enforcement Integration
+
+**CRITICAL**: All development work is now protected by Constitutional Amendments 1-3:
+
+1. **Pre-Task Gate**: `node .specify/tools/pre-task-check.js [taskId]` - Validates prerequisites
+2. **Implementation Work**: Normal development with constitutional principles
+3. **Post-Task Gate**: `node .specify/tools/post-task-validation.js [taskId]` - 3-gate validation
+4. **MCP Evidence**: Browser testing evidence required in `evidence/[taskId]/`
+5. **Constitutional Audit**: Regular compliance audits prevent violations
+
+**Development HALTS** when constitutional compliance falls below 80%. This prevents the hallucination crisis that led to 33 tasks being falsely marked complete without any real validation.
+
+**Evidence Requirements**:
+
+- Screenshots of working UI functionality
+- MCP browser interaction logs
+- Functional test results with user workflows
+- Error handling validation
+- Performance impact documentation
+
+**NO UI FUNCTIONALITY CLAIMS** are accepted without corresponding MCP browser testing evidence.
 
 <!-- MANUAL ADDITIONS END -->

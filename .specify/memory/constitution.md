@@ -455,6 +455,100 @@ In real-world development, there are situations where strict constitutional adhe
 
 ---
 
+## CONSTITUTIONAL AMENDMENTS
+
+### AMENDMENT 1: MANDATORY VALIDATION GATES (September 28, 2025)
+
+**Purpose**: Prevent task completion without proper validation by installing automated gates
+
+**Pre-Task Validation Gate**:
+- Tool: `.specify/tools/pre-task-check.js`
+- Requirements: All prerequisites verified before task execution
+- Blocks: Task start without proper environment, dependencies, or prerequisite completion
+- Usage: `node .specify/tools/pre-task-check.js [taskId]`
+
+**Post-Task Validation Gate**:
+- Tool: `.specify/tools/post-task-validation.js`
+- Requirements: 3-gate validation system before task completion
+  - **Implementation Gate**: Code compilation, linting, basic functionality
+  - **MCP Gate**: Browser testing evidence, screenshots, interaction logs
+  - **Constitutional Gate**: Compliance checker validation, completion certificates
+- Blocks: Task completion marking without passing all 3 gates
+- Usage: `node .specify/tools/post-task-validation.js [taskId]`
+
+**Enforcement**: Tasks cannot be marked complete without passing validation gates
+
+### AMENDMENT 2: EVIDENCE-FIRST DEVELOPMENT (September 28, 2025)
+
+**Purpose**: Mandate MCP browser testing evidence for ALL UI functionality claims
+
+**MCP Evidence Requirements**:
+- Tool: `.specify/tools/mcp-evidence-validator.js`
+- Evidence Directory: `evidence/[taskId]/`
+- Required Files:
+  - `mcp-interaction.log` - Complete browser interaction log
+  - `functional-test-results.json` - Functional test validation results
+  - `screenshots/` - UI state screenshots and evidence
+  - `user-workflow-docs.md` - User workflow documentation
+  - `error-handling-tests.json` - Error scenario testing results
+
+**Validation Standards**:
+- Screenshot evidence for all UI states
+- Click-through testing for all interactive elements
+- User workflow validation for complete features
+- Error handling verification
+- Performance impact assessment
+
+**Enforcement**: No UI functionality claims accepted without MCP evidence
+
+### AMENDMENT 3: AUTOMATED ENFORCEMENT (September 28, 2025)
+
+**Purpose**: Implement fail-fast constitutional compliance with automated audit system
+
+**Constitutional Audit System**:
+- Tool: `.specify/tools/constitutional-audit.js`
+- Audits: All completed tasks for constitutional compliance
+- Compliance Threshold: 80% minimum for development continuation
+- Spot Checks: Random MCP evidence validation
+- Reports: Comprehensive compliance reports with recommendations
+
+**Automated Enforcement**:
+- Tool: `.specify/tools/constitutional-enforcement.js`
+- Git Hooks: Pre-commit constitutional checks
+- Development Gates: Constitutional compliance required for server start
+- Task Wrappers: All task operations go through constitutional validation
+- Package Scripts: `npm run constitutional:audit`, `npm run constitutional:enforce`
+
+**Fail-Fast Protocol**:
+- Development HALT when compliance < 80%
+- Immediate violation detection and reporting
+- Automated remediation guidance
+- Progress blocking until violations resolved
+
+**Constitutional Status Tracking**: `.specify/tracking/constitutional-status.json`
+
+**Enforcement Tools Integration**:
+```bash
+# Pre-task validation
+node .specify/tools/pre-task-check.js T001
+
+# Post-task validation
+node .specify/tools/post-task-validation.js T001
+
+# MCP evidence validation
+node .specify/tools/mcp-evidence-validator.js ./evidence/T001 T001
+
+# Constitutional audit
+node .specify/tools/constitutional-audit.js
+
+# Full enforcement activation
+node .specify/tools/constitutional-enforcement.js
+```
+
+**Amendment Status**: ACTIVE & ENFORCED - All three amendments are implemented with automated enforcement tools
+
+---
+
 ## CONSTITUTIONAL VIOLATIONS & REMEDIES
 
 ### Violation: False Completion Claims
@@ -463,6 +557,7 @@ In real-world development, there are situations where strict constitutional adhe
 2. Full validation of all recent claims
 3. Honest status reassessment
 4. Process review and reinforcement
+5. **NEW**: Run constitutional audit to identify all violations
 
 ### Violation: Documentation Without Validation
 **Remedy**:

@@ -1,0 +1,527 @@
+{
+  "auditId": "audit_1759059187637",
+  "timestamp": "2025-09-28T11:33:07.637Z",
+  "tasksAudited": 33,
+  "taskResults": {
+    "T001": {
+      "taskId": "T001",
+      "timestamp": "2025-09-28T11:33:05.936Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T002": {
+      "taskId": "T002",
+      "timestamp": "2025-09-28T11:33:05.991Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T003": {
+      "taskId": "T003",
+      "timestamp": "2025-09-28T11:33:06.045Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T004": {
+      "taskId": "T004",
+      "timestamp": "2025-09-28T11:33:06.103Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T005": {
+      "taskId": "T005",
+      "timestamp": "2025-09-28T11:33:06.154Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T006": {
+      "taskId": "T006",
+      "timestamp": "2025-09-28T11:33:06.207Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T007": {
+      "taskId": "T007",
+      "timestamp": "2025-09-28T11:33:06.264Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T008": {
+      "taskId": "T008",
+      "timestamp": "2025-09-28T11:33:06.316Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T009": {
+      "taskId": "T009",
+      "timestamp": "2025-09-28T11:33:06.367Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T010": {
+      "taskId": "T010",
+      "timestamp": "2025-09-28T11:33:06.417Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T011": {
+      "taskId": "T011",
+      "timestamp": "2025-09-28T11:33:06.469Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T012": {
+      "taskId": "T012",
+      "timestamp": "2025-09-28T11:33:06.518Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T013": {
+      "taskId": "T013",
+      "timestamp": "2025-09-28T11:33:06.569Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T014": {
+      "taskId": "T014",
+      "timestamp": "2025-09-28T11:33:06.621Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T015": {
+      "taskId": "T015",
+      "timestamp": "2025-09-28T11:33:06.672Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T016": {
+      "taskId": "T016",
+      "timestamp": "2025-09-28T11:33:06.728Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T017": {
+      "taskId": "T017",
+      "timestamp": "2025-09-28T11:33:06.781Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T018": {
+      "taskId": "T018",
+      "timestamp": "2025-09-28T11:33:06.831Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T019": {
+      "taskId": "T019",
+      "timestamp": "2025-09-28T11:33:06.883Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T020": {
+      "taskId": "T020",
+      "timestamp": "2025-09-28T11:33:06.936Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T021": {
+      "taskId": "T021",
+      "timestamp": "2025-09-28T11:33:06.986Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T022": {
+      "taskId": "T022",
+      "timestamp": "2025-09-28T11:33:07.035Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T023": {
+      "taskId": "T023",
+      "timestamp": "2025-09-28T11:33:07.087Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T024": {
+      "taskId": "T024",
+      "timestamp": "2025-09-28T11:33:07.138Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T025": {
+      "taskId": "T025",
+      "timestamp": "2025-09-28T11:33:07.188Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T026": {
+      "taskId": "T026",
+      "timestamp": "2025-09-28T11:33:07.236Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T027": {
+      "taskId": "T027",
+      "timestamp": "2025-09-28T11:33:07.287Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T028": {
+      "taskId": "T028",
+      "timestamp": "2025-09-28T11:33:07.336Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T029": {
+      "taskId": "T029",
+      "timestamp": "2025-09-28T11:33:07.386Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T030": {
+      "taskId": "T030",
+      "timestamp": "2025-09-28T11:33:07.436Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T031": {
+      "taskId": "T031",
+      "timestamp": "2025-09-28T11:33:07.487Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T032": {
+      "taskId": "T032",
+      "timestamp": "2025-09-28T11:33:07.538Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    },
+    "T033": {
+      "taskId": "T033",
+      "timestamp": "2025-09-28T11:33:07.587Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "No evidence directory found"
+      ],
+      "warnings": []
+    }
+  },
+  "overallCompliance": 0,
+  "criticalViolations": 36,
+  "warnings": 0,
+  "recommendations": [
+    {
+      "type": "critical",
+      "issue": "Missing MCP Evidence",
+      "affected": [
+        "T001",
+        "T002",
+        "T003",
+        "T004",
+        "T005",
+        "T006",
+        "T007",
+        "T008",
+        "T009",
+        "T010",
+        "T011",
+        "T012",
+        "T013",
+        "T014",
+        "T015",
+        "T016",
+        "T017",
+        "T018",
+        "T019",
+        "T020",
+        "T021",
+        "T022",
+        "T023",
+        "T024",
+        "T025",
+        "T026",
+        "T027",
+        "T028",
+        "T029",
+        "T030",
+        "T031",
+        "T032",
+        "T033"
+      ],
+      "action": "Perform MCP browser testing and capture evidence for all affected tasks"
+    },
+    {
+      "type": "critical",
+      "issue": "Constitutional Violations",
+      "affected": [
+        "T001",
+        "T002",
+        "T003",
+        "T004",
+        "T005",
+        "T006",
+        "T007",
+        "T008",
+        "T009",
+        "T010",
+        "T011",
+        "T012",
+        "T013",
+        "T014",
+        "T015",
+        "T016",
+        "T017",
+        "T018",
+        "T019",
+        "T020",
+        "T021",
+        "T022",
+        "T023",
+        "T024",
+        "T025",
+        "T026",
+        "T027",
+        "T028",
+        "T029",
+        "T030",
+        "T031",
+        "T032",
+        "T033"
+      ],
+      "action": "Review and fix constitutional compliance issues for all affected tasks"
+    },
+    {
+      "type": "process",
+      "issue": "High Error Rate",
+      "action": "Review and strengthen constitutional enforcement processes"
+    }
+  ],
+  "auditor": "constitutional-audit.js"
+}
