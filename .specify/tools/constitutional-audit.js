@@ -16,6 +16,7 @@ class ConstitutionalAuditor {
     this.warnings = [];
     this.auditTasks = [];
     this.auditResults = {};
+    this.taskMCPRequirements = {}; // Maps taskId to MCP requirement
   }
 
   findRepoRoot() {
@@ -73,6 +74,9 @@ class ConstitutionalAuditor {
     while ((match = completedTaskPattern.exec(tasksContent)) !== null) {
       this.auditTasks.push(match[1]);
     }
+
+    // Parse MCP requirements for all tasks
+    await this.parseMCPRequirements(tasksContent);
 
     console.log(`📋 Found ${this.auditTasks.length} completed tasks to audit`);
   }
@@ -161,7 +165,34 @@ class ConstitutionalAuditor {
     }
   }
 
+  async parseMCPRequirements(tasksContent) {
+    // Parse task blocks to extract MCP requirements
+    const taskBlocks = tasksContent.split(/(?=^-\s*\[.\]\s*T\d+)/gm);
+
+    for (const block of taskBlocks) {
+      const taskMatch = block.match(/^-\s*\[.\]\s*(T\d+)/m);
+      if (!taskMatch) continue;
+
+      const taskId = taskMatch[1];
+      const mcpMatch = block.match(/MCP:\s*(.*?)$/m);
+
+      if (mcpMatch) {
+        const mcpRequirement = mcpMatch[1].trim();
+        this.taskMCPRequirements[taskId] = mcpRequirement;
+      }
+    }
+  }
+
   async checkTaskMCPEvidence(taskId, taskAudit) {
+    const mcpRequirement = this.taskMCPRequirements[taskId];
+
+    // If task is marked as "N/A" for MCP, skip MCP validation
+    if (mcpRequirement && mcpRequirement.startsWith("N/A")) {
+      taskAudit.mcpEvidence = true; // Pass MCP check for N/A tasks
+      taskAudit.warnings.push(`MCP N/A: ${mcpRequirement}`);
+      return;
+    }
+
     const evidenceDir = path.join(this.repoRoot, "evidence", taskId);
 
     if (!fs.existsSync(evidenceDir)) {
@@ -234,6 +265,14 @@ class ConstitutionalAuditor {
   }
 
   async runMCPSpotCheck(taskId) {
+    const mcpRequirement = this.taskMCPRequirements[taskId];
+
+    // Skip MCP spot-check for N/A tasks
+    if (mcpRequirement && mcpRequirement.startsWith("N/A")) {
+      console.log(`   ✅ ${taskId} spot-check skipped (MCP N/A)`);
+      return;
+    }
+
     const evidenceDir = path.join(this.repoRoot, "evidence", taskId);
 
     if (!fs.existsSync(evidenceDir)) {

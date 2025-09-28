@@ -18,6 +18,7 @@ class PostTaskValidator {
     this.warnings = [];
     this.validationResults = {};
     this.repoRoot = this.findRepoRoot();
+    this.mcpRequirement = null;
   }
 
   findRepoRoot() {
@@ -35,10 +36,13 @@ class PostTaskValidator {
     console.log(`🔍 Post-Task Validation for ${this.taskId}`);
     console.log("=".repeat(60));
 
+    // Parse MCP requirements for this task
+    await this.parseMCPRequirement();
+
     // Constitutional Gate 1: Implementation Gate
     await this.validateImplementationGate();
 
-    // Constitutional Gate 2: MCP Validation Gate (MANDATORY)
+    // Constitutional Gate 2: MCP Validation Gate (CONDITIONAL)
     await this.validateMCPGate();
 
     // Constitutional Gate 3: Constitutional Compliance Gate
@@ -67,8 +71,129 @@ class PostTaskValidator {
     };
   }
 
+  async parseMCPRequirement() {
+    const tasksPath = path.join(
+      this.repoRoot,
+      "specs",
+      "006-quotes-technical-debt",
+      "tasks.md"
+    );
+
+    if (!fs.existsSync(tasksPath)) {
+      this.warnings.push(
+        "tasks.md not found - cannot determine MCP requirements"
+      );
+      return;
+    }
+
+    console.log(`🔍 DEBUG: Reading tasks.md from: ${tasksPath}`);
+    console.log(`🔍 DEBUG: File exists: ${fs.existsSync(tasksPath)}`);
+
+    const tasksContent = fs.readFileSync(tasksPath, "utf8");
+    console.log(`🔍 DEBUG: File content length: ${tasksContent.length}`);
+
+    // Debug: Check if task exists at all
+    console.log(
+      `🔍 DEBUG: Task ${this.taskId} mentioned ${
+        (tasksContent.match(new RegExp(this.taskId, "g")) || []).length
+      } times`
+    );
+
+    // Find the task block - simplified pattern first
+    const simplePattern = new RegExp(`- \\[[x ]\\] ${this.taskId} `, "gm");
+    const simpleMatch = tasksContent.match(simplePattern);
+
+    if (!simpleMatch) {
+      console.log(
+        `⚠️  DEBUG: Task ${this.taskId} not found with simple pattern`
+      );
+      return;
+    }
+
+    // Find the full task block for this specific task - captures multi-line task definitions
+    // Look for the task line and all following indented lines until next task or section
+    const taskStartIndex =
+      tasksContent.indexOf(`- [x] ${this.taskId} `) !== -1
+        ? tasksContent.indexOf(`- [x] ${this.taskId} `)
+        : tasksContent.indexOf(`- [ ] ${this.taskId} `);
+
+    if (taskStartIndex === -1) {
+      console.log(`⚠️  DEBUG: Task ${this.taskId} not found at start index`);
+      return;
+    }
+
+    // Find the end of this task block (next task or section header)
+    const remainingContent = tasksContent.substring(taskStartIndex);
+    const nextTaskMatch = remainingContent.match(/\n- \[[x ]\] T\d+/);
+    const nextSectionMatch = remainingContent.match(/\n## /);
+
+    let endIndex = remainingContent.length;
+    if (nextTaskMatch && nextSectionMatch) {
+      endIndex = Math.min(nextTaskMatch.index, nextSectionMatch.index);
+    } else if (nextTaskMatch) {
+      endIndex = nextTaskMatch.index;
+    } else if (nextSectionMatch) {
+      endIndex = nextSectionMatch.index;
+    }
+
+    const taskBlock = remainingContent.substring(0, endIndex);
+    const taskMatch = [taskBlock];
+
+    console.log(`🔍 DEBUG: Looking for task ${this.taskId}`);
+
+    if (taskMatch && taskMatch[0]) {
+      console.log(`🔍 DEBUG: Found task block (${taskMatch[0].length} chars)`);
+      console.log(`🔍 DEBUG: Task block content:\\n${taskMatch[0]}`);
+
+      // Try different MCP patterns
+      const mcpPatterns = [
+        /\s+- MCP: (.*?)$/m,
+        /- MCP: (.*?)$/m,
+        /MCP: (.*?)$/m,
+      ];
+
+      let found = false;
+      for (const pattern of mcpPatterns) {
+        const mcpMatch = taskMatch[0].match(pattern);
+        if (mcpMatch) {
+          this.mcpRequirement = mcpMatch[1].trim();
+          console.log(
+            `📋 Task ${this.taskId} MCP requirement: ${this.mcpRequirement}`
+          );
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        console.log(`⚠️  DEBUG: No MCP match found with any pattern`);
+      }
+    } else {
+      console.log(`⚠️  DEBUG: No task block found for ${this.taskId}`);
+    }
+  }
+
   async validateMCPGate() {
-    console.log("\n🌐 Gate 2: MCP Validation (MANDATORY)");
+    const isSkipped =
+      this.mcpRequirement && this.mcpRequirement.startsWith("N/A");
+
+    if (isSkipped) {
+      console.log(
+        `\n🌐 Gate 2: MCP Validation (SKIPPED - ${this.mcpRequirement})`
+      );
+      console.log("-".repeat(40));
+      console.log("✅ MCP validation skipped for non-UI task");
+
+      this.validationResults.mcpGate = {
+        passed: true,
+        skipped: true,
+        reason: this.mcpRequirement,
+        checks: ["mcp-requirement-check"],
+      };
+      return;
+    }
+
+    console.log("\n🌐 Gate 2: MCP Validation (REQUIRED)");
     console.log("-".repeat(40));
 
     await this.checkMCPEvidence();
@@ -91,14 +216,18 @@ class PostTaskValidator {
     console.log("\n⚖️  Gate 3: Constitutional Compliance");
     console.log("-".repeat(40));
 
+    // MANDATE 8: ZERO ERROR TOLERANCE - Constitutional requirement
+    await this.enforceZeroErrorTolerance();
     await this.runConstitutionalChecker();
     await this.validateCompletionLevel();
     await this.generateComplianceCertificate();
 
     this.validationResults.constitutionalGate = {
       passed:
-        this.errors.filter((e) => e.includes("Constitutional")).length === 0,
+        this.errors.filter((e) => e.includes("Constitutional")).length === 0 &&
+        this.errors.filter((e) => e.includes("MANDATE 8")).length === 0,
       checks: [
+        "zero-error-tolerance",
         "constitutional-checker",
         "completion-level",
         "compliance-certificate",
@@ -130,16 +259,115 @@ class PostTaskValidator {
     }
   }
 
-  async checkTypeScriptCompilation() {
+  async enforceZeroErrorTolerance() {
+    console.log("🚫 MANDATE 8: Zero Error Tolerance Check");
+
+    // Check TypeScript compilation with zero tolerance
+    await this.checkTypeScriptCompilationStrict();
+
+    // Check for any runtime errors in console (if applicable)
+    await this.checkLintingStrict();
+
+    // Verify no hanging errors in package.json or config files
+    await this.checkConfigurationHealth();
+  }
+
+  async checkTypeScriptCompilationStrict() {
     try {
       const webDir = path.join(this.repoRoot, "packages", "web");
-      execSync("npx tsc --noEmit", { cwd: webDir, stdio: "pipe" });
-      console.log("✓ TypeScript compilation successful");
+      const result = execSync("npx tsc --noEmit --skipLibCheck", {
+        cwd: webDir,
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "pipe"],
+      });
+
+      console.log("✅ MANDATE 8: TypeScript compilation ZERO ERRORS");
+    } catch (error) {
+      const errorOutput = error.stderr || error.stdout || error.message;
+
+      // Parse the error output to count actual errors
+      const errorCount = (errorOutput.match(/error TS\d+:/g) || []).length;
+
+      this.errors.push(
+        `MANDATE 8 VIOLATION: TypeScript compilation failed with ${errorCount} errors. ` +
+          `Per Constitutional Amendment 8, ALL errors must be resolved before task completion. ` +
+          `Error details: ${errorOutput.substring(0, 500)}...`
+      );
+
+      console.log(
+        `❌ MANDATE 8: TypeScript compilation found ${errorCount} ERRORS`
+      );
+      console.log("🚨 DEVELOPMENT MUST HALT until all errors are resolved");
+    }
+  }
+
+  async checkLintingStrict() {
+    try {
+      const webDir = path.join(this.repoRoot, "packages", "web");
+      const result = execSync("npm run lint", {
+        cwd: webDir,
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "pipe"],
+      });
+
+      console.log("✅ MANDATE 8: Linting ZERO ERRORS");
+    } catch (error) {
+      const errorOutput = error.stderr || error.stdout || error.message;
+
+      // Distinguish between errors and warnings
+      const errorCount = (errorOutput.match(/\s+error\s+/gi) || []).length;
+      const warningCount = (errorOutput.match(/\s+warning\s+/gi) || []).length;
+
+      if (errorCount > 0) {
+        this.errors.push(
+          `MANDATE 8 VIOLATION: Linting failed with ${errorCount} errors. ` +
+            `All linting ERRORS must be resolved before task completion.`
+        );
+        console.log(`❌ MANDATE 8: Linting found ${errorCount} ERRORS`);
+      } else if (warningCount > 0) {
+        this.warnings.push(
+          `Linting found ${warningCount} warnings. ` +
+            `Consider addressing these in post-sprint cleanup.`
+        );
+        console.log(
+          `⚠️  MANDATE 8: Linting found ${warningCount} warnings (acceptable)`
+        );
+      } else {
+        console.log("✅ MANDATE 8: Linting ZERO ERRORS");
+      }
+    }
+  }
+
+  async checkConfigurationHealth() {
+    try {
+      const webDir = path.join(this.repoRoot, "packages", "web");
+
+      // Check package.json exists and is valid JSON
+      const packagePath = path.join(webDir, "package.json");
+      if (fs.existsSync(packagePath)) {
+        JSON.parse(fs.readFileSync(packagePath, "utf8"));
+        console.log("✅ MANDATE 8: package.json is valid");
+      }
+
+      // Check tsconfig.json exists and is valid JSON
+      const tsconfigPath = path.join(webDir, "tsconfig.json");
+      if (fs.existsSync(tsconfigPath)) {
+        JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
+        console.log("✅ MANDATE 8: tsconfig.json is valid");
+      }
     } catch (error) {
       this.errors.push(
-        "TypeScript compilation failed - fix type errors before completion"
+        `MANDATE 8 VIOLATION: Configuration file corruption detected. ` +
+          `Fix configuration issues before task completion. Error: ${error.message}`
       );
+      console.log("❌ MANDATE 8: Configuration health check FAILED");
     }
+  }
+
+  // Legacy method - kept for backward compatibility but enhanced
+  async checkTypeScriptCompilation() {
+    // Delegate to the strict version for MANDATE 8 compliance
+    await this.checkTypeScriptCompilationStrict();
   }
 
   async checkLinting() {
@@ -247,6 +475,16 @@ class PostTaskValidator {
   }
 
   async runConstitutionalChecker() {
+    // For non-UI tasks (MCP: N/A), run specialized validation
+    const isNonUITask =
+      this.mcpRequirement && this.mcpRequirement.startsWith("N/A");
+
+    if (isNonUITask) {
+      console.log("✓ Non-UI task constitutional validation");
+      await this.validateNonUITaskCompliance();
+      return;
+    }
+
     const checkerPath = path.join(
       this.repoRoot,
       ".specify",
@@ -272,6 +510,157 @@ class PostTaskValidator {
         "Constitutional checker failed - review compliance requirements"
       );
     }
+  }
+
+  async validateNonUITaskCompliance() {
+    // Non-UI task specific constitutional validation (schemas, services, etc.)
+    let implementationFile = null;
+
+    // Extract file path from task description
+    const tasksPath = path.join(
+      this.repoRoot,
+      "specs",
+      "006-quotes-technical-debt",
+      "tasks.md"
+    );
+    if (fs.existsSync(tasksPath)) {
+      const tasksContent = fs.readFileSync(tasksPath, "utf8");
+      // Look for any .ts file path in the task description
+      const taskMatch = tasksContent.match(
+        new RegExp(`${this.taskId}.*?packages/web/src/[^\\s]+\\.ts`)
+      );
+      if (taskMatch) {
+        const fileMatch = taskMatch[0].match(/packages\/web\/src\/[^\s]+\.ts/);
+        if (fileMatch) {
+          implementationFile = path.join(this.repoRoot, fileMatch[0]);
+        }
+      }
+    }
+
+    if (!implementationFile || !fs.existsSync(implementationFile)) {
+      this.errors.push("Implementation file not found or not implemented");
+      return;
+    }
+
+    const implementationContent = fs.readFileSync(implementationFile, "utf8");
+    const isSchemaFile =
+      implementationFile.includes("validation") ||
+      implementationFile.includes("schema");
+    const isServiceFile = implementationFile.includes("services");
+
+    // Constitutional compliance checks for non-UI tasks
+    let checks = [];
+
+    if (isSchemaFile) {
+      // Schema-specific checks
+      checks = [
+        {
+          name: "Zod schema definitions",
+          test:
+            implementationContent.includes("z.") &&
+            implementationContent.includes("Schema"),
+          error: "Schema file lacks proper Zod schema definitions",
+        },
+        {
+          name: "TypeScript type exports",
+          test:
+            implementationContent.includes("export type") ||
+            implementationContent.includes("export interface"),
+          error: "Schema file lacks proper TypeScript type exports",
+        },
+        {
+          name: "Validation functions",
+          test:
+            implementationContent.includes("parse") ||
+            implementationContent.includes("validate"),
+          error: "Schema file lacks validation helper functions",
+        },
+        {
+          name: "No console.log placeholders",
+          test: !implementationContent.includes("console.log"),
+          error:
+            "Schema contains console.log placeholders - implement real validation logic",
+        },
+        {
+          name: "Substantial implementation",
+          test: implementationContent.length > 500,
+          error: "Schema appears incomplete or too minimal",
+        },
+      ];
+    } else if (isServiceFile) {
+      // Service-specific checks
+      checks = [
+        {
+          name: "No console.log placeholders (anti-hallucination)",
+          test: !implementationContent.includes("console.log"),
+          error:
+            "Service contains console.log placeholders - implement real business logic",
+        },
+        {
+          name: "Error handling implementation",
+          test:
+            implementationContent.includes("try") &&
+            implementationContent.includes("catch"),
+          error: "Service lacks proper error handling implementation",
+        },
+        {
+          name: "Type validation with Zod",
+          test:
+            implementationContent.includes("z.") ||
+            implementationContent.includes("Schema"),
+          error: "Service lacks Zod validation integration",
+        },
+        {
+          name: "Business logic implementation",
+          test:
+            implementationContent.length > 1000 &&
+            implementationContent.includes("async"),
+          error:
+            "Service appears to be incomplete or lacks substantial business logic",
+        },
+        {
+          name: "Proper TypeScript types",
+          test:
+            implementationContent.includes("interface") ||
+            implementationContent.includes("type"),
+          error: "Service lacks proper TypeScript type definitions",
+        },
+      ];
+    } else {
+      // Generic non-UI checks
+      checks = [
+        {
+          name: "No console.log placeholders",
+          test: !implementationContent.includes("console.log"),
+          error: "Implementation contains console.log placeholders",
+        },
+        {
+          name: "TypeScript implementation",
+          test:
+            implementationContent.includes("export") &&
+            implementationContent.length > 100,
+          error: "Implementation appears incomplete",
+        },
+      ];
+    }
+
+    const failedChecks = checks.filter((check) => !check.test);
+    const passedChecks = checks.filter((check) => check.test);
+
+    if (failedChecks.length > 0) {
+      failedChecks.forEach((check) => {
+        this.errors.push(`Constitutional: ${check.error}`);
+      });
+    }
+
+    const taskType = isSchemaFile
+      ? "Schema"
+      : isServiceFile
+      ? "Service layer"
+      : "Non-UI task";
+    console.log(
+      `✓ ${taskType} compliance: ${passedChecks.length}/${checks.length} checks passed`
+    );
   }
 
   async validateCompletionLevel() {

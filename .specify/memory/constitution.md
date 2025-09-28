@@ -199,6 +199,46 @@
 **Sprint Context Awareness**:
 When working within a development sprint context (e.g., `specs/006-quotes-technical-debt/tasks.md`), this mandate becomes CRITICAL for preventing development hallucination and ensuring accurate progress tracking throughout the entire sprint lifecycle.
 
+### MANDATE 8: ZERO ERROR TOLERANCE (NON-NEGOTIABLE)
+
+**MUST DO** (Mandate 8):
+- ✅ IMMEDIATELY resolve ALL compilation errors, linting errors, and runtime errors before proceeding to next task
+- ✅ Maintain TypeScript compilation with ZERO errors at all times (except during active TDD red phase)
+- ✅ Fix configuration issues, import problems, and type mismatches the moment they appear
+- ✅ Validate that npx tsc --noEmit --skipLibCheck passes with zero errors after every significant change
+- ✅ Treat ANY error (except intentional TDD failing tests) as a development blocker that must be resolved immediately
+- ✅ Document the specific errors encountered and exactly how they were resolved
+- ✅ Run compilation checks after every file modification to catch errors early
+
+**MUST NOT DO** (Mandate 8):
+- ❌ NEVER ignore errors of any kind (compilation, linting, runtime, type checking)
+- ❌ NEVER proceed with new development while ANY errors exist in the codebase
+- ❌ NEVER modify configurations to hide errors instead of fixing root causes
+- ❌ NEVER assume errors are "temporary" or "will fix themselves later"
+- ❌ NEVER defer error resolution to "after the current task" unless it's TDD red phase
+- ❌ NEVER accept a codebase with errors as "good enough" or "working state"
+- ❌ NEVER skip error checking to "save time" or maintain development momentum
+
+**The Only Exception**: TDD failing tests during red phase (when writing tests before implementation)
+
+**Error Resolution Protocol**:
+1. **Immediate Detection**: Check for errors after every file save/modification
+2. **Development Halt**: Stop all feature development when errors appear
+3. **Root Cause Analysis**: Investigate the true source of each error, not just surface symptoms
+4. **Systematic Resolution**: Fix errors one by one, validating each fix
+5. **Compilation Verification**: Run `npx tsc --noEmit --skipLibCheck` to confirm zero errors
+6. **Documentation**: Record what errors occurred and how they were resolved
+7. **Resume Development**: Only proceed when codebase is in clean, error-free state
+
+**Rationale**: 
+After experiencing the cascade of 389 TypeScript errors caused by configuration issues, and the development paralysis that followed, it is now CONSTITUTIONAL LAW that NO ERRORS of any kind are acceptable in the codebase. A single overlooked error can multiply into hundreds of errors, blocking all development progress. The discipline of immediate error resolution prevents technical debt accumulation and ensures sustainable development velocity.
+
+**Success Criteria**: 
+- TypeScript compilation returns zero errors
+- Linting passes without errors (warnings may be temporarily acceptable with documentation)
+- No runtime console errors during normal operation
+- All existing tests pass (except TDD red phase)
+
 ---
 
 ## DEVELOPMENT WORKFLOW CONSTITUTION

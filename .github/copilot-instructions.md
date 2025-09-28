@@ -31,6 +31,8 @@ npm test; npm run lint
 
 TypeScript 5.0+, Node.js 18+: Follow constitutional principles - Component-First development with Tailwind CSS utilities, Test-First TDD approach (Test Pyramid: 70% Unit, 20% Integration, 10% E2E), Business Data Integrity for financial calculations, Design System Consistency, and Performance/Accessibility requirements. ALL hooks and validation schemas MUST have comprehensive unit tests with edge cases.
 
+**CONSTITUTIONAL MANDATE 8: ZERO ERROR TOLERANCE** - NO ERRORS of ANY KIND are acceptable in the codebase except TDD failing tests during red phase. ALL TypeScript compilation errors, linting errors, and runtime errors MUST be resolved immediately before proceeding to next task. Run `npx tsc --noEmit --skipLibCheck` after every significant change to ensure zero errors.
+
 **CRITICAL**: IMMEDIATELY update tasks.md with [x] after completing each task - NO EXCEPTIONS. This prevents hallucination and ensures accurate progress tracking.
 
 **CONSTITUTIONAL v1.1**: All component status reporting MUST use standardized completion levels (LEVEL 0-5). Claims of functionality MUST be supported by demonstrable evidence. Use completion level framework: 🔴 STUB → 🟡 COSMETIC → 🟠 INTERACTIVE → 🔵 INTEGRATED → 🟢 FUNCTIONAL → ✅ PRODUCTION.
