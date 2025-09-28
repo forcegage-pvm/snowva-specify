@@ -117,6 +117,39 @@ export function QuoteList({
     console.log('Email quote:', quote.quoteNumber);
     // In a real app, this would open email composer or send directly
   }, []);
+
+  // Quote action handlers
+  const handleEditQuote = useCallback((quote: Quote) => {
+    console.log('Edit quote:', quote.quoteNumber);
+    // In a real app, this would navigate to the quote composer with the quote data
+    // router.push(`/quotes/${quote.id}/edit`);
+  }, []);
+
+  const handleDuplicateQuote = useCallback((quote: Quote) => {
+    console.log('Duplicate quote:', quote.quoteNumber);
+    // In a real app, this would create a copy of the quote and navigate to composer
+    // router.push(`/quotes/new?duplicateFrom=${quote.id}`);
+  }, []);
+
+  const handleConvertQuote = useCallback((quote: Quote) => {
+    console.log('Convert quote to invoice:', quote.quoteNumber);
+    // In a real app, this would convert the quote to an invoice
+    // router.push(`/invoices/new?convertFrom=${quote.id}`);
+  }, []);
+
+  const handleArchiveQuote = useCallback((quote: Quote) => {
+    console.log('Archive quote:', quote.quoteNumber);
+    // In a real app, this would update the quote status to archived
+    // await updateQuoteStatus(quote.id, QuoteStatus.Archived);
+    // refetch();
+  }, []);
+
+  const handleStatusChange = useCallback((quote: Quote) => {
+    console.log('Change status for quote:', quote.quoteNumber);
+    // In a real app, this would open a status change modal
+    // setStatusChangeQuote(quote);
+    // setStatusChangeModalOpen(true);
+  }, []);
   
   // Loading state
   if (isLoading) {
@@ -193,7 +226,12 @@ export function QuoteList({
     onQuoteSelect: handleQuoteSelect,
     onSelectAll: handleSelectAll,
     onDeselectAll: deselectAll,
-    onViewQuote: handleViewQuote
+    onViewQuote: handleViewQuote,
+    onEditQuote: handleEditQuote,
+    onDuplicateQuote: handleDuplicateQuote,
+    onConvertQuote: handleConvertQuote,
+    onArchiveQuote: handleArchiveQuote,
+    onStatusChange: handleStatusChange
   };
   
   if (viewMode === 'table') {

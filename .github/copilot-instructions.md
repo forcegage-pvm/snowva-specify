@@ -33,6 +33,10 @@ TypeScript 5.0+, Node.js 18+: Follow constitutional principles - Component-First
 
 **CRITICAL**: IMMEDIATELY update tasks.md with [x] after completing each task - NO EXCEPTIONS. This prevents hallucination and ensures accurate progress tracking.
 
+**CONSTITUTIONAL v1.1**: All component status reporting MUST use standardized completion levels (LEVEL 0-5). Claims of functionality MUST be supported by demonstrable evidence. Use completion level framework: 🔴 STUB → 🟡 COSMETIC → 🟠 INTERACTIVE → 🔵 INTEGRATED → 🟢 FUNCTIONAL → ✅ PRODUCTION.
+
+**MANDATORY**: ALL component status reports MUST pass constitutional validation using: `node .specify/tools/constitutional-checker.js [status-file.md]`. Reports failing constitutional validation MUST be remediated. See `.specify/templates/component-status-template.md` for reporting format.
+
 See .specify/memory/constitution.md and .specify/memory/testing-strategy.md for complete guidelines.
 
 ## Recent Changes
