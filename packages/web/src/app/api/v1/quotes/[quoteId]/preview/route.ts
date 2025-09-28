@@ -81,7 +81,7 @@ export async function GET(
     
     // Handle different error types
     if (error && typeof error === 'object' && 'statusCode' in error) {
-      const apiError = error as any;
+      const apiError = error as { code?: string; message?: string; statusCode?: number };
       return NextResponse.json({
         error: {
           code: apiError.code || 'INTERNAL_SERVER_ERROR',
@@ -144,7 +144,7 @@ export async function POST(
     
     // Handle different error types
     if (error && typeof error === 'object' && 'statusCode' in error) {
-      const apiError = error as any;
+      const apiError = error as { code?: string; message?: string; statusCode?: number };
       return NextResponse.json({
         error: {
           code: apiError.code || 'INTERNAL_SERVER_ERROR',

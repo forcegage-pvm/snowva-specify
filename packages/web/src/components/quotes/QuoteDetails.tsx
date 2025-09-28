@@ -1,10 +1,31 @@
 'use client';
 
 import { formatCurrency, formatDate } from '@/lib/utils/format';
-import { getStatusColor, getStatusLabel, getValidNextStatuses } from '@/lib/utils/quote-status';
 import { Quote } from '@/types/quotes/Quote';
-import { QuoteStatus } from '@/types/quotes/QuoteStatus';
+import { QuoteStatus, STATUS_CONFIG, VALID_STATUS_TRANSITIONS } from '@/types/quotes/QuoteStatus';
 import { useCallback, useState } from 'react';
+
+// Inline utility functions
+function getStatusLabel(status: QuoteStatus): string {
+  return STATUS_CONFIG[status]?.label || status;
+}
+
+function getStatusColor(status: QuoteStatus): string {
+  const colors: Record<QuoteStatus, string> = {
+    [QuoteStatus.Draft]: 'bg-yellow-100 text-yellow-800',
+    [QuoteStatus.Pending]: 'bg-blue-100 text-blue-800',
+    [QuoteStatus.Approved]: 'bg-green-100 text-green-800',
+    [QuoteStatus.Rejected]: 'bg-red-100 text-red-800',
+    [QuoteStatus.Expired]: 'bg-orange-100 text-orange-800',
+    [QuoteStatus.Converted]: 'bg-purple-100 text-purple-800',
+    [QuoteStatus.Archived]: 'bg-gray-100 text-gray-800'
+  };
+  return colors[status] || 'bg-gray-100 text-gray-800';
+}
+
+function getValidNextStatuses(status: QuoteStatus): QuoteStatus[] {
+  return VALID_STATUS_TRANSITIONS[status] || [];
+}
 
 interface QuoteDetailsProps {
   quote: Quote;
@@ -303,7 +324,7 @@ export function QuoteDetails({
                           {formatCurrency(item.unitPrice)}
                         </td>
                         <td className="px-4 py-4 text-sm font-medium text-gray-900">
-                          {formatCurrency(item.totalPrice)}
+                          {formatCurrency(item.totalPrice || item.total)}
                         </td>
                       </tr>
                     ))}

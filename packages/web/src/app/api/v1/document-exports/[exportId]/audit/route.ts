@@ -3,9 +3,9 @@ import { NextResponse } from 'next/server';
 import { getDocumentAuditTrail } from '@/services/DocumentExportService';
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     exportId: string;
-  };
+  }>;
 }
 
 function parseLimitParam(value: string | null, fallback: number, min = 1, max = 100): number {
@@ -24,6 +24,7 @@ function parseLimitParam(value: string | null, fallback: number, min = 1, max = 
 const DEFAULT_LIMIT = 20;
 
 export async function GET(request: Request, context: RouteContext) {
+  const params = await context.params;
   try {
     const url = new URL(request.url);
     const { searchParams } = url;
@@ -31,7 +32,7 @@ export async function GET(request: Request, context: RouteContext) {
     const cursor = searchParams.get('cursor');
     const limit = parseLimitParam(searchParams.get('limit'), DEFAULT_LIMIT, 1, 100);
 
-    const result = await getDocumentAuditTrail(context.params.exportId, cursor, limit);
+    const result = await getDocumentAuditTrail(params.exportId, cursor, limit);
 
     return NextResponse.json({
       items: result.items.map((event) => ({

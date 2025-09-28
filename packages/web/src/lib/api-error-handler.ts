@@ -126,8 +126,8 @@ export class ApiErrorHandler {
   /**
    * Handle Next.js specific errors (like NotFound)
    */
-  private handleNextError(error: any, context: ErrorContext): ApiError {
-    if (error.digest === 'NEXT_NOT_FOUND') {
+  private handleNextError(error: unknown, context: ErrorContext): ApiError {
+    if (typeof error === 'object' && error !== null && 'digest' in error && error.digest === 'NEXT_NOT_FOUND') {
       return {
         code: ApiErrorCode.NOT_FOUND,
         message: this.getCustomMessage(
@@ -142,7 +142,7 @@ export class ApiErrorHandler {
       };
     }
 
-    return this.handleStandardError(error, context);
+    return this.handleStandardError(error instanceof Error ? error : new Error(String(error)), context);
   }
 
   /**
@@ -228,7 +228,7 @@ export class ApiErrorHandler {
     const context: ErrorContext = {
       requestId,
       path: request.nextUrl.pathname,
-      method: request.method as any,
+      method: request.method,
       userAgent: request.headers.get('user-agent') || undefined,
       ipAddress: this.getClientIP(request),
       timestamp: new Date(),
@@ -242,7 +242,7 @@ export class ApiErrorHandler {
       return {
         requestId: crypto.randomUUID(),
         path: request.nextUrl.pathname,
-        method: request.method as any,
+        method: request.method,
         timestamp: new Date()
       };
     }
@@ -271,7 +271,7 @@ export class ApiErrorHandler {
   /**
    * Group validation errors by field
    */
-  private groupValidationErrorsByField(validationErrors: any[]): Record<string, string[]> {
+  private groupValidationErrorsByField(validationErrors: Array<{ field: string; message: string }>): Record<string, string[]> {
     const grouped: Record<string, string[]> = {};
     
     for (const error of validationErrors) {
@@ -357,7 +357,7 @@ export class ApiErrorHandler {
       typeof error === 'object' &&
       error !== null &&
       'digest' in error &&
-      typeof (error as any).digest === 'string'
+      typeof (error as { digest: unknown }).digest === 'string'
     );
   }
 
@@ -373,7 +373,7 @@ export class ApiErrorHandler {
     };
   }
 
-  static createValidationError(message: string, details?: any): ApiError {
+  static createValidationError(message: string, details?: Record<string, unknown>): ApiError {
     return {
       code: ApiErrorCode.VALIDATION_FAILED,
       message,

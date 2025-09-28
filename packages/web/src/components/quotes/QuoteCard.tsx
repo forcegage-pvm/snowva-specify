@@ -1,14 +1,32 @@
 'use client';
 
 import { formatCurrency, formatDate } from '@/lib/utils/format';
-import { getStatusColor, getStatusLabel } from '@/lib/utils/quote-status';
 import { Quote } from '@/types/quotes/Quote';
+import { QuoteStatus, STATUS_CONFIG } from '@/types/quotes/QuoteStatus';
 import { memo, useCallback } from 'react';
+
+// Inline utility functions
+function getStatusLabel(status: QuoteStatus): string {
+  return STATUS_CONFIG[status]?.label || status;
+}
+
+function getStatusColor(status: QuoteStatus): string {
+  const colors: Record<QuoteStatus, string> = {
+    [QuoteStatus.Draft]: 'bg-gray-100 text-gray-800',
+    [QuoteStatus.Pending]: 'bg-yellow-100 text-yellow-800',
+    [QuoteStatus.Approved]: 'bg-green-100 text-green-800',
+    [QuoteStatus.Rejected]: 'bg-red-100 text-red-800',
+    [QuoteStatus.Expired]: 'bg-orange-100 text-orange-800',
+    [QuoteStatus.Converted]: 'bg-purple-100 text-purple-800',
+    [QuoteStatus.Archived]: 'bg-gray-100 text-gray-800'
+  };
+  return colors[status] || 'bg-gray-100 text-gray-800';
+}
 
 interface QuoteCardProps {
   quote: Quote;
   isSelected?: boolean;
-  onSelect?: (event?: React.MouseEvent) => void;
+  onSelect?: (event: React.MouseEvent) => void;
   layout?: 'grid' | 'list';
   size?: 'small' | 'medium' | 'large';
   density?: 'compact' | 'comfortable' | 'spacious';
@@ -39,7 +57,8 @@ export const QuoteCard = memo<QuoteCardProps>(function QuoteCard({
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       if (onSelect) {
-        onSelect();
+        // Create a minimal mouse event for keyboard activation
+        onSelect({ currentTarget: event.currentTarget } as React.MouseEvent);
       }
     }
   }, [onSelect]);

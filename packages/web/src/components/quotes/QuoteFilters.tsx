@@ -1,10 +1,14 @@
 'use client';
 
 import { useQuoteFiltersState } from '@/hooks/quotes/useQuoteState';
-import { getStatusLabel } from '@/lib/utils/quote-status';
 import { QuotesFilter } from '@/services/quotes/QuoteValidation';
-import { QuoteStatus } from '@/types/quotes/QuoteStatus';
+import { QuoteStatus, STATUS_CONFIG } from '@/types/quotes/QuoteStatus';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+
+// Inline utility function
+function getStatusLabel(status: QuoteStatus): string {
+  return STATUS_CONFIG[status]?.label || status;
+}
 
 interface QuoteFiltersProps {
   onFiltersChange?: (filters: QuotesFilter) => void;

@@ -87,9 +87,14 @@ export function QuoteTable({
         return 0;
       }
       
-      // Default comparison
-      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      // Default comparison with null checks
+      if (aValue != null && bValue != null) {
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      }
+      // Handle null/undefined values
+      if (aValue == null && bValue != null) return sortDirection === 'asc' ? 1 : -1;
+      if (aValue != null && bValue == null) return sortDirection === 'asc' ? -1 : 1;
       return 0;
     });
   }, [quotes, sortColumn, sortDirection]);

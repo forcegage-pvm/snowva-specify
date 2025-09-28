@@ -287,11 +287,11 @@ export class QuotePdfService {
     );
   }
 
-  private createValidationError(message: string, details?: any): ApiError {
+  private createValidationError(message: string, details?: unknown): ApiError {
     return {
       code: ApiErrorCode.VALIDATION_FAILED,
       message,
-      details,
+      details: details as Record<string, unknown>,
       timestamp: new Date(),
       statusCode: 400
     };

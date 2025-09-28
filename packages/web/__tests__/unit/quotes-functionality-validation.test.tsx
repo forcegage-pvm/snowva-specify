@@ -5,8 +5,6 @@
  */
 import { describe, expect, it, jest } from '@jest/globals';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 // Simple isolated unit tests for quote functionality
 // These avoid the complex mocking conflicts of the full integration test
@@ -53,9 +51,9 @@ describe('Quote Functionality Unit Tests', () => {
     
     const clearFilters = (filters: typeof mockFilters) => {
       return Object.keys(filters).reduce((acc, key) => {
-        acc[key] = '';
+        acc[key as keyof typeof filters] = '';
         return acc;
-      }, {} as any);
+      }, {} as Record<keyof typeof mockFilters, string>);
     };
     
     const clearedFilters = clearFilters(mockFilters);
@@ -95,11 +93,11 @@ describe('Quote Functionality Unit Tests', () => {
     const mockSearch = jest.fn(() => { searchCallCount++; });
     
     // Simulate debouncing logic
-    const debounce = (fn: Function, delay: number) => {
+    const debounce = (fn: (...args: string[]) => void, delay: number) => {
       let timeoutId: NodeJS.Timeout;
-      return (...args: any[]) => {
+      return (...args: string[]) => {
         clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => fn.apply(null, args), delay);
+        timeoutId = setTimeout(() => fn(...args), delay);
       };
     };
     
@@ -119,7 +117,7 @@ describe('Quote Functionality Unit Tests', () => {
     // Issue 7: Active filter state validation
     const filterState = {
       active: false,
-      hasFilters: (filters: any) => Object.values(filters).some(v => v !== '' && v !== null && v !== undefined)
+      hasFilters: (filters: Record<string, string | number | null | undefined>) => Object.values(filters).some(v => v !== '' && v !== null && v !== undefined)
     };
     
     const emptyFilters = { search: '', status: '', date: '' };

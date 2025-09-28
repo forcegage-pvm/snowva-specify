@@ -10,14 +10,14 @@
 
 import { QuoteErrorBoundary } from '@/components/common/ErrorBoundary';
 import { LoadingButton, QuoteLoadingState, useLoadingState } from '@/components/common/LoadingStates';
-import { CreateQuoteRequest, defaultQuoteService } from '@/services/quote-service';
+import { CreateQuoteRequest, defaultQuoteService, type Quote } from '@/services/quote-service';
 import { FileTextIcon, PlusIcon, SaveIcon, TrashIcon } from 'lucide-react';
 import React, { memo, useCallback, useMemo, useState } from 'react';
 
 interface QuoteComposerProps {
   customerId?: string;
   initialData?: Partial<CreateQuoteRequest>;
-  onSave?: (quote: any) => void;
+  onSave?: (quote: Quote) => void;
   onCancel?: () => void;
   className?: string;
 }

@@ -3,14 +3,15 @@ import { NextResponse } from 'next/server';
 import { generateShareLink } from '@/services/DocumentExportService';
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     exportId: string;
-  };
+  }>;
 }
 
 export async function POST(_request: Request, context: RouteContext) {
+  const params = await context.params;
   try {
-    const result = await generateShareLink(context.params.exportId);
+    const result = await generateShareLink(params.exportId);
 
     return NextResponse.json({
       token: result.token,

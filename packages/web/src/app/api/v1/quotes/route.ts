@@ -24,7 +24,7 @@ const QuoteCreateSchema = z.object({
 const QuoteListQuerySchema = z.object({
   page: z.string().optional().transform(val => val ? parseInt(val, 10) : 1),
   limit: z.string().optional().transform(val => val ? parseInt(val, 10) : 20),
-  status: z.enum(['Draft', 'Pending', 'Approved', 'Rejected', 'Converted', 'Archived']).optional(),
+  status: z.enum(['draft', 'pending', 'approved', 'rejected', 'expired', 'converted', 'archived']).optional(),
   customerId: z.string().optional(),
   search: z.string().optional(),
   sortBy: z.enum(['createdAt', 'updatedAt', 'totalAmount', 'quoteNumber', 'customerName', 'status']).optional(),
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
       // Apply sorting
       if (sortBy) {
         filteredQuotes.sort((a, b) => {
-          let aVal: any, bVal: any;
+          let aVal: string | number | Date, bVal: string | number | Date;
           
           switch (sortBy) {
             case 'createdAt':

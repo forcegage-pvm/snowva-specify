@@ -35,7 +35,7 @@ type DraftQuoteResponse = {
     id: string;
     customerId: string;
     branchId: string;
-    lineItems: Array<any>;
+    lineItems: Array<{ id: string; description: string; quantity: number; unitPrice: number; [key: string]: unknown }>;
     totals: {
       subtotalExVat: number;
       vatAmount: number;

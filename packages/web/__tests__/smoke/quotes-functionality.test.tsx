@@ -5,14 +5,12 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import QuotesPage from '../../src/app/(dashboard)/quotes/page';
 
-// Extend Jest matchers
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeInTheDocument(): R;
-      toHaveValue(value: string): R;
-      toBeDisabled(): R;
-    }
+// Extend Jest matchers using module augmentation
+declare module '@jest/expect' {
+  interface Matchers<R> {
+    toBeInTheDocument(): R;
+    toHaveValue(value: string): R;
+    toBeDisabled(): R;
   }
 }
 

@@ -1,5 +1,5 @@
 import type { Quote, QuoteLineItem } from '@/types/quotes/Quote';
-import type { QuoteStatus } from '@/types/quotes/QuoteStatus';
+import { QuoteStatus } from '@/types/quotes/QuoteStatus';
 import { Decimal } from 'decimal.js';
 
 /**
@@ -88,7 +88,7 @@ export class QuoteCalculations {
     let totalDiscount = new Decimal(0);
     
     lineItems.forEach(item => {
-      const itemTotal = new Decimal(item.totalPrice);
+      const itemTotal = new Decimal(item.totalPrice || item.total);
       const itemDiscount = new Decimal(item.discountAmount || 0);
       
       subtotal = subtotal.add(itemTotal);
@@ -195,8 +195,8 @@ export class QuoteCalculations {
           item.discount
         );
         
-        if (Math.abs(calc.total - item.totalPrice) > 0.01) {
-          errors.push(`Line item ${index + 1} total mismatch: expected ${calc.total}, got ${item.totalPrice}`);
+        if (Math.abs(calc.total - (item.totalPrice || item.total)) > 0.01) {
+          errors.push(`Line item ${index + 1} total mismatch: expected ${calc.total}, got ${item.totalPrice || item.total}`);
         }
         
         if (item.discountAmount && Math.abs(calc.discountAmount - item.discountAmount) > 0.01) {
@@ -317,7 +317,7 @@ export class QuoteAnalytics {
    */
   static calculateConversionRate(quotes: Quote[]): number {
     const totalQuotes = quotes.length;
-    const convertedQuotes = quotes.filter(q => q.status === 'Converted' || q.linkedInvoiceId).length;
+    const convertedQuotes = quotes.filter(q => q.status === QuoteStatus.Converted || q.linkedInvoiceId).length;
     
     if (totalQuotes === 0) return 0;
     
@@ -390,11 +390,11 @@ export class QuoteAnalytics {
     const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
     
     // Approved quotes with approval time
-    const approvedQuotes = quotes.filter(q => q.status === 'Approved' || q.status === 'Converted');
+    const approvedQuotes = quotes.filter(q => q.status === QuoteStatus.Approved || q.status === QuoteStatus.Converted);
     const approvalTimes = approvedQuotes
       .map(q => {
         const approvalChange = q.statusHistory
-          .find(h => h.toStatus === 'Approved' || h.toStatus === 'Converted');
+          .find(h => h.toStatus === QuoteStatus.Approved || h.toStatus === QuoteStatus.Converted);
         
         if (approvalChange) {
           const timeDiff = approvalChange.changedAt.getTime() - q.createdAt.getTime();
@@ -410,9 +410,9 @@ export class QuoteAnalytics {
     
     // Expiry calculations
     const activeQuotes = quotes.filter(q => 
-      q.status !== 'Expired' && 
-      q.status !== 'Archived' && 
-      q.status !== 'Rejected'
+      q.status !== QuoteStatus.Expired &&
+      q.status !== QuoteStatus.Archived &&
+      q.status !== QuoteStatus.Rejected
     );
     
     const expiryTimes = activeQuotes.map(q => {

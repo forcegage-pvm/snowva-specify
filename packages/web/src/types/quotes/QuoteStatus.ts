@@ -2,12 +2,13 @@
  * Quote status enumeration representing the workflow lifecycle
  */
 export enum QuoteStatus {
-  Draft = 'Draft',
-  Pending = 'Pending', 
-  Approved = 'Approved',
-  Rejected = 'Rejected',
-  Converted = 'Converted',
-  Archived = 'Archived'
+  Draft = 'draft',
+  Pending = 'pending', 
+  Approved = 'approved',
+  Rejected = 'rejected',
+  Expired = 'expired',
+  Converted = 'converted',
+  Archived = 'archived'
 }
 
 /**
@@ -18,6 +19,7 @@ export const VALID_STATUS_TRANSITIONS: Record<QuoteStatus, QuoteStatus[]> = {
   [QuoteStatus.Pending]: [QuoteStatus.Approved, QuoteStatus.Rejected, QuoteStatus.Draft, QuoteStatus.Archived],
   [QuoteStatus.Approved]: [QuoteStatus.Converted, QuoteStatus.Archived],
   [QuoteStatus.Rejected]: [QuoteStatus.Draft, QuoteStatus.Archived],
+  [QuoteStatus.Expired]: [QuoteStatus.Draft, QuoteStatus.Archived],
   [QuoteStatus.Converted]: [QuoteStatus.Archived],
   [QuoteStatus.Archived]: [] // No transitions from archived state
 };
@@ -33,7 +35,7 @@ export interface QuoteStatusChange {
   changedBy: string;
   changedAt: Date;
   reason?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -42,7 +44,7 @@ export interface QuoteStatusChange {
 export interface StatusUpdateRequest {
   status: QuoteStatus;
   reason?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -73,6 +75,10 @@ export const STATUS_CONFIG: Record<QuoteStatus, StatusBadgeConfig> = {
   [QuoteStatus.Rejected]: {
     label: 'Rejected', 
     color: 'red'
+  },
+  [QuoteStatus.Expired]: {
+    label: 'Expired',
+    color: 'yellow'
   },
   [QuoteStatus.Converted]: {
     label: 'Converted',

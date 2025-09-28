@@ -303,7 +303,7 @@ export function useQuoteFiltersState() {
     setActiveFilters(prev => ({ ...prev, ...filters }));
   }, []);
   
-  const updateFilter = useCallback((key: keyof QuotesFilter, value: any) => {
+  const updateFilter = useCallback((key: keyof QuotesFilter, value: QuotesFilter[keyof QuotesFilter]) => {
     setActiveFilters(prev => ({ ...prev, [key]: value }));
   }, []);
   

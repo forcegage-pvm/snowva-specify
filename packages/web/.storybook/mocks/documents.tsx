@@ -68,19 +68,32 @@ export const createMockDocumentExportDetail = (
 ): DocumentExportDetail => {
   const baseExport = createMockDocumentExport();
   
+  // Build shareLink independently to avoid ShareLinkToken type interference
+  const shareLinkData = baseExport.shareLink && baseExport.shareLink.active ? {
+    token: `token_${baseExport.id}`,
+    expiresAt: baseExport.shareLink.expiresAt || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    public: true
+  } : null;
+  
+  const { shareLink, ...safeOverrides } = overrides;
+  
   return {
     id: baseExport.id,
     title: baseExport.title,
     documentType: baseExport.documentType,
-    customerBranchId: baseExport.customerBranch.id,
-    customerBranchName: baseExport.customerBranch.name,
+    customerBranch: {
+      id: baseExport.customerBranch.id,
+      name: baseExport.customerBranch.name
+    },
     createdAt: baseExport.createdAt,
     deliveredChannels: baseExport.deliveredChannels,
     status: baseExport.status,
-    lastDownloadedAt: baseExport.lastDownloadedAt,
-    fileSizeBytes: baseExport.fileSizeBytes,
-    previewAssetUrl: `/api/previews/${baseExport.id}.pdf`,
-    shareLinkTokenId: baseExport.shareLink?.active ? `token_${baseExport.id}` : null,
+    preview: {
+      assetUrl: `/api/previews/${baseExport.id}.pdf`,
+      mimeType: 'application/pdf',
+      fileSizeBytes: baseExport.fileSizeBytes
+    },
+    shareLink: shareLinkData,
     auditTrail: [
       {
         id: `audit_${Date.now()}_1`,
@@ -101,8 +114,8 @@ export const createMockDocumentExportDetail = (
         context: {},
       },
     ],
-    ...overrides,
-  };
+    ...safeOverrides,
+  } as DocumentExportDetail;
 };
 
 export const createMockAuditLogEvents = (

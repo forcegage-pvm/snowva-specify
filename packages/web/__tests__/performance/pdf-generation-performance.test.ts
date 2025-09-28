@@ -33,7 +33,7 @@ class MockPDFService {
   }
 
   async generateQuotePDF(quoteData: {
-    items: any[];
+    items: Array<{ id: number; description: string; [key: string]: unknown }>;
     includeImages?: boolean;
     includeTables?: boolean;
     template?: 'simple' | 'detailed' | 'custom';
@@ -54,7 +54,7 @@ class MockPDFService {
     };
   }
 
-  async generatePreview(quoteData: any) {
+  async generatePreview(quoteData: { items?: Array<unknown>; [key: string]: unknown }) {
     // Preview should be faster than full PDF
     const delay = this.calculateDelay(1, 0, 0) * 0.3;
     await this.simulateProcessing(delay);
@@ -65,7 +65,7 @@ class MockPDFService {
     };
   }
 
-  async generateBatch(quotes: any[]) {
+  async generateBatch(quotes: Array<{ id?: string; items: Array<unknown>; includeImages?: boolean }>) {
     const delays = quotes.map(quote => 
       this.calculateDelay(
         Math.ceil(quote.items.length / 10) + 1,
@@ -462,3 +462,4 @@ describe('PDF Service Integration Performance', () => {
 
 // Export utilities for use in other test files
 export { MockPDFService };
+

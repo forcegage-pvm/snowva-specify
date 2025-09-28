@@ -8,7 +8,7 @@ import {
     type StatusUpdateRequest,
     type UpdateQuoteRequest
 } from '@/services/quotes/QuoteValidation';
-import type { Quote } from '@/types/quotes/Quote';
+import type { Quote, QuoteLineItem } from '@/types/quotes/Quote';
 import type { QuoteStatus, QuoteStatusChange } from '@/types/quotes/QuoteStatus';
 
 /**
@@ -107,22 +107,26 @@ export class QuoteService implements IQuoteService {
       const validRequest = validation.data;
       
       // Calculate totals
-      const lineItems = validRequest.lineItems.map((item, index) => ({
-        id: `item-${Date.now()}-${index}`,
-        description: item.description,
-        productId: item.productId,
-        category: item.category,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        discount: item.discount || 0,
-        discountAmount: ((item.unitPrice * item.quantity * (item.discount || 0)) / 100),
-        totalPrice: (item.unitPrice * item.quantity) - ((item.unitPrice * item.quantity * (item.discount || 0)) / 100),
-        notes: item.notes,
-        taxable: item.taxable,
-        sortOrder: index + 1
-      }));
+      const lineItems: QuoteLineItem[] = validRequest.lineItems.map((item, index) => {
+        const totalPrice = (item.unitPrice * item.quantity) - ((item.unitPrice * item.quantity * (item.discount || 0)) / 100);
+        return {
+          id: `item-${Date.now()}-${index}`,
+          description: item.description,
+          productId: item.productId,
+          category: item.category,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          discount: item.discount || 0,
+          total: totalPrice, // Required by QuoteLineItem interface
+          discountAmount: ((item.unitPrice * item.quantity * (item.discount || 0)) / 100),
+          totalPrice: totalPrice, // Alias for total
+          notes: item.notes,
+          taxable: item.taxable,
+          sortOrder: index + 1
+        };
+      });
       
-      const subtotal = lineItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const subtotal = lineItems.reduce((sum, item) => sum + (item.totalPrice || item.total), 0);
       const taxAmount = subtotal * validRequest.taxRate;
       const totalAmount = subtotal + taxAmount;
       
@@ -188,17 +192,28 @@ export class QuoteService implements IQuoteService {
       }
       
       // Recalculate totals if line items changed
-      let updates = { ...validRequest };
-      if (validRequest.lineItems) {
-        const lineItems = validRequest.lineItems.map((item, index) => ({
-          ...item,
-          id: item.id || `item-${Date.now()}-${index}`,
-          discountAmount: item.discount ? ((item.unitPrice * item.quantity * item.discount) / 100) : 0,
-          totalPrice: (item.unitPrice * item.quantity) - (item.discount ? ((item.unitPrice * item.quantity * item.discount) / 100) : 0),
-          sortOrder: index + 1
-        }));
+      const { expiryDate, validUntil, lineItems: rawLineItems, ...restValidRequest } = validRequest;
+      let updates: Partial<Quote> = { 
+        ...restValidRequest,
+        // Convert string dates to Date objects
+        expiryDate: expiryDate ? new Date(expiryDate) : undefined,
+        validUntil: validUntil ? new Date(validUntil) : undefined
+      };
+      
+      if (rawLineItems) {
+        const lineItems: QuoteLineItem[] = rawLineItems.map((item, index) => {
+          const totalPrice = (item.unitPrice * item.quantity) - (item.discount ? ((item.unitPrice * item.quantity * item.discount) / 100) : 0);
+          return {
+            ...item,
+            id: `item-${Date.now()}-${index}`, // Generate id for new items
+            total: totalPrice, // Required by QuoteLineItem interface
+            discountAmount: item.discount ? ((item.unitPrice * item.quantity * item.discount) / 100) : 0,
+            totalPrice: totalPrice, // Alias for total
+            sortOrder: index + 1
+          };
+        });
         
-        const subtotal = lineItems.reduce((sum, item) => sum + item.totalPrice, 0);
+        const subtotal = lineItems.reduce((sum, item) => sum + item.total, 0);
         const taxAmount = subtotal * (validRequest.taxRate || currentQuote.taxRate);
         const totalAmount = subtotal + taxAmount;
         
@@ -391,7 +406,7 @@ export class QuoteService implements IQuoteService {
       if (validation.success) {
         return { valid: true, errors: [] };
       } else {
-        const errors = validation.error.issues.map((err: any) => 
+        const errors = validation.error.issues.map((err) => 
           `${err.path.join('.')}: ${err.message}`
         );
         return { valid: false, errors };
@@ -407,7 +422,7 @@ export class QuoteService implements IQuoteService {
  * Custom error class for quote service operations
  */
 export class QuoteServiceError extends Error {
-  constructor(message: string, public cause?: any) {
+  constructor(message: string, public cause?: Error | unknown) {
     super(message);
     this.name = 'QuoteServiceError';
   }
@@ -417,7 +432,7 @@ export class QuoteServiceError extends Error {
  * Service factory for dependency injection
  */
 export class QuoteServiceFactory {
-  private static instance: IQuoteService;
+  private static instance: IQuoteService | undefined;
   
   static getInstance(): IQuoteService {
     if (!this.instance) {
@@ -431,7 +446,7 @@ export class QuoteServiceFactory {
   }
   
   static reset() {
-    this.instance = undefined as any;
+    this.instance = undefined;
   }
 }
 

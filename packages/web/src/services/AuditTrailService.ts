@@ -1,4 +1,4 @@
-import { recordNavigationMetric } from '@/lib/metrics/performanceMetrics';
+import { recordNavigationMetric } from '../lib/metrics/performanceMetrics';
 
 export type DocumentAuditEventPayload = {
   exportId: string;

@@ -20,10 +20,13 @@ export interface ValidationConfig {
 }
 
 export interface ValidatedRequest extends NextRequest {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Type-erased holder for validated body data, cast to specific types in ValidatedRequestWithBody<T>
   validatedBody?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Type-erased holder for validated query data, cast to specific types in ValidatedRequestWithQuery<T>
   validatedQuery?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Type-erased holder for validated params data, cast to specific types in ValidatedRequestWithParams<T>
   validatedParams?: any;
-  validatedHeaders?: any;
+  validatedHeaders?: Record<string, string>;
 }
 
 export interface ValidatedRequestWithBody<T> extends NextRequest {
@@ -44,9 +47,9 @@ export interface ValidatedRequestWithParams<T> extends NextRequest {
  */
 export function withValidation(
   config: ValidationConfig,
-  handler: (request: ValidatedRequest, context?: any) => Promise<NextResponse> | NextResponse
+  handler: (request: ValidatedRequest, context?: { params?: Record<string, string> }) => Promise<NextResponse> | NextResponse
 ) {
-  return async (request: NextRequest, context?: any): Promise<NextResponse> => {
+  return async (request: NextRequest, context?: { params?: Record<string, string> }): Promise<NextResponse> => {
     const errorHandler = new ApiErrorHandler({
       customErrorMessages: config.customErrorMessages
     });
@@ -126,7 +129,7 @@ export function withValidation(
         try {
           const headersObj = Object.fromEntries(request.headers.entries());
           const validatedHeaders = config.headers.parse(headersObj);
-          validatedRequest.validatedHeaders = validatedHeaders;
+          validatedRequest.validatedHeaders = validatedHeaders as Record<string, string>;
         } catch (error) {
           if (error instanceof ZodError) {
             return errorHandler.handleError(error, request);
@@ -148,9 +151,9 @@ export function withValidation(
  */
 export function validateBody<T>(schema: ZodSchema<T>) {
   return (
-    handler: (request: ValidatedRequestWithBody<T>, context?: any) => Promise<NextResponse> | NextResponse
+    handler: (request: ValidatedRequestWithBody<T>, context?: { params?: Record<string, string> }) => Promise<NextResponse> | NextResponse
   ) => {
-    return withValidation({ body: schema }, handler as any);
+    return withValidation({ body: schema }, handler as (request: ValidatedRequest, context?: { params?: Record<string, string> }) => Promise<NextResponse> | NextResponse);
   };
 }
 
@@ -160,9 +163,9 @@ export function validateBody<T>(schema: ZodSchema<T>) {
  */
 export function validateQuery<T>(schema: ZodSchema<T>) {
   return (
-    handler: (request: ValidatedRequestWithQuery<T>, context?: any) => Promise<NextResponse> | NextResponse
+    handler: (request: ValidatedRequestWithQuery<T>, context?: { params?: Record<string, string> }) => Promise<NextResponse> | NextResponse
   ) => {
-    return withValidation({ query: schema }, handler as any);
+    return withValidation({ query: schema }, handler as (request: ValidatedRequest, context?: { params?: Record<string, string> }) => Promise<NextResponse> | NextResponse);
   };
 }
 
@@ -172,16 +175,16 @@ export function validateQuery<T>(schema: ZodSchema<T>) {
  */
 export function validateParams<T>(schema: ZodSchema<T>) {
   return (
-    handler: (request: ValidatedRequestWithParams<T>, context?: any) => Promise<NextResponse> | NextResponse
+    handler: (request: ValidatedRequestWithParams<T>, context?: { params?: Record<string, string> }) => Promise<NextResponse> | NextResponse
   ) => {
-    return withValidation({ params: schema }, handler as any);
+    return withValidation({ params: schema }, handler as (request: ValidatedRequest, context?: { params?: Record<string, string> }) => Promise<NextResponse> | NextResponse);
   };
 }
 
 /**
  * Combined validation for common API patterns
  */
-export function validateApiRequest<TBody = any, TQuery = any, TParams = any>(config: {
+export function validateApiRequest<TBody = unknown, TQuery = unknown, TParams = unknown>(config: {
   body?: ZodSchema<TBody>;
   query?: ZodSchema<TQuery>;
   params?: ZodSchema<TParams>;
@@ -193,7 +196,7 @@ export function validateApiRequest<TBody = any, TQuery = any, TParams = any>(con
         validatedQuery?: TQuery;
         validatedParams?: TParams;
       },
-      context?: any
+      context?: { params?: Record<string, string> }
     ) => Promise<NextResponse> | NextResponse
   ) => {
     return withValidation(config, handler);
@@ -321,15 +324,15 @@ export const CommonValidations = {
    * Pagination validation
    */
   pagination: {
-    limit: (value: any, min: number = 1, max: number = 100) => 
+    limit: (value: unknown, min: number = 1, max: number = 100) => 
       Number.isInteger(Number(value)) && 
       Number(value) >= min && 
       Number(value) <= max,
     
-    offset: (value: any) => 
+    offset: (value: unknown) => 
       Number.isInteger(Number(value)) && Number(value) >= 0,
     
-    cursor: (value: any) => 
+    cursor: (value: unknown) => 
       typeof value === 'string' && value.length > 0
   },
 

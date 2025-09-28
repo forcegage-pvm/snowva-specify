@@ -14,7 +14,7 @@ export class QuoteStatusService {
     newStatus: QuoteStatus,
     changedBy: string,
     reason?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): Promise<{
     success: boolean;
     updatedQuote?: Quote;
@@ -228,7 +228,7 @@ export class QuoteStatusService {
   static validateStatusChange(
     quote: Quote,
     newStatus: QuoteStatus,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): {
     valid: boolean;
     warnings: string[];

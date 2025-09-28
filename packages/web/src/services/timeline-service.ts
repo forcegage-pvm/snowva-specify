@@ -272,7 +272,7 @@ export class TimelineService {
       }]);
     }
 
-    const responseData = data as any;
+    const responseData = data as Record<string, unknown>;
     
     if (!Array.isArray(responseData.events)) {
       throw createValidationError([{
@@ -284,7 +284,7 @@ export class TimelineService {
 
     // Validate each event
     const validatedEvents: TimelineEvent[] = [];
-    const validationErrors: any[] = [];
+    const validationErrors: { field: string; code: string; message: string }[] = [];
 
     for (let i = 0; i < responseData.events.length; i++) {
       const validation = validateTimelineEvent(responseData.events[i]);
@@ -306,9 +306,9 @@ export class TimelineService {
 
     return {
       events: validatedEvents,
-      totalCount: responseData.totalCount ?? 0,
-      hasMore: responseData.hasMore ?? false,
-      nextCursor: responseData.nextCursor
+      totalCount: typeof responseData.totalCount === 'number' ? responseData.totalCount : 0,
+      hasMore: typeof responseData.hasMore === 'boolean' ? responseData.hasMore : false,
+      nextCursor: typeof responseData.nextCursor === 'string' ? responseData.nextCursor : undefined
     };
   }
 

@@ -14,7 +14,8 @@ export function getStatusLabel(status: QuoteStatus): string {
     [QuoteStatus.Approved]: 'Approved',
     [QuoteStatus.Rejected]: 'Rejected',
     [QuoteStatus.Converted]: 'Converted',
-    [QuoteStatus.Archived]: 'Archived'
+    [QuoteStatus.Archived]: 'Archived',
+    [QuoteStatus.Expired]: 'Expired'
   };
   
   return labels[status] || status;
@@ -30,7 +31,8 @@ export function getStatusColor(status: QuoteStatus): string {
     [QuoteStatus.Approved]: 'bg-green-100 text-green-800',
     [QuoteStatus.Rejected]: 'bg-red-100 text-red-800',
     [QuoteStatus.Converted]: 'bg-blue-100 text-blue-800',
-    [QuoteStatus.Archived]: 'bg-gray-100 text-gray-800'
+    [QuoteStatus.Archived]: 'bg-gray-100 text-gray-800',
+    [QuoteStatus.Expired]: 'bg-orange-100 text-orange-800'
   };
   
   return colors[status] || 'bg-gray-100 text-gray-800';
@@ -46,7 +48,8 @@ export function getStatusIcon(status: QuoteStatus): string {
     [QuoteStatus.Approved]: '✅',
     [QuoteStatus.Rejected]: '❌',
     [QuoteStatus.Converted]: '🔄',
-    [QuoteStatus.Archived]: '�'
+        [QuoteStatus.Archived]: '📁',
+    [QuoteStatus.Expired]: '⏰'
   };
   
   return icons[status] || '📄';
@@ -84,7 +87,8 @@ export function getValidNextStatuses(status: QuoteStatus): QuoteStatus[] {
     [QuoteStatus.Approved]: [QuoteStatus.Converted, QuoteStatus.Archived],
     [QuoteStatus.Rejected]: [QuoteStatus.Draft, QuoteStatus.Archived],
     [QuoteStatus.Converted]: [QuoteStatus.Archived],
-    [QuoteStatus.Archived]: []
+    [QuoteStatus.Archived]: [],
+    [QuoteStatus.Expired]: [QuoteStatus.Draft, QuoteStatus.Archived]
   };
   
   return transitions[status] || [];
@@ -110,8 +114,9 @@ export function getStatusPriority(status: QuoteStatus): number {
     [QuoteStatus.Draft]: 2,
     [QuoteStatus.Approved]: 3,
     [QuoteStatus.Converted]: 4,
-    [QuoteStatus.Rejected]: 5,
-    [QuoteStatus.Archived]: 6
+    [QuoteStatus.Expired]: 5,
+    [QuoteStatus.Rejected]: 6,
+    [QuoteStatus.Archived]: 7
   };
   
   return priorities[status] || 9;

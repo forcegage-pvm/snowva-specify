@@ -1,4 +1,4 @@
-import QuotesPage from '@/app/(dashboard)/quotes/page';
+import QuotesPage from '../../src/app/(dashboard)/quotes/page';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';

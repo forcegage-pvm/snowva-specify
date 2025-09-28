@@ -3,16 +3,17 @@ import { NextResponse } from 'next/server';
 import { getDocumentExport } from '@/services/DocumentExportService';
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     exportId: string;
-  };
+  }>;
 }
 
 const SHARE_LINK_BASE_URL = 'https://app.snowva.com/share';
 
 export async function GET(_request: Request, context: RouteContext) {
+  const params = await context.params;
   try {
-    const record = await getDocumentExport(context.params.exportId);
+    const record = await getDocumentExport(params.exportId);
 
     const shareLink = record.shareLink
       ? {

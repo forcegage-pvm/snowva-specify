@@ -3,14 +3,15 @@ import { NextResponse } from 'next/server';
 import { resendDocumentExport } from '@/services/DocumentExportService';
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     exportId: string;
-  };
+  }>;
 }
 
 export async function POST(_request: Request, context: RouteContext) {
+  const params = await context.params;
   try {
-    const result = await resendDocumentExport(context.params.exportId);
+    const result = await resendDocumentExport(params.exportId);
 
     return NextResponse.json({
       status: result.status,

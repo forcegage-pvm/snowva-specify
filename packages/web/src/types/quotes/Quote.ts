@@ -1,3 +1,24 @@
+import { QuoteStatus, QuoteStatusChange } from './QuoteStatus';
+
+/**
+ * Quote line item
+ */
+export interface QuoteLineItem {
+  id: string;
+  productId?: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  discount?: number;
+  total: number;
+  discountAmount?: number;
+  totalPrice?: number; // Alias for total - optional for backward compatibility
+  taxable: boolean;
+  notes?: string;
+  category?: string;
+  sortOrder?: number;
+}
+
 /**
  * Core Quote entity representing a price proposal to a customer
  */
@@ -98,6 +119,4 @@ export interface QuotesSorting {
   order: 'asc' | 'desc';
 }
 
-// Re-export related types
-export type { QuoteLineItem } from './QuoteLineItem';
-export type { QuoteStatus, QuoteStatusChange } from './QuoteStatus';
+// Related types are now defined in this file

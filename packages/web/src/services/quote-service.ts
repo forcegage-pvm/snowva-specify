@@ -440,7 +440,7 @@ export class QuoteService {
    * Error handling utilities
    */
   private async handleApiError(response: Response): Promise<ApiError> {
-    let errorData: any = {};
+    let errorData: Record<string, unknown> = {};
 
     try {
       errorData = await response.json();
@@ -450,14 +450,14 @@ export class QuoteService {
 
     const apiError: ApiError = {
       code: this.getErrorCodeFromStatus(response.status),
-      message: errorData.message || this.getDefaultErrorMessage(response.status),
+      message: (typeof errorData.message === 'string' ? errorData.message : undefined) || this.getDefaultErrorMessage(response.status),
       statusCode: response.status,
       timestamp: new Date(),
       details: {
         url: response.url,
         status: response.status,
         statusText: response.statusText,
-        ...errorData.details,
+        ...(errorData.details && typeof errorData.details === 'object' ? errorData.details as Record<string, unknown> : {}),
       },
     };
 

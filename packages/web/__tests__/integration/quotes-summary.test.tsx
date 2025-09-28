@@ -1,17 +1,15 @@
-import QuotesPage from '@/app/(dashboard)/quotes/page';
+import QuotesPage from '../../src/app/(dashboard)/quotes/page';
 import { describe, expect, it } from '@jest/globals';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
-// Extend Jest matchers
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeInTheDocument(): R;
-      toHaveValue(value: string): R;
-      toBeDisabled(): R;
-    }
+// Extend Jest matchers using module augmentation
+declare module '@jest/expect' {
+  interface Matchers<R> {
+    toBeInTheDocument(): R;
+    toHaveValue(value: string): R;
+    toBeDisabled(): R;
   }
 }
 

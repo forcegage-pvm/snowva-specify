@@ -240,7 +240,7 @@ export function QuoteDetailModal({
                             {formatCurrency(item.unitPrice)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {formatCurrency(item.totalPrice)}
+                            {formatCurrency(item.totalPrice || item.total)}
                           </td>
                         </tr>
                       ))}

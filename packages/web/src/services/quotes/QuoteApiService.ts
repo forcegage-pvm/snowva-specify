@@ -3,8 +3,7 @@ import {
     type CreateQuoteRequest,
     type ExportRequest,
     type QuotesFilter,
-    type StatusUpdateRequest,
-    type UpdateQuoteRequest
+    type StatusUpdateRequest
 } from '@/services/quotes/QuoteValidation';
 import type { Quote } from '@/types/quotes/Quote';
 import type { QuoteStatus, QuoteStatusChange } from '@/types/quotes/QuoteStatus';
@@ -23,7 +22,7 @@ export interface ApiResponse<T> {
   error?: {
     message: string;
     code?: string;
-    details?: any;
+    details?: Record<string, unknown>;
   };
   meta?: {
     page?: number;
@@ -93,7 +92,7 @@ export class QuoteApiService {
       
       // Handle non-JSON responses (like file downloads)
       if (options.headers && 
-          (options.headers as any)['Accept'] !== 'application/json') {
+          (options.headers as Record<string, string>)['Accept'] !== 'application/json') {
         if (response.ok) {
           return { 
             success: true, 
@@ -182,18 +181,21 @@ export class QuoteApiService {
   /**
    * Update existing quote
    */
-  async updateQuote(id: string, request: UpdateQuoteRequest): Promise<ApiResponse<Quote>> {
+    async updateQuote(id: string, data: Partial<Quote>): Promise<Quote> {
     if (!id) {
-      return {
-        success: false,
-        error: { message: 'Quote ID is required' }
-      };
+      throw new Error('Quote ID is required');
     }
     
-    return await this.makeRequest<Quote>(`/${id}`, {
+    const response = await this.makeRequest<Quote>(`/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(request)
+      body: JSON.stringify(data)
     });
+    
+    if (!response.data) {
+      throw new Error('Failed to update quote');
+    }
+    
+    return response.data;
   }
   
   /**
@@ -439,7 +441,7 @@ export class QuoteApiError extends Error {
   constructor(
     message: string,
     public code?: string,
-    public details?: any
+    public details?: Record<string, unknown>
   ) {
     super(message);
     this.name = 'QuoteApiError';

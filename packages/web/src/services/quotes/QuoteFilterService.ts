@@ -102,8 +102,8 @@ export class QuoteFilterService {
     sortOrder: 'asc' | 'desc' = 'desc'
   ): Quote[] {
     return [...quotes].sort((a, b) => {
-      let aVal: any = a[sortBy];
-      let bVal: any = b[sortBy];
+      let aVal: unknown = a[sortBy];
+      let bVal: unknown = b[sortBy];
       
       // Handle Date objects
       if (aVal instanceof Date && bVal instanceof Date) {
@@ -118,8 +118,14 @@ export class QuoteFilterService {
       }
       
       let comparison = 0;
-      if (aVal > bVal) comparison = 1;
-      if (aVal < bVal) comparison = -1;
+      // Safe comparison for primitive values
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        if (aVal > bVal) comparison = 1;
+        if (aVal < bVal) comparison = -1;
+      } else if (typeof aVal === 'number' && typeof bVal === 'number') {
+        if (aVal > bVal) comparison = 1;
+        if (aVal < bVal) comparison = -1;
+      }
       
       return sortOrder === 'asc' ? comparison : -comparison;
     });

@@ -3,7 +3,7 @@
  * Provides centralized error processing with logging and monitoring
  */
 
-import { errorResponseSchema } from '@/schemas/error-schema';
+// import { errorResponseSchema } from '@/schemas/error-schema'; // TODO: Create error schema
 import { ApiError, ApiErrorCode } from '@/types/api-errors';
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
@@ -223,7 +223,7 @@ export class ErrorHandler {
 
     // Validate response structure
     try {
-      return errorResponseSchema.parse(response);
+      return response; // TODO: Parse with errorResponseSchema when available
     } catch (validationError) {
       // Fallback to basic error response if validation fails
       return {

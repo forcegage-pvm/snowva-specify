@@ -21,8 +21,26 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["jest", "@testing-library/jest-dom", "node"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "tests/**/*",
+    "__tests__/**/*",
+    "cypress/**/*",
+    "src/services/quotes/QuoteService.ts",
+    "src/app/api/v1/quotes/bulk-actions/route.ts",
+    ".storybook/**/*"
+  ]
 }

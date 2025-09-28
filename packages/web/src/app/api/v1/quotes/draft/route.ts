@@ -16,8 +16,8 @@ export async function POST(request: NextRequest) {
     const draftId = `draft-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     
     // Calculate totals
-    const subtotal = body.lineItems.reduce((sum: number, item: any) => {
-      return sum + (item.quantity * (item.unitPriceExVat || item.unitPrice));
+    const subtotal = (body.lineItems as Array<{ quantity: number; unitPriceExVat?: number; unitPrice?: number }>).reduce((sum: number, item) => {
+      return sum + (item.quantity * (item.unitPriceExVat || item.unitPrice || 0));
     }, 0);
     
     const vatAmount = subtotal * (body.vatRate || 0.15);

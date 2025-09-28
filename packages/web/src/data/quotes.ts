@@ -13,6 +13,7 @@ export const mockLineItems: QuoteLineItem[] = [
     quantity: 1,
     unitPrice: 2500.00,
     discount: 0,
+    total: 2500.00,
     totalPrice: 2500.00,
     notes: 'Responsive design with modern UI/UX',
     taxable: true,
@@ -26,6 +27,7 @@ export const mockLineItems: QuoteLineItem[] = [
     quantity: 40,
     unitPrice: 85.00,
     discount: 0,
+    total: 3400.00,
     totalPrice: 3400.00,
     notes: 'RESTful API with authentication',
     taxable: true,
@@ -40,6 +42,7 @@ export const mockLineItems: QuoteLineItem[] = [
     unitPrice: 95.00,
     discount: 10,
     discountAmount: 190.00,
+    total: 1710.00,
     totalPrice: 1710.00,
     notes: 'PostgreSQL with optimization',
     taxable: true,
@@ -55,6 +58,7 @@ export const mockLineItemsSimple: QuoteLineItem[] = [
     quantity: 1,
     unitPrice: 150.00,
     discount: 0,
+    total: 150.00,
     totalPrice: 150.00,
     taxable: true,
     sortOrder: 1
@@ -71,7 +75,8 @@ export const mockLineItemsLarge: QuoteLineItem[] = [
     unitPrice: 120.00,
     discount: 15,
     discountAmount: 9000.00,
-    totalPrice: 51000.00,
+    total: 54000.00,
+    totalPrice: 54000.00,
     notes: 'Full-scale enterprise application',
     taxable: true,
     sortOrder: 1
@@ -84,7 +89,8 @@ export const mockLineItemsLarge: QuoteLineItem[] = [
     quantity: 80,
     unitPrice: 150.00,
     discount: 0,
-    totalPrice: 12000.00,
+    total: 150.00,
+    totalPrice: 150.00,
     notes: 'AWS cloud infrastructure',
     taxable: true,
     sortOrder: 2
@@ -97,7 +103,8 @@ export const mockLineItemsLarge: QuoteLineItem[] = [
     quantity: 200,
     unitPrice: 95.00,
     discount: 0,
-    totalPrice: 19000.00,
+    total: 1710.00,
+    totalPrice: 1710.00,
     notes: 'Full project lifecycle management',
     taxable: true,
     sortOrder: 3
@@ -290,7 +297,8 @@ export const mockQuotes: Quote[] = [
         quantity: 1,
         unitPrice: 5000.00,
         discount: 0,
-        totalPrice: 5000.00,
+        total: 5000.00,
+    totalPrice: 5000.00,
         notes: 'Minimum viable product for startup',
         taxable: true,
         sortOrder: 1
@@ -356,7 +364,8 @@ export const mockQuotes: Quote[] = [
         quantity: 1,
         unitPrice: 12500.00,
         discount: 0,
-        totalPrice: 12500.00,
+        total: 12500.00,
+    totalPrice: 12500.00,
         notes: 'Full e-commerce solution with payment integration',
         taxable: true,
         sortOrder: 1
@@ -426,6 +435,7 @@ export function generateMockQuotes(count: number = 100): Quote[] {
         unitPrice: Math.round(unitPrice * 100) / 100,
         discount: discount || undefined,
         discountAmount: discountAmount > 0 ? Math.round(discountAmount * 100) / 100 : undefined,
+        total: Math.round(totalPrice * 100) / 100,
         totalPrice: Math.round(totalPrice * 100) / 100,
         notes: Math.random() > 0.7 ? 'Additional requirements discussed' : undefined,
         taxable: true,
@@ -537,16 +547,21 @@ export class MockQuoteService {
     const sortOrder = filters.sortOrder || 'desc';
     
     filteredQuotes.sort((a, b) => {
-      let aVal: any = (a as any)[sortBy];
-      let bVal: any = (b as any)[sortBy];
+      let aVal: string | number | Date = (a as unknown as Record<string, string | number | Date>)[sortBy];
+      let bVal: string | number | Date = (b as unknown as Record<string, string | number | Date>)[sortBy];
       
+      // Convert dates to numbers for comparison
       if (aVal instanceof Date) aVal = aVal.getTime();
       if (bVal instanceof Date) bVal = bVal.getTime();
       
+      // Type-safe comparison
+      const aComp = typeof aVal === 'string' ? aVal.toLowerCase() : aVal;
+      const bComp = typeof bVal === 'string' ? bVal.toLowerCase() : bVal;
+      
       if (sortOrder === 'asc') {
-        return aVal > bVal ? 1 : -1;
+        return aComp > bComp ? 1 : -1;
       } else {
-        return aVal < bVal ? 1 : -1;
+        return aComp < bComp ? 1 : -1;
       }
     });
     

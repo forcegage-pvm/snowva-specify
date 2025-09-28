@@ -1,8 +1,38 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { getStatusColor, getStatusIcon, getStatusLabel } from '@/lib/utils/quote-status';
-import { QuoteStatus } from '@/types/quotes/QuoteStatus';
+import { QuoteStatus, STATUS_CONFIG } from '@/types/quotes/QuoteStatus';
+
+// Simple utility functions since we removed the quote-status.ts file
+function getStatusLabel(status: QuoteStatus): string {
+  return STATUS_CONFIG[status]?.label || status;
+}
+
+function getStatusIcon(status: QuoteStatus): string {
+  const icons: Record<QuoteStatus, string> = {
+    [QuoteStatus.Draft]: '📝',
+    [QuoteStatus.Pending]: '⏳',
+    [QuoteStatus.Approved]: '✅',
+    [QuoteStatus.Rejected]: '❌',
+    [QuoteStatus.Expired]: '⏰',
+    [QuoteStatus.Converted]: '💰',
+    [QuoteStatus.Archived]: '📁'
+  };
+  return icons[status] || '📄';
+}
+
+function getStatusColor(status: QuoteStatus): string {
+  const colors: Record<QuoteStatus, string> = {
+    [QuoteStatus.Draft]: 'bg-gray-100 text-gray-800',
+    [QuoteStatus.Pending]: 'bg-yellow-100 text-yellow-800',
+    [QuoteStatus.Approved]: 'bg-green-100 text-green-800',
+    [QuoteStatus.Rejected]: 'bg-red-100 text-red-800',
+    [QuoteStatus.Expired]: 'bg-orange-100 text-orange-800',
+    [QuoteStatus.Converted]: 'bg-purple-100 text-purple-800',
+    [QuoteStatus.Archived]: 'bg-gray-100 text-gray-800'
+  };
+  return colors[status] || 'bg-gray-100 text-gray-800';
+}
 
 interface QuoteStatusBadgeProps {
   /** Quote status to display */
@@ -89,6 +119,7 @@ function getOutlineColorClasses(status: QuoteStatus): string {
     [QuoteStatus.Pending]: 'border border-yellow-300 text-yellow-700 bg-yellow-50',
     [QuoteStatus.Approved]: 'border border-green-300 text-green-700 bg-green-50',
     [QuoteStatus.Rejected]: 'border border-red-300 text-red-700 bg-red-50',
+    [QuoteStatus.Expired]: 'border border-orange-300 text-orange-700 bg-orange-50',
     [QuoteStatus.Converted]: 'border border-blue-300 text-blue-700 bg-blue-50',
     [QuoteStatus.Archived]: 'border border-gray-300 text-gray-600 bg-gray-50'
   };
@@ -105,6 +136,7 @@ function getSolidColorClasses(status: QuoteStatus): string {
     [QuoteStatus.Pending]: 'bg-yellow-600 text-white',
     [QuoteStatus.Approved]: 'bg-green-600 text-white',
     [QuoteStatus.Rejected]: 'bg-red-600 text-white',
+    [QuoteStatus.Expired]: 'bg-orange-600 text-white',
     [QuoteStatus.Converted]: 'bg-blue-600 text-white',
     [QuoteStatus.Archived]: 'bg-gray-500 text-white'
   };

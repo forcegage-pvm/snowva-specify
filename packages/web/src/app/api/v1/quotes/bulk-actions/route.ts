@@ -173,8 +173,7 @@ export async function GET(request: NextRequest) {
         label: 'Delete',
         description: `Delete ${validQuotes.length} draft quotes`,
         requiresData: false,
-        enabled: true,
-        dangerous: true
+        enabled: true
       });
     }
 
