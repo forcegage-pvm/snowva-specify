@@ -5,16 +5,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-// Extend Jest matchers
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeInTheDocument(): R;
-      toHaveValue(value: string): R;
-      toBeDisabled(): R;
-    }
-  }
-}
+// Jest matchers are extended by @testing-library/jest-dom import
 
 // Mock Next.js App Router
 const mockPush = jest.fn();

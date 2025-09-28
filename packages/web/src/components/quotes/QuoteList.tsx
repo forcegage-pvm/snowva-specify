@@ -4,8 +4,9 @@ import { useQuotes } from '@/hooks/quotes/useQuoteOperations';
 import { useQuoteSelection, useQuoteView } from '@/hooks/quotes/useQuoteState';
 import { QuotesFilter } from '@/services/quotes/QuoteValidation';
 import { Quote } from '@/types/quotes/Quote';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { QuoteCard } from './QuoteCard';
+import { QuoteDetailModal } from './QuoteDetailModal';
 import { QuoteTable } from './QuoteTable';
 
 interface QuoteListProps {
@@ -32,6 +33,12 @@ export function QuoteList({
     deselectAll,
     selectRange 
   } = useQuoteSelection();
+
+  // Modal state for viewing quote details
+  const [selectedQuoteForView, setSelectedQuoteForView] = useState<Quote | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
+  const [modalError, setModalError] = useState<string | null>(null);
   
   // Fetch quotes with current filters
   const { 
@@ -83,6 +90,33 @@ export function QuoteList({
     const allIds = filteredQuotes.map(q => q.id);
     selectAll(allIds);
   }, [filteredQuotes, selectAll]);
+
+  // Handle view quote modal
+  const handleViewQuote = useCallback((quote: Quote) => {
+    setSelectedQuoteForView(quote);
+    setIsModalOpen(true);
+    setModalError(null);
+    // In a real app, you might fetch additional quote details here
+    // For now, we'll use the quote data we already have
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedQuoteForView(null);
+    setModalError(null);
+  }, []);
+
+  const handlePrintQuote = useCallback((quote: Quote) => {
+    // Placeholder for print functionality
+    console.log('Print quote:', quote.quoteNumber);
+    // In a real app, this would generate and print a PDF
+  }, []);
+
+  const handleEmailQuote = useCallback((quote: Quote) => {
+    // Placeholder for email functionality  
+    console.log('Email quote:', quote.quoteNumber);
+    // In a real app, this would open email composer or send directly
+  }, []);
   
   // Loading state
   if (isLoading) {
@@ -158,50 +192,91 @@ export function QuoteList({
     selectedQuotes,
     onQuoteSelect: handleQuoteSelect,
     onSelectAll: handleSelectAll,
-    onDeselectAll: deselectAll
+    onDeselectAll: deselectAll,
+    onViewQuote: handleViewQuote
   };
   
   if (viewMode === 'table') {
     return (
-      <div className={className}>
-        <QuoteTable {...commonProps} />
-      </div>
+      <>
+        <div className={className}>
+          <QuoteTable {...commonProps} />
+        </div>
+        {selectedQuoteForView && (
+          <QuoteDetailModal
+            quote={selectedQuoteForView}
+            open={isModalOpen}
+            onClose={handleCloseModal}
+            onPrint={handlePrintQuote}
+            onEmail={handleEmailQuote}
+            loading={modalLoading}
+            error={modalError || undefined}
+          />
+        )}
+      </>
     );
   }
   
   if (viewMode === 'grid') {
     return (
-      <div className={`${className} grid gap-4 ${
-        gridSize === 'small' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' :
-        gridSize === 'medium' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' :
-        'grid-cols-1 sm:grid-cols-2'
-      }`}>
+      <>
+        <div className={`${className} grid gap-4 ${
+          gridSize === 'small' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' :
+          gridSize === 'medium' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' :
+          'grid-cols-1 sm:grid-cols-2'
+        }`}>
+          {filteredQuotes.map((quote) => (
+            <QuoteCard
+              key={quote.id}
+              quote={quote}
+              isSelected={selectedQuotes.has(quote.id)}
+              onSelect={(event: React.MouseEvent) => handleQuoteSelect(quote, event)}
+              size={gridSize}
+            />
+          ))}
+        </div>
+        {selectedQuoteForView && (
+          <QuoteDetailModal
+            quote={selectedQuoteForView}
+            open={isModalOpen}
+            onClose={handleCloseModal}
+            onPrint={handlePrintQuote}
+            onEmail={handleEmailQuote}
+            loading={modalLoading}
+            error={modalError || undefined}
+          />
+        )}
+      </>
+    );
+  }
+  
+  // List view
+  return (
+    <>
+      <div className={`${className} space-y-${listDensity === 'compact' ? '1' : listDensity === 'comfortable' ? '2' : '3'}`}>
         {filteredQuotes.map((quote) => (
           <QuoteCard
             key={quote.id}
             quote={quote}
             isSelected={selectedQuotes.has(quote.id)}
             onSelect={(event: React.MouseEvent) => handleQuoteSelect(quote, event)}
-            size={gridSize}
+            layout="list"
+            density={listDensity}
           />
         ))}
       </div>
-    );
-  }
-  
-  // List view
-  return (
-    <div className={`${className} space-y-${listDensity === 'compact' ? '1' : listDensity === 'comfortable' ? '2' : '3'}`}>
-      {filteredQuotes.map((quote) => (
-        <QuoteCard
-          key={quote.id}
-          quote={quote}
-          isSelected={selectedQuotes.has(quote.id)}
-          onSelect={(event: React.MouseEvent) => handleQuoteSelect(quote, event)}
-          layout="list"
-          density={listDensity}
+      {selectedQuoteForView && (
+        <QuoteDetailModal
+          quote={selectedQuoteForView}
+          open={isModalOpen}
+          onClose={handleCloseModal}
+          onPrint={handlePrintQuote}
+          onEmail={handleEmailQuote}
+          loading={modalLoading}
+          error={modalError || undefined}
         />
-      ))}
-    </div>
+      )}
+    </>
   );
+
 }

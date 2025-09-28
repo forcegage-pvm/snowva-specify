@@ -1,9 +1,10 @@
 import { POST } from '@/app/api/v1/quotes/route';
+import { Quote } from '@/types/quotes/Quote';
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import { NextRequest } from 'next/server';
 
 describe('POST /api/v1/quotes Contract', () => {
-  let validQuoteData: any;
+  let validQuoteData: Partial<Quote>;
 
   beforeEach(() => {
     validQuoteData = {
@@ -23,8 +24,8 @@ describe('POST /api/v1/quotes Contract', () => {
       taxAmount: 1000.00,
       totalAmount: 6000.00,
       currency: 'GBP',
-      expiryDate: '2025-10-26',
-      validUntil: '2025-10-26',
+      expiryDate: new Date('2025-10-26'),
+      validUntil: new Date('2025-10-26'),
       terms: 'Payment due within 30 days',
       notes: 'Initial quote for website development project'
     };

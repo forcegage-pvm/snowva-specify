@@ -1,8 +1,8 @@
 'use client';
 
+import { QuoteStatusBadge } from '@/components/quotes/QuoteStatusBadge';
 import { useQuoteView } from '@/hooks/quotes/useQuoteState';
 import { formatCurrency, formatDate } from '@/lib/utils/format';
-import { getStatusColor, getStatusLabel } from '@/lib/utils/quote-status';
 import { Quote } from '@/types/quotes/Quote';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -12,6 +12,7 @@ interface QuoteTableProps {
   onQuoteSelect: (quote: Quote, event?: React.MouseEvent) => void;
   onSelectAll: () => void;
   onDeselectAll: () => void;
+  onViewQuote?: (quote: Quote) => void;
   className?: string;
 }
 
@@ -24,6 +25,7 @@ export function QuoteTable({
   onQuoteSelect,
   onSelectAll,
   onDeselectAll,
+  onViewQuote,
   className = ''
 }: QuoteTableProps) {
   const {
@@ -192,12 +194,12 @@ export function QuoteTable({
         );
       
       case 'status':
-        const statusColor = getStatusColor(quote.status);
-        const statusLabel = getStatusLabel(quote.status);
         return (
-          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor}`}>
-            {statusLabel}
-          </span>
+          <QuoteStatusBadge 
+            status={quote.status} 
+            size="sm"
+            variant="default"
+          />
         );
       
       case 'createdAt':
@@ -346,7 +348,7 @@ export function QuoteTable({
                       className="text-gray-400 hover:text-blue-600 p-1.5 rounded-md hover:bg-blue-50 transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
-                        // Handle view action
+                        onViewQuote?.(quote);
                       }}
                       title="View quote"
                     >

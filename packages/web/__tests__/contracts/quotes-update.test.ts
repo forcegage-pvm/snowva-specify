@@ -1,10 +1,11 @@
 import { PUT } from '@/app/api/v1/quotes/[quoteId]/route';
+import { Quote } from '@/types/quotes/Quote';
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import { NextRequest } from 'next/server';
 
 describe('PUT /api/v1/quotes/{quoteId} Contract', () => {
   let validQuoteId: string;
-  let updateData: any;
+  let updateData: Partial<Quote>;
 
   beforeEach(() => {
     validQuoteId = 'quote_123';
