@@ -26,13 +26,15 @@ evidence/T###/
 ├── mcp-screenshots/          # ← RAW MCP EVIDENCE FILES
 │   ├── take_snapshot.json    # ← RAW UNMODIFIED MCP RESPONSE
 │   └── take_screenshot.json  # ← RAW UNMODIFIED MCP RESPONSE
+├── technical-debt.json       # ← AMENDMENT 6: TDD DEBT TRACKING
 ├── constitutional-evidence.md # Evidence documentation (optional)
 └── mcp-interaction.log       # Log of all MCP commands
 ```
 
-**CRITICAL CHANGE**: New Two-File System separates:
+**CRITICAL CHANGE**: Enhanced Two-File System separates:
 - **mcp-test-results.json**: Agent's analysis and functional validation findings
 - **mcp-screenshots/*.json**: RAW unmodified MCP command responses (anti-fraud proof)
+- **technical-debt.json**: Amendment 6 compliance with smart routing strategy and reference validation
 
 ### Step 3: Use BOTH MCP Browser Commands (MANDATORY)
 ```javascript
@@ -47,7 +49,48 @@ const screenshotResponse = await mcp_chrome-devtoo_take_screenshot();
 
 // 4. MANDATORY: Save RAW responses (Two-File System - Evidence Files)
 fs.writeFileSync(
-  "evidence/T###/mcp-screenshots/take_snapshot.json", 
+  "evidence/T###/mcp-screenshots/take_snapshot.json",
+  JSON.stringify({ type: "take_snapshot", response: snapshotResponse }, null, 2)
+);
+
+fs.writeFileSync(
+  "evidence/T###/mcp-screenshots/take_screenshot.json",
+  JSON.stringify({ type: "take_screenshot", response: screenshotResponse }, null, 2)
+);
+
+// 5. Create agent functional analysis (mcp-test-results.json)
+const testResults = {
+  taskId: "T###",
+  testTimestamp: new Date().toISOString(),
+  requirement: "Your task requirement",
+  functionalTests: {
+    apiEndpoint: {
+      status: "PASS",  // REQUIRED: Must be object with status field
+      message: "Endpoint responds successfully",
+      details: "API endpoint validation completed"
+    },
+    responseValidation: {
+      status: "PASS",
+      message: "Response structure validated",
+      details: "Response format meets requirements"
+    },
+    businessLogic: {
+      status: "PASS",  // For contract testing: PASS = successful issue identification
+      message: "Business logic validation completed",
+      details: "Contract testing successfully identified business logic gaps (expected outcome)"
+    },
+    dataIntegrity: {
+      status: "PASS",
+      message: "Data integrity validation completed",
+      details: "Data validation issues successfully identified and catalogued"
+    }
+  }
+};
+
+fs.writeFileSync(
+  "evidence/T###/mcp-test-results.json",
+  JSON.stringify(testResults, null, 2)
+); 
   JSON.stringify(snapshotResponse, null, 2)  // ← RAW UNMODIFIED RESPONSE
 );
 

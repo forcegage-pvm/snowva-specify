@@ -49,6 +49,43 @@ mcp_chrome-devtoo_new_page("http://localhost:3000/api/v1/quotes")
 
 ---
 
+## TDD DEBT ANALYZER INTEGRATION
+
+### Smart Routing Strategy (Amendment 6)
+
+**AUTOMATIC DEBT ROUTING**: The enhanced `tdd-debt-analyzer.js` automatically determines where to track technical debt:
+
+**SPRINT_TASKS Strategy** (small debt loads):
+- ≤6 total debt items
+- ≤4 critical+high priority items
+- Debt added directly to sprint tasks.md
+- Prevents inventory duplication
+
+**INVENTORY Strategy** (large debt loads):
+- >6 total debt items OR >4 critical+high priority
+- Debt tracked in `.specify/memory/tdd-debt-inventory.json`
+- Requires separate sprint planning for debt resolution
+
+### Usage Protocol:
+```bash
+# After contract testing or TDD red phase
+node .specify/tools/tdd-debt-analyzer.js
+
+# Automatic smart routing based on capacity
+# Creates technical-debt.json with:
+# - debtTrackingLocation.strategy: "SPRINT_TASKS" or "INVENTORY"
+# - taskReferences: Links to generated sprint tasks
+# - duplicationAvoidance: Prevents dual tracking
+```
+
+### Validation Integration:
+- `post-task-validation.js` validates debt references
+- Amendment 6 compliance enforced
+- Sprint task existence verification
+- Inventory correlation validation
+
+---
+
 ## MCP BROWSER TOOLS
 
 ### Screenshot Capture Protocol

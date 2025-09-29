@@ -266,6 +266,41 @@ After experiencing the cascade of 389 TypeScript errors caused by configuration 
 - No runtime console errors during normal operation
 - All existing tests pass (except TDD red phase)
 
+### MANDATE 10: EXACT FUNCTIONAL CORRESPONDENCE (MCP TESTING ALIGNMENT)
+
+**CONSTITUTIONAL REQUIREMENT**: MCP testing must directly validate the EXACT functionality specified in the task, not adjacent, preliminary, or substitute functionality.
+
+**MUST DO** (Mandate 10):
+- ✅ MCP evidence must prove the specific API endpoint/method being tested (GET vs POST vs PUT vs DELETE)
+- ✅ Browser interactions must execute the exact operations required by the task
+- ✅ Evidence files must contain proof of the target functionality, not related functionality
+- ✅ Task-evidence mapping must show direct correspondence between requirement and validation
+- ✅ When testing POST endpoints, execute actual POST requests through MCP browser tools
+- ✅ When testing UI interactions, capture the specific UI behaviors required
+- ✅ Document exactly what functionality the MCP evidence proves
+
+**MUST NOT DO** (Mandate 10):
+- ❌ NEVER substitute testing adjacent functionality (GET) when task requires target functionality (POST)
+- ❌ NEVER use "server availability testing" as substitute for "specific endpoint testing"
+- ❌ NEVER conflate preliminary validation (server running) with functional validation (feature working)
+- ❌ NEVER document MCP testing of functionality X when task requires testing functionality Y
+- ❌ NEVER accept cognitive shortcuts that bypass actual requirement testing
+- ❌ NEVER fabricate evidence narratives that make insufficient testing sound adequate
+
+**Enforcement Protocol**:
+1. **Requirement Parsing**: Extract EXACT functionality from task description (API method, UI behavior, etc.)
+2. **MCP Test Design**: Design browser interactions that directly exercise the target functionality
+3. **Evidence Verification**: Validate that captured evidence proves the specific requirement
+4. **Documentation Alignment**: Ensure all evidence files document the target functionality, not substitutes
+5. **Validation Gate**: Post-task validation must verify evidence matches task requirements
+
+**Example Violations**:
+- Task: "Contract test POST /api/quotes" → MCP Testing: Only tested GET /api/quotes ❌
+- Task: "Browser test quote creation API" → MCP Evidence: Only shows server availability ❌
+- Task: "Test bulk operations UI" → MCP Evidence: Only shows individual quote operations ❌
+
+**Root Cause Prevention**: This mandate addresses the cognitive pattern-matching failure where agents substitute "related functionality testing" for "required functionality testing" due to perceived similarity or convenience.
+
 ---
 
 ## DEVELOPMENT WORKFLOW CONSTITUTION
@@ -713,12 +748,71 @@ This constitution will be updated based on:
 
 ## COMMITMENT STATEMENT
 
-**For AI Agents**: "I commit to validating every claim I make and reporting progress based on actual, tested functionality rather than assumed or intended functionality."
+---
 
-**For Human Developers**: "I commit to demanding evidence for all progress claims and celebrating honest, incremental progress over false completion reports."
+## CONSTITUTIONAL AMENDMENT 6: MANDATORY TDD DEBT MANAGEMENT
 
-**For Teams**: "We commit to building a culture where finding problems early is celebrated and where honest progress reporting is valued over maintaining illusions of completion."
+**Effective**: September 29, 2025  
+**Updated**: September 29, 2025 - Enhanced with smart routing strategy and duplication avoidance protocols
+**Scope**: All test-driven development processes
+
+**CORE PRINCIPLE**: Every failing TDD test creates trackable technical debt with severity classification, automatic task generation, smart routing strategy, and constitutional enforcement.
+
+### Mandatory Requirements:
+1. **ZERO IGNORED FAILURES**: No test failure can be ignored, deferred without tracking, or assumed handled elsewhere
+2. **AUTO-DEBT GENERATION**: Failing tests automatically generate implementation tasks via `tdd-debt-analyzer.js`
+3. **SMART ROUTING STRATEGY**: Debt automatically routed to SPRINT_TASKS (≤6 items, ≤4 critical+high) or INVENTORY (larger loads)
+4. **DUPLICATION AVOIDANCE**: Enhanced tracking prevents debt appearing in both sprint tasks and inventory
+5. **SEVERITY CLASSIFICATION**: All debt classified as CRITICAL, HIGH, MEDIUM, or LOW based on business impact
+6. **BLOCKING ENFORCEMENT**: CRITICAL debt blocks all non-debt development tasks
+7. **REAL-TIME TRACKING**: Debt status continuously monitored and reported
+
+### Debt Classification Rules:
+- **CRITICAL**: API business logic gaps, security vulnerabilities, data integrity issues, breaking changes
+- **HIGH**: Performance degradation, accessibility violations, UX friction, maintainability debt
+- **MEDIUM**: Nice-to-have features, code quality issues, documentation gaps, test coverage
+- **LOW**: Optimization opportunities, code style, legacy cleanup, developer experience
+
+### Enhanced TDD Debt Analyzer Features:
+- **Smart Routing**: `determineDebtTrackingStrategy()` automatically routes debt based on sprint capacity
+- **Capacity Thresholds**: SPRINT_TASKS (≤6 total items, ≤4 critical+high) vs INVENTORY (larger loads)
+- **Duplication Prevention**: Advanced tracking ensures debt appears in exactly one location
+- **Reference Validation**: `validateDebtReferences()` validates sprint task and inventory references
+- **Contract Testing Support**: Specialized handling for contract testing tasks that identify business logic issues
+
+### Enforcement Mechanisms:
+- **Pre-Task Gate**: `pre-task-check.js` blocks development when CRITICAL debt exists
+- **Post-Task Gate**: `post-task-validation.js` tracks debt resolution, validates references, and rescans for new issues
+- **Evidence Validation**: Amendment 6 compliance with technical-debt.json validation and reference checking
+- **Daily Reports**: `tdd-debt-report.js` maintains debt visibility
+- **Sprint Planning**: 30% capacity reserved for CRITICAL debt resolution
+
+### Escalation Thresholds:
+- **🚨 EMERGENCY**: >5 CRITICAL items → Development halt, emergency debt resolution required
+- **⚠️ WARNING**: >10 HIGH items → Next sprint must be 50% debt resolution focused
+- **📊 MONITOR**: >20 MEDIUM items → Architectural review required
+
+### Contract Testing Protocol:
+- **Purpose**: Contract testing tasks identify business logic issues, not implement functionality
+- **Success Criteria**: Successful identification and cataloging of business logic gaps constitutes task completion
+- **Evidence Format**: MCP functional tests show PASS status for successful contract testing, even when business logic issues are discovered
+- **Technical Debt**: Business logic issues identified through contract testing become tracked technical debt
+
+### Constitutional Violations:
+- Proceeding with new features while CRITICAL debt exists
+- Failing to run `tdd-debt-analyzer.js` after test completion
+- Deferring debt resolution without explicit tracking and approval
+- Gaming debt classification to avoid constitutional enforcement
+- Creating evidence that shows contract testing as "failed" when business logic issues are successfully identified
 
 ---
 
-**This constitution serves as the foundational law for all development work. Violations undermine trust, waste time, and create technical debt. Adherence ensures reliable, honest progress toward working software.**
+**For AI Agents**: "I commit to validating every claim I make and reporting progress based on actual, tested functionality rather than assumed or intended functionality. I will treat every failing test as mandatory technical debt requiring immediate tracking and classification."
+
+**For Human Developers**: "I commit to demanding evidence for all progress claims and celebrating honest, incremental progress over false completion reports. I will not allow technical debt to accumulate without proper tracking and prioritization."
+
+**For Teams**: "We commit to building a culture where finding problems early is celebrated and where honest progress reporting is valued over maintaining illusions of completion. We will treat TDD debt as a first-class citizen requiring active management."
+
+---
+
+**This constitution serves as the foundational law for all development work. Violations undermine trust, waste time, and create technical debt. Adherence ensures reliable, honest progress toward working software with proper debt management.**

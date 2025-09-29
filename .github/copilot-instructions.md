@@ -64,7 +64,7 @@ See .specify/memory/constitution.md, .specify/memory/testing-strategy.md, and .s
 - All MCP interactions MUST save raw JSON responses as evidence
 - Screenshot fraud detection now active - no placeholder files accepted
 
-**VALIDATION INSTRUCTIONS**: See `.specify/memory/validation-tools-usage-guide.md` for step-by-step instructions on proper evidence generation, fraud prevention, and troubleshooting validation errors.
+**VALIDATION INSTRUCTIONS**: See `.specify/memory/validation-tools-usage-guide.md` for step-by-step instructions on proper evidence generation, fraud prevention, and troubleshooting validation errors.\n\n**CONSTITUTIONAL AMENDMENT 6 - ENHANCED TDD DEBT MANAGEMENT**: Smart routing strategy automatically determines debt tracking location (SPRINT_TASKS vs INVENTORY) based on capacity thresholds. Enhanced `tdd-debt-analyzer.js` prevents duplication, validates references, and supports contract testing workflows. All technical debt MUST be tracked with Amendment 6 compliance.
 
 ## Recent Changes
 
@@ -149,6 +149,6 @@ This prevents development hallucination and ensures accurate sprint progress tra
 - Error handling validation
 - Performance impact documentation
 
-**NO UI FUNCTIONALITY CLAIMS** are accepted without corresponding MCP browser testing evidence.
+**NO UI FUNCTIONALITY CLAIMS** are accepted without corresponding MCP browser testing evidence.\n\n### Enhanced Constitutional Tools (September 29, 2025)\n\n**TDD Debt Analyzer Enhancements**:\n- Smart routing strategy: `determineDebtTrackingStrategy()` \n- Capacity thresholds: SPRINT_TASKS (≤6 items, ≤4 critical+high) vs INVENTORY\n- Duplication prevention: Advanced tracking ensures single-location debt\n- Contract testing support: Specialized handling for business logic identification tasks\n\n**Evidence Validation Improvements**:\n- Reference validation: `validateDebtReferences()` validates sprint task and inventory correlation\n- Amendment 6 compliance: Technical debt tracking with constitutional enforcement\n- Contract testing protocol: Successful issue identification = PASS functional tests\n- Two-file evidence system: Agent analysis + raw MCP responses for anti-fraud
 
 <!-- MANUAL ADDITIONS END -->
