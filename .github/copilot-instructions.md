@@ -53,7 +53,18 @@ TypeScript 5.0+, Node.js 18+: Follow constitutional principles - Component-First
 - Constitutional audit: `node .specify/tools/constitutional-audit.js`
 - Full enforcement: `node .specify/tools/constitutional-enforcement.js`
 
-See .specify/memory/constitution.md and .specify/memory/testing-strategy.md for complete guidelines.
+See .specify/memory/constitution.md, .specify/memory/testing-strategy.md, and .specify/memory/tool-usage-instructions.md for complete guidelines.
+
+**CONSTITUTIONAL AMENDMENT 4 - ANTI-FRAUD ENFORCEMENT**: Zero tolerance for evidence fabrication, validation circumvention, or system gaming. When tools fail, STOP and wait for human assistance rather than creating workarounds or fake evidence.
+
+**MANDATORY TOOL PROTOCOLS**:
+
+- Development server MUST be started with `Start-Process` in separate window
+- MCP browser tools require running dev server - verify connection before use
+- All MCP interactions MUST save raw JSON responses as evidence
+- Screenshot fraud detection now active - no placeholder files accepted
+
+**VALIDATION INSTRUCTIONS**: See `.specify/memory/validation-tools-usage-guide.md` for step-by-step instructions on proper evidence generation, fraud prevention, and troubleshooting validation errors.
 
 ## Recent Changes
 

@@ -39,6 +39,33 @@
 
 ## CONSTITUTIONAL MANDATES
 
+### MANDATE 9: ANTI-FRAUD ENFORCEMENT PROTOCOL
+
+**CONSTITUTIONAL AMENDMENT 4**: Zero tolerance for evidence fabrication, validation circumvention, or system gaming.
+
+**PROHIBITED BEHAVIORS**:
+- ❌ Creating placeholder/dummy files to satisfy validators without proving functionality
+- ❌ Copying evidence files between directories to bypass validation requirements  
+- ❌ Creating fake JSON responses or manipulated test results
+- ❌ Gaming validation systems by discovering and exploiting their technical requirements
+- ❌ Working around broken processes instead of fixing root causes
+- ❌ Making suggestions or recommendations when fundamental tools are failing
+
+**MANDATORY PROTOCOL WHEN ENCOUNTERING BLOCKING ISSUES**:
+1. **STOP IMMEDIATELY**: Do not attempt workarounds, bypasses, or creative solutions
+2. **DIAGNOSE ROOT CAUSE**: Identify the fundamental issue preventing progress
+3. **DOCUMENT FAILURE STATE**: Create clear report of what is broken and why
+4. **WAIT FOR HUMAN ASSISTANCE**: Do not proceed without explicit human guidance
+
+**Example Blocking Issues Requiring Human Intervention**:
+- Development servers failing to start or repeatedly crashing
+- MCP browser tools unable to connect or capture evidence
+- Test environments not functioning properly
+- Tool dependencies missing or misconfigured
+- Validation systems producing false negatives
+
+**ENFORCEMENT**: Any attempt to circumvent this protocol constitutes a CONSTITUTIONAL VIOLATION requiring immediate rollback of all fraudulent work.
+
 ### MANDATE 1: EVIDENCE-FIRST PROGRESS REPORTING
 
 **MUST DO**:
@@ -575,8 +602,8 @@ node .specify/tools/pre-task-check.js T001
 # Post-task validation
 node .specify/tools/post-task-validation.js T001
 
-# MCP evidence validation
-node .specify/tools/mcp-evidence-validator.js ./evidence/T001 T001
+# MCP evidence validation (Two-File System)
+node .specify/tools/post-task-validation.js T001
 
 # Constitutional audit
 node .specify/tools/constitutional-audit.js
@@ -586,6 +613,40 @@ node .specify/tools/constitutional-enforcement.js
 ```
 
 **Amendment Status**: ACTIVE & ENFORCED - All three amendments are implemented with automated enforcement tools
+
+---
+
+## MCP VALIDATION TWO-FILE SYSTEM
+
+**CONSTITUTIONAL MANDATE**: All MCP validation must use the two-file system to separate analysis from evidence.
+
+### File Structure Requirements
+
+**1. mcp-test-results.json** (Agent's Analysis):
+- Contains functional analysis and validation findings
+- Structured test results with clear categories
+- Agent's interpretation of what the evidence proves
+- Required fields: taskId, testTimestamp, mcpValidation, functionalTests, testResultsSummary
+
+**2. Evidence Files** (RAW MCP Outputs):
+- `mcp-screenshots/take_snapshot.json`: RAW accessibility tree response
+- `mcp-screenshots/take_screenshot.json`: RAW visual OCR response
+- `mcp-interaction.log`: Command execution log
+- **COMPLETELY UNMODIFIED** - proving actual MCP usage
+
+### Constitutional Requirements
+
+**PROHIBITED**:
+- ❌ Mixing analysis with raw evidence in single files
+- ❌ Editing or processing raw MCP responses
+- ❌ Creating fake status files to bypass validation
+- ❌ Using processed data as evidence
+
+**REQUIRED**:
+- ✅ Clear separation between test results (analysis) and evidence (raw data)
+- ✅ Both file types must exist for validation to pass
+- ✅ Evidence files prove MCP tool usage (anti-fraud)
+- ✅ Test results prove functional analysis (validation)
 
 ---
 

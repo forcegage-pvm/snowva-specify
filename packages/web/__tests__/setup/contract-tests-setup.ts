@@ -4,11 +4,16 @@
  * NOTE: This file is not currently used - contract tests use validation approach instead
  */
 
-// @ts-nocheck - Legacy setup file with complex Jest typing issues
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck - Suppress all TypeScript errors in this legacy test setup file
+// Legacy setup file with complex Jest typing issues
 import { jest } from "@jest/globals";
 
 // Mock all API route modules before they're imported
+// @ts-expect-error - Complex Jest typing with Next.js API routes
 jest.mock("@/app/api/v1/quotes/route", () => ({
+  // @ts-expect-error - Jest mock typing complexity
   GET: jest.fn().mockResolvedValue({
     status: 200,
     json: () =>

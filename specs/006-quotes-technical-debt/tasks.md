@@ -30,7 +30,7 @@
   - Validation: node .specify/tools/pre-task-check.js T002
   - Completion: node .specify/tools/post-task-validation.js T002
 
-- [ ] T003 Create audit service for quote operations in packages/web/src/services/auditService.ts
+- [x] T003 Create audit service for quote operations in packages/web/src/services/auditService.ts
   - Evidence: evidence/T003/ with audit logging implementation, test results
   - MCP: N/A (service layer)
   - Validation: node .specify/tools/pre-task-check.js T003
