@@ -1,0 +1,505 @@
+{
+  "testPlanVersion": "3.0.0",
+  "createdDate": "2025-09-29",
+  "description": "Self-Contained T004 & T005: Complete API Contract Tests with Exact Commands and Parameters",
+
+  "globalConfiguration": {
+    "workspaceRoot": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva",
+    "evidenceBaseDirectory": "specs/006-quotes-technical-debt/evidence",
+    "testDirectory": "packages/web/__tests__/contracts",
+    "apiBaseUrl": "http://localhost:3000",
+    "developmentServer": {
+      "command": "Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"cd 'X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web'; npm run dev\"",
+      "healthCheck": "curl -f http://localhost:3000/api/health",
+      "timeout": 30
+    }
+  },
+
+  "executionEngine": {
+    "testCommands": {
+      "jest": {
+        "executable": "npm",
+        "baseArgs": ["test", "--"],
+        "workingDirectory": "packages/web",
+        "environment": {
+          "NODE_ENV": "test"
+        }
+      },
+      "mcpBrowser": {
+        "functions": {
+          "navigate": "mcp_chrome-devtoo_navigate_page",
+          "screenshot": "mcp_chrome-devtoo_take_screenshot",
+          "snapshot": "mcp_chrome-devtoo_take_snapshot",
+          "newPage": "mcp_chrome-devtoo_new_page",
+          "listPages": "mcp_chrome-devtoo_list_pages"
+        }
+      }
+    }
+  },
+
+  "tasks": {
+    "T004": {
+      "taskId": "T004",
+      "title": "Contract test GET /api/quotes (list endpoint)",
+      "description": "Validate GET /api/v1/quotes endpoint returns proper quote list with pagination",
+      "testFile": "__tests__/contracts/quotes-list.test.ts",
+      "apiEndpoint": {
+        "method": "GET",
+        "path": "/api/v1/quotes",
+        "fullUrl": "http://localhost:3000/api/v1/quotes"
+      },
+      
+      "testExecution": {
+        "command": "npm test -- __tests__/contracts/quotes-list.test.ts",
+        "workingDirectory": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web",
+        "expectedDuration": "< 5 seconds",
+        "expectedResult": "PASS",
+        "testCounts": {
+          "total": 15,
+          "suites": 1
+        }
+      },
+
+      "mcpValidation": {
+        "steps": [
+          {
+            "stepId": "navigate_to_api",
+            "action": "mcp_chrome-devtoo_navigate_page",
+            "parameters": {
+              "url": "http://localhost:3000/api/v1/quotes"
+            },
+            "expectedResult": "JSON response visible",
+            "evidence": "mcp-navigate-response.json"
+          },
+          {
+            "stepId": "capture_api_response",
+            "action": "mcp_chrome-devtoo_take_snapshot",
+            "parameters": {},
+            "expectedResult": "Quote data structure visible",
+            "evidence": "mcp-snapshot-data.json"
+          },
+          {
+            "stepId": "screenshot_api_output",
+            "action": "mcp_chrome-devtoo_take_screenshot",
+            "parameters": {
+              "format": "png"
+            },
+            "expectedResult": "Screenshot taken",
+            "evidence": "mcp-screenshot.png"
+          }
+        ]
+      },
+
+      "validationCriteria": {
+        "contractTests": {
+          "successCases": [
+            "should return 200 OK with proper JSON structure",
+            "should return quotes array with required fields",
+            "should return valid pagination metadata",
+            "should return valid filter metadata"
+          ],
+          "queryParameterHandling": [
+            "should handle page parameter",
+            "should handle limit parameter", 
+            "should handle search parameter",
+            "should handle status filter"
+          ],
+          "errorHandling": [
+            "should handle invalid page parameter gracefully",
+            "should handle invalid limit parameter gracefully"
+          ],
+          "performance": [
+            "should respond within acceptable time limits",
+            "should handle concurrent requests efficiently"
+          ],
+          "dataIntegrity": [
+            "should maintain consistent data structure across requests",
+            "should return valid numeric types for amounts",
+            "should return valid date formats"
+          ]
+        },
+        "apiResponse": {
+          "statusCode": 200,
+          "contentType": "application/json",
+          "structure": {
+            "quotes": "array",
+            "pagination": {
+              "page": "number",
+              "limit": "number", 
+              "total": "number",
+              "totalPages": "number"
+            },
+            "filters": {
+              "applied": "object",
+              "available": "object"
+            },
+            "summary": {
+              "totalQuotes": "number",
+              "totalAmount": "number",
+              "averageAmount": "number",
+              "statusCounts": "object"
+            }
+          }
+        }
+      },
+
+      "evidenceFiles": [
+        "contract-test-execution.log",
+        "mcp-navigate-response.json", 
+        "mcp-snapshot-data.json",
+        "mcp-screenshot.png",
+        "step-analysis.json"
+      ]
+    },
+
+    "T005": {
+      "taskId": "T005",
+      "title": "Contract test POST /api/quotes", 
+      "description": "Validate POST /api/v1/quotes endpoint creates quotes with proper validation",
+      "testFile": "__tests__/contracts/quotes-post.test.ts",
+      "apiEndpoint": {
+        "method": "POST",
+        "path": "/api/v1/quotes",
+        "fullUrl": "http://localhost:3000/api/v1/quotes"
+      },
+
+      "testExecution": {
+        "command": "npm test -- __tests__/contracts/quotes-post.test.ts",
+        "workingDirectory": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web",
+        "expectedDuration": "< 10 seconds",
+        "expectedResult": "MIXED (some may fail in TDD red phase)",
+        "testCounts": {
+          "total": "varies",
+          "suites": 1
+        }
+      },
+
+      "testPayloads": {
+        "validQuote": {
+          "customerId": "cust-001",
+          "customerName": "Test Customer",
+          "items": [
+            {
+              "productId": "prod-001",
+              "productName": "Test Product", 
+              "description": "Test product description",
+              "quantity": 2,
+              "unitPrice": 100.0,
+              "discount": 0
+            }
+          ],
+          "notes": "Test quote creation",
+          "assignedTo": "user-001"
+        },
+        "invalidQuote": {
+          "customerId": "",
+          "customerName": "",
+          "items": []
+        },
+        "multiItemQuote": {
+          "customerId": "cust-002",
+          "customerName": "Multi Item Customer",
+          "items": [
+            {
+              "productId": "prod-001",
+              "productName": "Product 1",
+              "description": "First product",
+              "quantity": 1,
+              "unitPrice": 50.0,
+              "discount": 5
+            },
+            {
+              "productId": "prod-002", 
+              "productName": "Product 2",
+              "description": "Second product",
+              "quantity": 3,
+              "unitPrice": 25.0,
+              "discount": 0
+            }
+          ],
+          "notes": "Multi-item test quote"
+        }
+      },
+
+      "mcpValidation": {
+        "steps": [
+          {
+            "stepId": "navigate_to_app",
+            "action": "mcp_chrome-devtoo_navigate_page",
+            "parameters": {
+              "url": "http://localhost:3000"
+            },
+            "expectedResult": "Application loads",
+            "evidence": "mcp-app-navigate.json"
+          },
+          {
+            "stepId": "find_quote_creation",
+            "description": "Look for quote creation functionality in the UI",
+            "action": "mcp_chrome-devtoo_take_snapshot",
+            "parameters": {},
+            "expectedResult": "UI elements for quote creation visible",
+            "evidence": "mcp-ui-snapshot.json"
+          },
+          {
+            "stepId": "screenshot_ui",
+            "action": "mcp_chrome-devtoo_take_screenshot", 
+            "parameters": {
+              "format": "png"
+            },
+            "expectedResult": "Screenshot of application UI",
+            "evidence": "mcp-ui-screenshot.png"
+          }
+        ]
+      },
+
+      "validationCriteria": {
+        "contractTests": {
+          "successCases": [
+            "should return 201 Created with proper JSON structure for valid quote",
+            "should generate unique quote ID and quote number",
+            "should calculate totals correctly (subtotal, tax, total)",
+            "should set default status to 'draft'",
+            "should include all provided quote data in response"
+          ],
+          "validationCases": [
+            "should return 400 Bad Request for missing required fields",
+            "should return 400 Bad Request for invalid data types",
+            "should validate customer ID format",
+            "should validate item quantities are positive",
+            "should validate unit prices are non-negative"
+          ],
+          "businessLogicCases": [
+            "should calculate line item totals correctly",
+            "should apply discounts properly",
+            "should calculate tax amounts correctly",
+            "should handle multiple line items",
+            "should generate sequential quote numbers"
+          ],
+          "errorHandling": [
+            "should handle malformed JSON gracefully",
+            "should return appropriate error messages",
+            "should not create quote on validation failure"
+          ]
+        },
+        "expectedResponse": {
+          "success": {
+            "statusCode": 201,
+            "structure": {
+              "id": "string (UUID format)",
+              "quoteNumber": "string (QUO-YYYY-NNN format)",
+              "customerId": "string",
+              "customerName": "string", 
+              "status": "draft",
+              "lineItems": "array",
+              "subtotal": "number",
+              "taxAmount": "number",
+              "totalAmount": "number",
+              "currency": "GBP",
+              "createdAt": "ISO date string",
+              "updatedAt": "ISO date string",
+              "expiresAt": "ISO date string"
+            }
+          },
+          "validation_error": {
+            "statusCode": 400,
+            "structure": {
+              "error": "string",
+              "details": "array or object"
+            }
+          }
+        }
+      },
+
+      "technicalDebtExpectations": {
+        "likelyFailures": [
+          "POST endpoint may not exist yet",
+          "Request validation may be incomplete",
+          "Business logic calculations may be missing",
+          "Error handling may be incomplete",
+          "Response structure may not match contract"
+        ],
+        "debtCategories": [
+          "API_ENDPOINT_MISSING",
+          "VALIDATION_INCOMPLETE", 
+          "BUSINESS_LOGIC_GAPS",
+          "ERROR_HANDLING_INCOMPLETE",
+          "RESPONSE_STRUCTURE_MISMATCH"
+        ]
+      },
+
+      "evidenceFiles": [
+        "contract-test-execution.log",
+        "test-failure-analysis.json",
+        "mcp-app-navigate.json",
+        "mcp-ui-snapshot.json", 
+        "mcp-ui-screenshot.png",
+        "technical-debt-identified.json",
+        "step-analysis.json"
+      ]
+    }
+  },
+
+  "executionWorkflow": {
+    "prerequisites": [
+      {
+        "name": "development_server_running",
+        "command": "curl -f http://localhost:3000/api/health",
+        "timeout": 5,
+        "onFailure": "Start development server: cd packages/web && npm run dev"
+      },
+      {
+        "name": "test_environment_ready",
+        "command": "cd packages/web && npm run lint",
+        "timeout": 30,
+        "onFailure": "Fix linting errors before proceeding"
+      }
+    ],
+
+    "executionSteps": [
+      {
+        "stepId": "execute_T004_contract_tests",
+        "taskId": "T004",
+        "action": "TERMINAL_COMMAND",
+        "command": "cd 'X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web' && npm test -- __tests__/contracts/quotes-list.test.ts",
+        "evidence": "T004/contract-test-execution.log",
+        "successCriteria": "All 15 tests pass",
+        "onSuccess": "proceed_to_T004_mcp",
+        "onFailure": "create_technical_debt_T004"
+      },
+      {
+        "stepId": "execute_T004_mcp_validation", 
+        "taskId": "T004",
+        "action": "MCP_BROWSER_SEQUENCE",
+        "sequence": [
+          {
+            "action": "mcp_chrome-devtoo_navigate_page",
+            "parameters": {"url": "http://localhost:3000/api/v1/quotes"},
+            "evidence": "T004/mcp-navigate-response.json"
+          },
+          {
+            "action": "mcp_chrome-devtoo_take_snapshot",
+            "parameters": {},
+            "evidence": "T004/mcp-snapshot-data.json"
+          },
+          {
+            "action": "mcp_chrome-devtoo_take_screenshot",
+            "parameters": {"format": "png"},
+            "evidence": "T004/mcp-screenshot.png"
+          }
+        ],
+        "successCriteria": "All MCP commands execute successfully",
+        "onSuccess": "mark_T004_complete",
+        "onFailure": "document_mcp_issues_T004"
+      },
+      {
+        "stepId": "execute_T005_contract_tests",
+        "taskId": "T005", 
+        "action": "TERMINAL_COMMAND",
+        "command": "cd 'X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web' && npm test -- __tests__/contracts/quotes-post.test.ts",
+        "evidence": "T005/contract-test-execution.log",
+        "successCriteria": "Tests complete (may have failures in TDD red phase)",
+        "onSuccess": "analyze_T005_results",
+        "onFailure": "analyze_T005_failures"
+      },
+      {
+        "stepId": "analyze_T005_test_results",
+        "taskId": "T005",
+        "action": "ANALYZE_TEST_OUTPUT",
+        "analysisPatterns": {
+          "total_tests": "Tests:\\s+(\\d+) failed, (\\d+) passed, (\\d+) total",
+          "specific_failures": "FAIL.*POST.*quotes.*",
+          "validation_errors": ".*validation.*error.*",
+          "business_logic_errors": ".*calculation.*|.*total.*expected.*received.*"
+        },
+        "evidence": "T005/test-failure-analysis.json",
+        "onResults": "create_technical_debt_T005"
+      },
+      {
+        "stepId": "execute_T005_mcp_validation",
+        "taskId": "T005",
+        "action": "MCP_BROWSER_SEQUENCE", 
+        "sequence": [
+          {
+            "action": "mcp_chrome-devtoo_navigate_page",
+            "parameters": {"url": "http://localhost:3000"},
+            "evidence": "T005/mcp-app-navigate.json"
+          },
+          {
+            "action": "mcp_chrome-devtoo_take_snapshot",
+            "parameters": {},
+            "evidence": "T005/mcp-ui-snapshot.json"
+          },
+          {
+            "action": "mcp_chrome-devtoo_take_screenshot",
+            "parameters": {"format": "png"},
+            "evidence": "T005/mcp-ui-screenshot.png"
+          }
+        ],
+        "successCriteria": "UI accessible and screenshot captured",
+        "onSuccess": "mark_T005_complete", 
+        "onFailure": "document_mcp_issues_T005"
+      }
+    ],
+
+    "completionCriteria": {
+      "T004": {
+        "contractTestsPassed": true,
+        "mcpValidationComplete": true,
+        "evidenceFilesPresent": [
+          "contract-test-execution.log",
+          "mcp-navigate-response.json",
+          "mcp-snapshot-data.json", 
+          "mcp-screenshot.png"
+        ]
+      },
+      "T005": {
+        "contractTestsExecuted": true,
+        "testResultsAnalyzed": true,
+        "technicalDebtCreated": "if_tests_failed",
+        "mcpValidationComplete": true,
+        "evidenceFilesPresent": [
+          "contract-test-execution.log",
+          "test-failure-analysis.json",
+          "mcp-app-navigate.json",
+          "mcp-ui-snapshot.json",
+          "mcp-ui-screenshot.png"
+        ]
+      }
+    }
+  },
+
+  "technicalDebtManagement": {
+    "enabled": true,
+    "debtCreationTriggers": {
+      "test_failures": {
+        "pattern": "FAIL.*contracts.*",
+        "severity": "HIGH",
+        "category": "CONTRACT_TEST_FAILURE" 
+      },
+      "api_errors": {
+        "pattern": "404.*api.*|500.*api.*",
+        "severity": "CRITICAL",
+        "category": "API_ENDPOINT_ISSUE"
+      },
+      "validation_errors": {
+        "pattern": ".*validation.*error.*",
+        "severity": "HIGH", 
+        "category": "VALIDATION_INCOMPLETE"
+      }
+    },
+    "routingStrategy": "CAPACITY_BASED",
+    "debtTemplate": {
+      "title": "TDD Contract Test Failure: {endpoint}",
+      "description": "Contract tests failing for {endpoint}. Implementation gaps identified.",
+      "priority": "HIGH",
+      "source": "TDD_CONTRACT_TESTING",
+      "implementationRequired": [
+        "API endpoint implementation",
+        "Request validation",
+        "Business logic",
+        "Error handling",
+        "Response formatting"
+      ]
+    }
+  }
+}

@@ -42,27 +42,27 @@
   - Tests: See task-test-plan.md for T004.1-T004.2 specifications
 
 - [ ] **T005**: Contract test POST /api/quotes
-  - File: `packages/web/tests/contract/quotes-post.test.ts`
+  - File: `packages/web/__tests__/contracts/quotes-post.test.ts`
   - Tests: See task-test-plan.md for T005.1-T005.3 specifications
 
 - [ ] **T006**: Contract test PUT /api/quotes/{id}
-  - File: `packages/web/tests/contract/quotes-put.test.ts`
+  - File: `packages/web/__tests__/contracts/quotes-put.test.ts`
   - Tests: See task-test-plan.md for T006.1-T006.4 specifications
 
 - [ ] **T007**: Contract test DELETE /api/quotes/{id}
-  - File: `packages/web/tests/contract/quotes-delete.test.ts`
+  - File: `packages/web/__tests__/contracts/quotes-delete.test.ts`
   - Tests: See task-test-plan.md for T007.1-T007.4 specifications
 
 - [ ] **T008**: Quote list performance test
-  - File: `packages/web/tests/contract/quotes-performance.test.ts`
+  - File: `packages/web/__tests__/contracts/quotes-performance.test.ts`
   - Tests: See task-test-plan.md for T008.1-T008.3 specifications
 
 - [ ] **T009**: Quote search functionality test
-  - File: `packages/web/tests/contract/quotes-search.test.ts`
+  - File: `packages/web/__tests__/contracts/quotes-search.test.ts`
   - Tests: See task-test-plan.md for T009.1-T009.4 specifications
 
 - [ ] **T010**: Quote bulk operations test
-  - File: `packages/web/tests/contract/quotes-bulk.test.ts`
+  - File: `packages/web/__tests__/contracts/quotes-bulk.test.ts`
   - Tests: See task-test-plan.md for T010.1-T010.3 specifications
 
 ---
