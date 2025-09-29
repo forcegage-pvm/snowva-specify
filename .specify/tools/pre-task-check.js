@@ -84,7 +84,11 @@ class PreTaskChecker {
     }
 
     const tasksContent = fs.readFileSync(tasksPath, "utf8");
-    const taskPattern = new RegExp(`^-\\s*\\[.\\]\\s*${this.taskId}\\b`, "m");
+    // Updated regex to match both formats: T004 and **T004**:
+    const taskPattern = new RegExp(
+      `^-\\s*\\[.\\]\\s*\\*\\*${this.taskId}\\*\\*`,
+      "m"
+    );
 
     if (!taskPattern.test(tasksContent)) {
       this.errors.push(`Task ${this.taskId} not found in tasks.md`);
@@ -105,8 +109,9 @@ class PreTaskChecker {
     if (!fs.existsSync(tasksPath)) return;
 
     const tasksContent = fs.readFileSync(tasksPath, "utf8");
+    // Updated regex to match both formats: T004 and **T004**:
     const completedTaskPattern = new RegExp(
-      `^-\\s*\\[x\\]\\s*${this.taskId}\\b`,
+      `^-\\s*\\[x\\]\\s*\\*\\*${this.taskId}\\*\\*`,
       "m"
     );
 

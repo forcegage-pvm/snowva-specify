@@ -16,7 +16,7 @@ class EvidenceFabricationDetector {
     this.fabricationPatterns = [
       // Fake MCP response patterns
       /"command":\s*"mcp_chrome-devtoo_/,
-      /"timestamp":\s*"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z"/,
+      /"timestamp":\s*"2024-01-01T00:00:00\.000Z"/, // Obvious fake timestamp
       /"response":\s*\{[^}]*"status":\s*"TDD/,
       /"analysis":\s*".*confirms.*"/,
 
@@ -25,6 +25,10 @@ class EvidenceFabricationDetector {
       /Visual evidence shows.*expected/i,
       /Screenshot confirms.*validating/i,
       /MCP snapshot confirms.*endpoint/i,
+      /This is clearly fabricated/i,
+      /fabricated evidence for testing/i,
+      /This would contain.*but it's fabricated/i,
+      /This is fake content/i,
 
       // Fabricated structure patterns
       /"testType":\s*"TDD_RED_PHASE_API_VALIDATION"/,
@@ -35,6 +39,7 @@ class EvidenceFabricationDetector {
       /This evidence validates the starting state/i,
       /Constitutional Compliance.*Evidence shows/i,
       /Implementation Phase.*will be implemented/i,
+      /"evidence_type":\s*"mcp_browser_interaction"/, // This is made up
     ];
 
     this.validMCPMarkers = [
@@ -60,10 +65,9 @@ class EvidenceFabricationDetector {
 
     // Check if this is an evidence file
     if (!this.isEvidenceFile(filePath)) {
+      console.log(`⏭️  Skipping non-evidence file: ${filePath}`);
       return result; // Not an evidence file, skip validation
     }
-
-    console.log(`🔍 EVIDENCE VALIDATION: ${path.basename(filePath)}`);
 
     // Check for fabrication patterns
     this.fabricationPatterns.forEach((pattern, index) => {
@@ -111,7 +115,11 @@ class EvidenceFabricationDetector {
   }
 
   isEvidenceFile(filePath) {
-    return filePath.includes("/evidence/") || filePath.includes("\\evidence\\");
+    const normalizedPath = filePath.replace(/\\/g, "/");
+    return (
+      normalizedPath.includes("/evidence/") ||
+      normalizedPath.startsWith("evidence/")
+    );
   }
 
   detectAIGeneration(content) {

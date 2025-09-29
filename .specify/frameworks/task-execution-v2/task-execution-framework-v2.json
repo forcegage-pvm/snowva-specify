@@ -1,0 +1,401 @@
+{
+  "testPlanVersion": "2.0.0",
+  "createdDate": "2025-09-29",
+  "description": "Generic, extensible task execution framework with self-contained steps and comprehensive action handling",
+
+  "globalConfiguration": {
+    "workspaceRoot": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva",
+    "evidenceBaseDirectory": "specs/006-quotes-technical-debt/evidence",
+    "constitutionalEnforcement": true,
+    "fraudDetection": true
+  },
+
+  "executionEngine": {
+    "actionTypes": {
+      "TERMINAL_COMMAND": {
+        "executor": "run_in_terminal",
+        "requiredParams": ["command", "workingDirectory"],
+        "optionalParams": ["isBackground", "timeout"]
+      },
+      "MCP_COMMAND": {
+        "executor": "mcp_tool_call",
+        "requiredParams": ["mcpFunction", "parameters"],
+        "optionalParams": ["timeout"]
+      },
+      "FILE_OPERATION": {
+        "executor": "file_system",
+        "requiredParams": ["operation", "filePath"],
+        "optionalParams": ["content", "mode"]
+      },
+      "PROCESS_CONTROL": {
+        "executor": "process_manager",
+        "requiredParams": ["action"],
+        "optionalParams": ["processName", "arguments", "waitTime"]
+      },
+      "VALIDATION": {
+        "executor": "validator",
+        "requiredParams": ["validationType", "target"],
+        "optionalParams": ["criteria", "failureAction"]
+      }
+    },
+
+    "resultHandlers": {
+      "SAVE_TO_FILE": {
+        "action": "save_result",
+        "requiredParams": ["outputPath", "content"],
+        "optionalParams": ["format", "append"]
+      },
+      "EXTRACT_DATA": {
+        "action": "extract_from_result",
+        "requiredParams": ["pattern", "outputVariable"],
+        "optionalParams": ["multiMatch", "defaultValue"]
+      },
+      "VALIDATE_CONTENT": {
+        "action": "validate_result",
+        "requiredParams": ["validationRules"],
+        "optionalParams": ["failureAction"]
+      }
+    }
+  },
+
+  "tasks": {
+    "T004": {
+      "taskId": "T004",
+      "description": "Contract test GET /api/quotes with comprehensive validation",
+      "evidenceDirectory": "evidence/T004",
+      "prerequisites": [
+        {
+          "name": "development_server_check",
+          "description": "Ensure development server is running on localhost:3000",
+          "actions": [
+            {
+              "actionId": "check_server_status",
+              "type": "TERMINAL_COMMAND",
+              "parameters": {
+                "command": "curl -f http://localhost:3000/api/health",
+                "workingDirectory": "{workspaceRoot}",
+                "timeout": 5
+              },
+              "onSuccess": [
+                {
+                  "type": "VALIDATION",
+                  "parameters": {
+                    "validationType": "http_response",
+                    "target": "result.exitCode",
+                    "criteria": { "equals": 0 }
+                  }
+                }
+              ],
+              "onFailure": [
+                {
+                  "actionId": "start_dev_server",
+                  "type": "PROCESS_CONTROL",
+                  "parameters": {
+                    "action": "start_separate_process",
+                    "command": "Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"cd '{workspaceRoot}\\packages\\web'; npm run dev\"",
+                    "waitTime": 10
+                  },
+                  "onSuccess": [
+                    {
+                      "actionId": "verify_server_started",
+                      "type": "TERMINAL_COMMAND",
+                      "parameters": {
+                        "command": "curl -f http://localhost:3000/api/v1/quotes",
+                        "workingDirectory": "{workspaceRoot}",
+                        "timeout": 5
+                      },
+                      "onFailure": [
+                        {
+                          "type": "FILE_OPERATION",
+                          "parameters": {
+                            "operation": "create",
+                            "filePath": "{evidenceDirectory}/prerequisite_failure.json",
+                            "content": "{\"error\": \"Failed to start development server\", \"timestamp\": \"{timestamp}\", \"action\": \"TASK_ABORT\"}"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+
+      "steps": [
+        {
+          "stepId": "T004.1",
+          "description": "Execute contract test suite and capture results",
+          "evidenceDirectory": "{evidenceDirectory}/T004.1",
+          "actions": [
+            {
+              "actionId": "execute_contract_tests",
+              "type": "TERMINAL_COMMAND",
+              "parameters": {
+                "command": "npm test -- __tests__/contracts/quotes-get.test.ts",
+                "workingDirectory": "{workspaceRoot}/packages/web",
+                "timeout": 30
+              },
+              "resultHandling": [
+                {
+                  "type": "SAVE_TO_FILE",
+                  "parameters": {
+                    "outputPath": "{evidenceDirectory}/contract-test-execution.log",
+                    "content": "{result.fullOutput}",
+                    "format": "raw_text"
+                  }
+                },
+                {
+                  "type": "EXTRACT_DATA",
+                  "parameters": {
+                    "pattern": "Test Suites: (\\d+) failed, (\\d+) total",
+                    "outputVariable": "testSuiteStats"
+                  }
+                },
+                {
+                  "type": "EXTRACT_DATA",
+                  "parameters": {
+                    "pattern": "Tests:\\s+(\\d+) failed, (\\d+) passed, (\\d+) total",
+                    "outputVariable": "testStats"
+                  }
+                }
+              ],
+              "onSuccess": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "{evidenceDirectory}/test-execution-summary.json",
+                    "content": "{\"stepId\": \"T004.1\", \"status\": \"completed\", \"testSuiteStats\": \"{testSuiteStats}\", \"testStats\": \"{testStats}\", \"timestamp\": \"{timestamp}\"}"
+                  }
+                }
+              ],
+              "onFailure": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "{evidenceDirectory}/test-execution-failure.json",
+                    "content": "{\"stepId\": \"T004.1\", \"status\": \"failed\", \"error\": \"{result.error}\", \"exitCode\": \"{result.exitCode}\", \"timestamp\": \"{timestamp}\"}"
+                  }
+                }
+              ]
+            }
+          ],
+          "successCriteria": [
+            {
+              "type": "VALIDATION",
+              "parameters": {
+                "validationType": "file_exists",
+                "target": "{evidenceDirectory}/contract-test-execution.log"
+              }
+            },
+            {
+              "type": "VALIDATION",
+              "parameters": {
+                "validationType": "file_contains",
+                "target": "{evidenceDirectory}/contract-test-execution.log",
+                "criteria": { "pattern": "Test Suites:" }
+              }
+            }
+          ]
+        },
+
+        {
+          "stepId": "T004.2",
+          "description": "Validate GET /api/quotes endpoint via MCP browser testing",
+          "evidenceDirectory": "{evidenceDirectory}/T004.2",
+          "actions": [
+            {
+              "actionId": "navigate_to_api_endpoint",
+              "type": "MCP_COMMAND",
+              "parameters": {
+                "mcpFunction": "mcp_chrome-devtoo_navigate_page",
+                "parameters": {
+                  "url": "http://localhost:3000/api/v1/quotes"
+                }
+              },
+              "resultHandling": [
+                {
+                  "type": "SAVE_TO_FILE",
+                  "parameters": {
+                    "outputPath": "{evidenceDirectory}/mcp-raw-outputs/step1_navigate.json",
+                    "content": "{result.rawOutput}",
+                    "format": "raw_json"
+                  }
+                }
+              ],
+              "onFailure": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "{evidenceDirectory}/mcp-failure.json",
+                    "content": "{\"stepId\": \"T004.2\", \"status\": \"failed\", \"failedAction\": \"navigate_to_api_endpoint\", \"error\": \"{result.error}\", \"timestamp\": \"{timestamp}\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "actionId": "take_page_snapshot",
+              "type": "MCP_COMMAND",
+              "parameters": {
+                "mcpFunction": "mcp_chrome-devtoo_take_snapshot",
+                "parameters": {}
+              },
+              "resultHandling": [
+                {
+                  "type": "SAVE_TO_FILE",
+                  "parameters": {
+                    "outputPath": "{evidenceDirectory}/mcp-raw-outputs/step2_snapshot.json",
+                    "content": "{result.rawOutput}",
+                    "format": "raw_json"
+                  }
+                }
+              ],
+              "onFailure": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "{evidenceDirectory}/mcp-failure.json",
+                    "content": "{\"stepId\": \"T004.2\", \"status\": \"failed\", \"failedAction\": \"take_page_snapshot\", \"error\": \"{result.error}\", \"timestamp\": \"{timestamp}\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "actionId": "take_page_screenshot",
+              "type": "MCP_COMMAND",
+              "parameters": {
+                "mcpFunction": "mcp_chrome-devtoo_take_screenshot",
+                "parameters": {}
+              },
+              "resultHandling": [
+                {
+                  "type": "SAVE_TO_FILE",
+                  "parameters": {
+                    "outputPath": "{evidenceDirectory}/mcp-raw-outputs/step3_screenshot.json",
+                    "content": "{result.rawOutput}",
+                    "format": "raw_json"
+                  }
+                }
+              ],
+              "onSuccess": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "{evidenceDirectory}/mcp-validation-summary.json",
+                    "content": "{\"stepId\": \"T004.2\", \"status\": \"completed\", \"mcpActionsCompleted\": 3, \"evidenceFilesGenerated\": [\"step1_navigate.json\", \"step2_snapshot.json\", \"step3_screenshot.json\"], \"timestamp\": \"{timestamp}\"}"
+                  }
+                }
+              ],
+              "onFailure": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "{evidenceDirectory}/mcp-failure.json",
+                    "content": "{\"stepId\": \"T004.2\", \"status\": \"failed\", \"failedAction\": \"take_page_screenshot\", \"error\": \"{result.error}\", \"timestamp\": \"{timestamp}\"}"
+                  }
+                }
+              ]
+            }
+          ],
+          "successCriteria": [
+            {
+              "type": "VALIDATION",
+              "parameters": {
+                "validationType": "file_exists",
+                "target": "{evidenceDirectory}/mcp-raw-outputs/step1_navigate.json"
+              }
+            },
+            {
+              "type": "VALIDATION",
+              "parameters": {
+                "validationType": "file_exists",
+                "target": "{evidenceDirectory}/mcp-raw-outputs/step2_snapshot.json"
+              }
+            },
+            {
+              "type": "VALIDATION",
+              "parameters": {
+                "validationType": "file_exists",
+                "target": "{evidenceDirectory}/mcp-raw-outputs/step3_screenshot.json"
+              }
+            }
+          ]
+        }
+      ],
+
+      "completionCriteria": [
+        {
+          "type": "VALIDATION",
+          "parameters": {
+            "validationType": "all_steps_completed",
+            "target": ["T004.1", "T004.2"]
+          }
+        },
+        {
+          "type": "VALIDATION",
+          "parameters": {
+            "validationType": "evidence_files_exist",
+            "target": [
+              "{evidenceDirectory}/T004.1/contract-test-execution.log",
+              "{evidenceDirectory}/T004.2/mcp-raw-outputs/step1_navigate.json",
+              "{evidenceDirectory}/T004.2/mcp-raw-outputs/step2_snapshot.json",
+              "{evidenceDirectory}/T004.2/mcp-raw-outputs/step3_screenshot.json"
+            ]
+          }
+        }
+      ],
+
+      "postTaskActions": [
+        {
+          "type": "FILE_OPERATION",
+          "parameters": {
+            "operation": "create",
+            "filePath": "{evidenceDirectory}/task-completion-summary.json",
+            "content": "{\"taskId\": \"T004\", \"status\": \"completed\", \"stepsCompleted\": [\"T004.1\", \"T004.2\"], \"evidenceGenerated\": true, \"constitutionalCompliance\": true, \"timestamp\": \"{timestamp}\"}"
+          }
+        }
+      ]
+    }
+  },
+
+  "executionRules": {
+    "variableSubstitution": {
+      "enabled": true,
+      "variables": {
+        "workspaceRoot": "{globalConfiguration.workspaceRoot}",
+        "evidenceDirectory": "{task.evidenceDirectory}",
+        "timestamp": "{system.currentTimestamp}",
+        "taskId": "{task.taskId}",
+        "stepId": "{step.stepId}"
+      }
+    },
+
+    "errorHandling": {
+      "defaultFailureAction": "CONTINUE_WITH_LOGGING",
+      "criticalFailureAction": "ABORT_WITH_EVIDENCE",
+      "maxRetries": 2,
+      "retryDelay": 5
+    },
+
+    "evidenceManagement": {
+      "enforceRawOutputs": true,
+      "preventFabrication": true,
+      "validateFileIntegrity": true,
+      "createDirectoryStructure": true
+    },
+
+    "constitutionalCompliance": {
+      "enforceAmendment4": true,
+      "validateAuthenticity": true,
+      "preventFraud": true,
+      "requireRealEvidence": true
+    }
+  }
+}

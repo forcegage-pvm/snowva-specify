@@ -1,0 +1,947 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://test/schemas/task-execution-framework-v2.1.schema.json",
+  "title": "Task Execution Framework v2.1 - Enhanced with Technical Debt Management",
+  "description": "Generic, extensible task execution framework with enhanced technical debt management, test failure analysis, and comprehensive TDD workflow support. This version adds specialized handlers for test failure → technical debt workflows while maintaining all v2.0 capabilities.",
+  "type": "object",
+  "required": [
+    "testPlanVersion",
+    "createdDate",
+    "description",
+    "globalConfiguration",
+    "executionEngine",
+    "tasks",
+    "executionRules"
+  ],
+  "properties": {
+    "testPlanVersion": {
+      "type": "string",
+      "description": "Semantic version of the framework schema (e.g., '2.1.0'). Version 2.1+ includes technical debt management capabilities.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["2.1.0", "2.1.3"]
+    },
+    "createdDate": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when this task execution plan was created. Used for tracking plan evolution and debugging historical executions."
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of what this task execution plan accomplishes. Should describe the overall purpose, scope, and expected outcomes of the task collection.",
+      "minLength": 10,
+      "maxLength": 500
+    },
+    "globalConfiguration": {
+      "type": "object",
+      "description": "Framework-wide configuration settings including technical debt management configuration for TDD workflows.",
+      "required": [
+        "workspaceRoot",
+        "evidenceBaseDirectory",
+        "constitutionalEnforcement",
+        "fraudDetection",
+        "technicalDebtConfiguration"
+      ],
+      "properties": {
+        "workspaceRoot": {
+          "type": "string",
+          "description": "Absolute path to the project workspace root directory. All relative paths in tasks will be resolved against this directory. Must be an existing, accessible directory path.",
+          "minLength": 3,
+          "examples": [
+            "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva",
+            "/home/user/projects/myapp"
+          ]
+        },
+        "evidenceBaseDirectory": {
+          "type": "string",
+          "description": "Relative path from workspaceRoot where all task evidence will be stored. The framework will create task-specific subdirectories under this path. Should be version-controlled for audit trails.",
+          "minLength": 1,
+          "examples": [
+            "specs/006-quotes-technical-debt/evidence",
+            "test-evidence",
+            "execution-logs"
+          ]
+        },
+        "constitutionalEnforcement": {
+          "type": "boolean",
+          "description": "Enable constitutional compliance enforcement (Amendment 4 fraud detection). When true, all evidence files are validated for authenticity and fabrication is prevented. Required for production use.",
+          "default": true
+        },
+        "fraudDetection": {
+          "type": "boolean",
+          "description": "Enable fraud detection mechanisms for evidence authenticity. When true, the framework validates that all evidence files contain genuine tool outputs rather than manually created content. Critical for audit compliance.",
+          "default": true
+        },
+        "technicalDebtConfiguration": {
+          "type": "object",
+          "description": "Configuration for technical debt management and TDD workflows. Controls how test failures are analyzed, classified, and tracked as technical debt.",
+          "required": [
+            "enableDebtTracking",
+            "debtRoutingStrategy",
+            "debtClassification",
+            "integrationSettings"
+          ],
+          "properties": {
+            "enableDebtTracking": {
+              "type": "boolean",
+              "description": "Enable automatic technical debt creation from test failures. When true, failed tests trigger debt analysis and tracking workflows.",
+              "default": true
+            },
+            "debtRoutingStrategy": {
+              "type": "object",
+              "description": "Strategy for determining where technical debt should be tracked based on capacity thresholds and debt characteristics.",
+              "required": ["capacityThresholds", "routingRules"],
+              "properties": {
+                "capacityThresholds": {
+                  "type": "object",
+                  "description": "Capacity thresholds for determining debt routing destination.",
+                  "required": ["sprintTasksMaxItems", "sprintTasksMaxCritical"],
+                  "properties": {
+                    "sprintTasksMaxItems": {
+                      "type": "integer",
+                      "description": "Maximum number of items in SPRINT_TASKS before routing to INVENTORY.",
+                      "minimum": 1,
+                      "default": 6
+                    },
+                    "sprintTasksMaxCritical": {
+                      "type": "integer",
+                      "description": "Maximum number of critical+high priority items in SPRINT_TASKS.",
+                      "minimum": 1,
+                      "default": 4
+                    }
+                  }
+                },
+                "routingRules": {
+                  "type": "array",
+                  "description": "Rules for routing debt to different tracking locations based on conditions.",
+                  "items": {
+                    "$ref": "#/definitions/DebtRoutingRule"
+                  }
+                }
+              }
+            },
+            "debtClassification": {
+              "type": "object",
+              "description": "Configuration for classifying and categorizing technical debt from test failures.",
+              "required": [
+                "severityLevels",
+                "categoryMappings",
+                "priorityRules"
+              ],
+              "properties": {
+                "severityLevels": {
+                  "type": "array",
+                  "description": "Available severity levels for technical debt classification.",
+                  "items": {
+                    "type": "string",
+                    "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+                  },
+                  "minItems": 1
+                },
+                "categoryMappings": {
+                  "type": "object",
+                  "description": "Mappings from test failure patterns to debt categories.",
+                  "patternProperties": {
+                    "^.*$": {
+                      "type": "string",
+                      "description": "Debt category for matching test failure pattern"
+                    }
+                  }
+                },
+                "priorityRules": {
+                  "type": "array",
+                  "description": "Rules for determining debt priority based on test characteristics.",
+                  "items": {
+                    "$ref": "#/definitions/DebtPriorityRule"
+                  }
+                }
+              }
+            },
+            "integrationSettings": {
+              "type": "object",
+              "description": "Integration settings for external debt tracking systems and constitutional compliance tools.",
+              "properties": {
+                "tddDebtAnalyzer": {
+                  "type": "object",
+                  "description": "Configuration for TDD debt analyzer tool integration.",
+                  "properties": {
+                    "toolPath": {
+                      "type": "string",
+                      "description": "Path to tdd-debt-analyzer.js tool.",
+                      "default": ".specify/tools/tdd-debt-analyzer.js"
+                    },
+                    "enableDuplicationPrevention": {
+                      "type": "boolean",
+                      "description": "Enable duplication prevention for debt entries.",
+                      "default": true
+                    },
+                    "enableReferenceValidation": {
+                      "type": "boolean",
+                      "description": "Enable validation of sprint task and inventory correlation.",
+                      "default": true
+                    }
+                  }
+                },
+                "constitutionalTools": {
+                  "type": "object",
+                  "description": "Integration with constitutional compliance validation tools.",
+                  "properties": {
+                    "enforceAmendment6": {
+                      "type": "boolean",
+                      "description": "Enforce Constitutional Amendment 6 for debt tracking compliance.",
+                      "default": true
+                    },
+                    "validationToolPath": {
+                      "type": "string",
+                      "description": "Path to constitutional validation tool.",
+                      "default": ".specify/tools/constitutional-checker.js"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "executionEngine": {
+      "type": "object",
+      "description": "Defines the available action types and result handlers including enhanced technical debt management capabilities.",
+      "required": ["actionTypes", "resultHandlers"],
+      "properties": {
+        "actionTypes": {
+          "type": "object",
+          "description": "Registry of available action types including technical debt management actions.",
+          "patternProperties": {
+            "^[A-Z_]+$": {
+              "$ref": "#/definitions/ActionTypeDefinition"
+            }
+          },
+          "additionalProperties": false
+        },
+        "resultHandlers": {
+          "type": "object",
+          "description": "Registry of available result handling strategies including test failure analysis and debt creation handlers.",
+          "patternProperties": {
+            "^[A-Z_]+$": {
+              "$ref": "#/definitions/ResultHandlerDefinition"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "tasks": {
+      "type": "object",
+      "description": "Collection of multiple tasks to execute in sequence, each with complete self-contained execution definitions including technical debt handling.",
+      "patternProperties": {
+        "^T\\d+$": {
+          "$ref": "#/definitions/Task"
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "executionRules": {
+      "type": "object",
+      "description": "Rules governing task execution flow, evidence management, and technical debt workflows.",
+      "required": [
+        "evidenceManagement",
+        "constitutionalCompliance",
+        "technicalDebtWorkflows"
+      ],
+      "properties": {
+        "evidenceManagement": {
+          "type": "object",
+          "description": "Rules for evidence collection, validation, and storage.",
+          "required": [
+            "requireEvidence",
+            "preventFabrication",
+            "validateFileIntegrity",
+            "createDirectoryStructure"
+          ],
+          "properties": {
+            "requireEvidence": {
+              "type": "boolean",
+              "description": "Require evidence generation for all actions. When true, actions without evidence handlers will fail validation.",
+              "default": true
+            },
+            "preventFabrication": {
+              "type": "boolean",
+              "description": "Enable fraud detection to prevent manually created evidence files. When true, evidence must be generated by actual tool execution.",
+              "default": true
+            },
+            "validateFileIntegrity": {
+              "type": "boolean",
+              "description": "Validate evidence file integrity and authenticity after creation. Checks for tampering or corruption.",
+              "default": true
+            },
+            "createDirectoryStructure": {
+              "type": "boolean",
+              "description": "Automatically create required evidence directory structure before task execution. Ensures evidence storage locations exist.",
+              "default": true
+            }
+          }
+        },
+        "constitutionalCompliance": {
+          "type": "object",
+          "description": "Constitutional Amendment compliance enforcement settings.",
+          "required": [
+            "enforceAmendment4",
+            "enforceAmendment6",
+            "validateAuthenticity",
+            "preventFraud",
+            "requireRealEvidence"
+          ],
+          "properties": {
+            "enforceAmendment4": {
+              "type": "boolean",
+              "description": "Enforce Constitutional Amendment 4 fraud detection protocols. When true, all evidence is validated for authenticity.",
+              "default": true
+            },
+            "enforceAmendment6": {
+              "type": "boolean",
+              "description": "Enforce Constitutional Amendment 6 enhanced TDD debt management protocols. When true, all technical debt follows Amendment 6 compliance requirements.",
+              "default": true
+            },
+            "validateAuthenticity": {
+              "type": "boolean",
+              "description": "Validate that all evidence files contain authentic tool outputs rather than fabricated content.",
+              "default": true
+            },
+            "preventFraud": {
+              "type": "boolean",
+              "description": "Actively prevent evidence fraud through detection mechanisms and validation checks.",
+              "default": true
+            },
+            "requireRealEvidence": {
+              "type": "boolean",
+              "description": "Require all evidence to be generated by actual tool execution, not manually created or simulated.",
+              "default": true
+            }
+          }
+        },
+        "technicalDebtWorkflows": {
+          "type": "object",
+          "description": "Workflows for handling technical debt creation, classification, and tracking from test failures.",
+          "required": [
+            "enableAutomaticDebtCreation",
+            "debtAnalysisWorkflow",
+            "debtTrackingWorkflow"
+          ],
+          "properties": {
+            "enableAutomaticDebtCreation": {
+              "type": "boolean",
+              "description": "Enable automatic technical debt creation from test failures. When false, debt creation requires manual triggers.",
+              "default": true
+            },
+            "debtAnalysisWorkflow": {
+              "type": "object",
+              "description": "Workflow for analyzing test failures and determining debt characteristics.",
+              "required": ["analysisActions", "classificationRules"],
+              "properties": {
+                "analysisActions": {
+                  "type": "array",
+                  "description": "Sequence of actions to analyze test failure and extract debt information.",
+                  "items": {
+                    "$ref": "#/definitions/Action"
+                  }
+                },
+                "classificationRules": {
+                  "type": "array",
+                  "description": "Rules for classifying debt based on test failure analysis.",
+                  "items": {
+                    "$ref": "#/definitions/DebtClassificationRule"
+                  }
+                }
+              }
+            },
+            "debtTrackingWorkflow": {
+              "type": "object",
+              "description": "Workflow for tracking and managing technical debt entries.",
+              "required": ["trackingActions", "routingActions"],
+              "properties": {
+                "trackingActions": {
+                  "type": "array",
+                  "description": "Actions to execute for tracking debt (file creation, tool integration, etc.).",
+                  "items": {
+                    "$ref": "#/definitions/Action"
+                  }
+                },
+                "routingActions": {
+                  "type": "array",
+                  "description": "Actions to determine and execute debt routing to appropriate tracking location.",
+                  "items": {
+                    "$ref": "#/definitions/Action"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ActionTypeDefinition": {
+      "type": "object",
+      "description": "Defines an available action type with its execution requirements. Enhanced to support technical debt management actions.",
+      "required": ["executor", "requiredParams"],
+      "properties": {
+        "executor": {
+          "type": "string",
+          "description": "Internal executor name that handles this action type. Maps to framework implementation modules.",
+          "enum": [
+            "run_in_terminal",
+            "mcp_tool_call",
+            "file_system",
+            "process_manager",
+            "validator",
+            "debt_analyzer",
+            "debt_tracker",
+            "test_analyzer"
+          ]
+        },
+        "requiredParams": {
+          "type": "array",
+          "description": "List of parameter names that must be provided when using this action type.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "optionalParams": {
+          "type": "array",
+          "description": "List of optional parameter names that can be provided for this action type.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResultHandlerDefinition": {
+      "type": "object",
+      "description": "Defines a result handling strategy for processing action outputs. Enhanced to support test failure analysis and debt creation.",
+      "required": ["action", "requiredParams"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "Internal action name for this result handler. Maps to framework processing modules.",
+          "enum": [
+            "save_result",
+            "extract_from_result",
+            "validate_result",
+            "analyze_test_failure",
+            "create_technical_debt",
+            "classify_debt",
+            "route_debt"
+          ]
+        },
+        "requiredParams": {
+          "type": "array",
+          "description": "List of parameter names required when using this result handler.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "optionalParams": {
+          "type": "array",
+          "description": "List of optional parameter names for this result handler.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "description": "A complete, self-contained unit of work with enhanced technical debt handling capabilities.",
+      "required": [
+        "taskId",
+        "status",
+        "state",
+        "completion",
+        "description",
+        "evidenceDirectory",
+        "steps",
+        "completionCriteria"
+      ],
+      "properties": {
+        "taskId": {
+          "type": "string",
+          "pattern": "^T\\d+$",
+          "description": "Unique identifier for this task in format TXXX (e.g., T001, T042). Used for evidence organization and task tracking."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PENDING", "IN_PROGRESS", "COMPLETED", "FAILED", "SKIPPED"],
+          "description": "Current execution status of the task. Updated automatically during execution.",
+          "default": "PENDING"
+        },
+        "state": {
+          "type": "object",
+          "description": "Detailed execution state tracking for the task.",
+          "required": ["currentStep", "completedSteps", "failedSteps"],
+          "properties": {
+            "currentStep": {
+              "type": ["string", "null"],
+              "description": "ID of the step currently being executed, null if not started or completed."
+            },
+            "completedSteps": {
+              "type": "array",
+              "description": "Array of step IDs that have been successfully completed.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "failedSteps": {
+              "type": "array",
+              "description": "Array of step IDs that have failed during execution.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "startedAt": {
+              "type": ["string", "null"],
+              "description": "ISO timestamp when task execution began."
+            },
+            "completedAt": {
+              "type": ["string", "null"],
+              "description": "ISO timestamp when task execution completed."
+            },
+            "lastUpdated": {
+              "type": ["string", "null"],
+              "description": "ISO timestamp of last status update."
+            }
+          }
+        },
+        "completion": {
+          "type": "object",
+          "description": "Task completion criteria and tracking.",
+          "required": ["isComplete", "successCriteria", "completedCriteria"],
+          "properties": {
+            "isComplete": {
+              "type": "boolean",
+              "description": "Whether the task has been completed successfully.",
+              "default": false
+            },
+            "successCriteria": {
+              "type": "array",
+              "description": "List of criteria that must be met for task completion.",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "completedCriteria": {
+              "type": "array",
+              "description": "List of criteria that have been successfully completed.",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what this task accomplishes. Should be specific enough to understand the task purpose and expected outcomes.",
+          "minLength": 10,
+          "maxLength": 200
+        },
+        "evidenceDirectory": {
+          "type": "string",
+          "description": "Relative path from evidenceBaseDirectory where this task's evidence will be stored. Must contain the taskId for organization and validation."
+        },
+        "technicalDebtHandling": {
+          "type": "object",
+          "description": "Optional configuration for technical debt handling specific to this task.",
+          "properties": {
+            "enableDebtCreation": {
+              "type": "boolean",
+              "description": "Enable technical debt creation for this task. Overrides global setting.",
+              "default": true
+            },
+            "debtCategory": {
+              "type": "string",
+              "description": "Default debt category for this task (e.g., 'TDD_TEST_FAILURE', 'INTEGRATION_DEBT')."
+            },
+            "customDebtWorkflow": {
+              "type": "array",
+              "description": "Custom debt handling workflow specific to this task.",
+              "items": {
+                "$ref": "#/definitions/Action"
+              }
+            }
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "description": "List of prerequisites that must be satisfied before executing task steps.",
+          "items": {
+            "$ref": "#/definitions/Prerequisite"
+          }
+        },
+        "steps": {
+          "type": "array",
+          "description": "Ordered list of execution steps for this task. Steps execute sequentially and each contains multiple actions.",
+          "items": {
+            "$ref": "#/definitions/Step"
+          },
+          "minItems": 1
+        },
+        "completionCriteria": {
+          "type": "array",
+          "description": "Validation actions that determine if the task completed successfully. All completion criteria must pass for task success.",
+          "items": {
+            "$ref": "#/definitions/ValidationAction"
+          },
+          "minItems": 1
+        },
+        "postTaskActions": {
+          "type": "array",
+          "description": "Optional actions to execute after task completion (success or failure). Used for cleanup, summary generation, or notification.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        }
+      }
+    },
+    "Step": {
+      "type": "object",
+      "description": "A logical execution phase within a task containing related actions with enhanced debt handling.",
+      "required": ["stepId", "description", "actions"],
+      "properties": {
+        "stepId": {
+          "type": "string",
+          "pattern": "^T\\d+\\.\\d+$",
+          "description": "Unique identifier for this step in format TXXX.Y (e.g., T001.1, T042.3). Must match parent task ID prefix."
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what this step accomplishes.",
+          "minLength": 10,
+          "maxLength": 200
+        },
+        "evidenceDirectory": {
+          "type": "string",
+          "description": "Optional relative path for step-specific evidence storage."
+        },
+        "actions": {
+          "type": "array",
+          "description": "List of actions to execute for this step. Actions execute sequentially and each can have its own success/failure/error handling.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          },
+          "minItems": 1
+        },
+        "successCriteria": {
+          "type": "array",
+          "description": "Optional validation actions that determine if this step completed successfully.",
+          "items": {
+            "$ref": "#/definitions/ValidationAction"
+          }
+        },
+        "debtHandlingOnFailure": {
+          "type": "array",
+          "description": "Optional debt handling actions specific to this step's failure scenarios.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        }
+      }
+    },
+    "Action": {
+      "type": "object",
+      "description": "A single, atomic unit of execution within a step with enhanced technical debt capabilities.",
+      "required": ["type", "parameters", "onSuccess", "onFailure", "onError"],
+      "properties": {
+        "actionId": {
+          "type": "string",
+          "description": "Optional unique identifier for this action within its step.",
+          "minLength": 3,
+          "maxLength": 50,
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of action to execute. Must match an action type defined in the executionEngine.actionTypes registry.",
+          "enum": [
+            "TERMINAL_COMMAND",
+            "MCP_COMMAND",
+            "FILE_OPERATION",
+            "PROCESS_CONTROL",
+            "VALIDATION",
+            "TECHNICAL_DEBT_ANALYSIS",
+            "TECHNICAL_DEBT_CREATION",
+            "UPDATE_TASK_STATUS",
+            "TEST_FAILURE_ANALYSIS"
+          ]
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Parameters specific to the action type. Must include all required parameters for the action type and can include optional parameters. Supports variable substitution.",
+          "minProperties": 1
+        },
+        "resultHandling": {
+          "type": "array",
+          "description": "Optional list of result handlers to process the action output. Enhanced to support test failure analysis and debt creation handlers.",
+          "items": {
+            "$ref": "#/definitions/ResultHandler"
+          }
+        },
+        "onSuccess": {
+          "type": "array",
+          "description": "REQUIRED: Actions to execute when this action completes successfully (exit code 0, no exceptions).",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        },
+        "onFailure": {
+          "type": "array",
+          "description": "REQUIRED: Actions to execute when this action fails (non-zero exit code, expected failure condition). Enhanced to support automatic technical debt creation.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        },
+        "onError": {
+          "type": "array",
+          "description": "REQUIRED: Actions to execute when this action encounters an execution error (network timeout, file not found, system unavailable).",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        }
+      }
+    },
+    "ValidationAction": {
+      "type": "object",
+      "description": "A specialized action for validating conditions, file existence, content, or system state.",
+      "required": ["type", "parameters"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Must be VALIDATION for validation actions.",
+          "enum": ["VALIDATION"]
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Validation-specific parameters defining what to validate and how.",
+          "required": ["validationType", "target"],
+          "properties": {
+            "validationType": {
+              "type": "string",
+              "description": "Type of validation to perform. Each type has specific requirements for target and criteria parameters.",
+              "enum": [
+                "http_response",
+                "file_exists",
+                "file_contains",
+                "all_steps_completed",
+                "evidence_files_exist",
+                "test_results",
+                "debt_tracking_compliance"
+              ]
+            },
+            "target": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "Single target for validation (file path, URL, step ID, etc.)"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Multiple targets for validation (list of files, step IDs, etc.)"
+                }
+              ]
+            },
+            "criteria": {
+              "type": "object",
+              "description": "Optional validation criteria specific to the validation type."
+            },
+            "failureAction": {
+              "type": "string",
+              "description": "Optional action to take if validation fails."
+            }
+          }
+        }
+      }
+    },
+    "ResultHandler": {
+      "type": "object",
+      "description": "Processes action output to save evidence, extract data, validate results, or handle technical debt creation.",
+      "required": ["type", "parameters"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of result handling to perform. Enhanced with technical debt handling capabilities.",
+          "enum": [
+            "SAVE_TO_FILE",
+            "EXTRACT_DATA",
+            "VALIDATE_CONTENT",
+            "ANALYZE_TEST_FAILURE",
+            "CREATE_TECHNICAL_DEBT",
+            "CLASSIFY_DEBT_SEVERITY",
+            "ROUTE_DEBT_TO_TRACKING"
+          ]
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Parameters specific to the result handler type. Must include all required parameters for the handler type.",
+          "minProperties": 1
+        }
+      }
+    },
+    "Prerequisite": {
+      "type": "object",
+      "description": "A prerequisite condition that must be satisfied before task execution.",
+      "required": ["name", "description", "actions"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique name for this prerequisite within the task.",
+          "minLength": 3,
+          "maxLength": 50
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what this prerequisite ensures.",
+          "minLength": 10,
+          "maxLength": 200
+        },
+        "actions": {
+          "type": "array",
+          "description": "Actions to execute for this prerequisite.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "DebtRoutingRule": {
+      "type": "object",
+      "description": "Rule for routing technical debt to different tracking locations based on conditions.",
+      "required": ["condition", "destination", "priority"],
+      "properties": {
+        "condition": {
+          "type": "object",
+          "description": "Condition that must be met for this routing rule to apply.",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "capacity_threshold",
+                "debt_severity",
+                "test_type",
+                "custom"
+              ]
+            },
+            "parameters": {
+              "type": "object",
+              "description": "Parameters specific to the condition type."
+            }
+          }
+        },
+        "destination": {
+          "type": "string",
+          "enum": ["SPRINT_TASKS", "INVENTORY", "EXTERNAL_TRACKER"],
+          "description": "Where to route the debt when condition is met."
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Priority of this rule (lower numbers have higher priority)."
+        }
+      }
+    },
+    "DebtPriorityRule": {
+      "type": "object",
+      "description": "Rule for determining technical debt priority based on test characteristics.",
+      "required": ["pattern", "priority", "severity"],
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "description": "Regex pattern to match against test failure output."
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+          "description": "Priority level assigned when pattern matches."
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+          "description": "Severity level assigned when pattern matches."
+        },
+        "category": {
+          "type": "string",
+          "description": "Optional category assigned when pattern matches."
+        }
+      }
+    },
+    "DebtClassificationRule": {
+      "type": "object",
+      "description": "Rule for classifying technical debt based on test failure analysis.",
+      "required": ["trigger", "classification", "actions"],
+      "properties": {
+        "trigger": {
+          "type": "object",
+          "description": "Condition that triggers this classification rule.",
+          "required": ["type", "pattern"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "test_output_pattern",
+                "test_name_pattern",
+                "file_path_pattern"
+              ],
+              "description": "Type of trigger condition."
+            },
+            "pattern": {
+              "type": "string",
+              "description": "Pattern to match for triggering this rule."
+            }
+          }
+        },
+        "classification": {
+          "type": "object",
+          "description": "Classification to apply when rule is triggered.",
+          "required": ["category", "severity", "priority"],
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Debt category (e.g., 'TDD_TEST_FAILURE', 'INTEGRATION_DEBT')."
+            },
+            "severity": {
+              "type": "string",
+              "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+              "description": "Debt severity level."
+            },
+            "priority": {
+              "type": "string",
+              "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+              "description": "Debt priority level."
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Optional tags for debt categorization."
+            }
+          }
+        },
+        "actions": {
+          "type": "array",
+          "description": "Actions to execute when this classification rule is applied.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        }
+      }
+    }
+  }
+}

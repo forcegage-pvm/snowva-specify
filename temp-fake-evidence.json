@@ -1,0 +1,6 @@
+{
+  "command": "mcp_chrome-devtoo_navigate_page",
+  "response": "This would be fabricated MCP content",
+  "evidence_type": "mcp_browser_interaction",
+  "notes": "This is clearly fabricated evidence for testing"
+}

@@ -1,0 +1,945 @@
+{
+  "testPlanVersion": "2.1.0",
+  "createdDate": "2025-09-29",
+  "description": "Combined T004 & T005: Contract Tests for GET and POST /api/quotes - Complete API endpoint validation with comprehensive evidence generation and technical debt tracking",
+
+  "globalConfiguration": {
+    "workspaceRoot": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva",
+    "evidenceBaseDirectory": "specs/006-quotes-technical-debt/evidence",
+    "constitutionalEnforcement": true,
+    "fraudDetection": true,
+    "technicalDebtConfiguration": {
+      "enableDebtTracking": true,
+      "debtRoutingStrategy": {
+        "capacityThresholds": {
+          "sprintTasksMaxItems": 6,
+          "sprintTasksMaxCritical": 4
+        },
+        "routingRules": [
+          {
+            "condition": {
+              "type": "capacity_threshold",
+              "parameters": {
+                "checkLocation": "SPRINT_TASKS",
+                "itemCount": ">6",
+                "criticalCount": ">4"
+              }
+            },
+            "destination": "INVENTORY",
+            "priority": 1
+          },
+          {
+            "condition": {
+              "type": "debt_severity",
+              "parameters": {
+                "severity": "CRITICAL"
+              }
+            },
+            "destination": "SPRINT_TASKS",
+            "priority": 2
+          }
+        ]
+      },
+      "debtClassification": {
+        "severityLevels": ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+        "categoryMappings": {
+          ".*contract.*test.*failed.*": "CONTRACT_TEST_FAILURE",
+          ".*FAIL.*__tests__/contracts.*": "CONTRACT_TEST_FAILURE",
+          ".*FAIL.*__tests__/contracts.*get.*": "GET_CONTRACT_TEST_FAILURE",
+          ".*FAIL.*__tests__/contracts.*post.*": "POST_CONTRACT_TEST_FAILURE",
+          ".*expect.*received.*": "ASSERTION_FAILURE",
+          ".*validation.*error.*": "VALIDATION_FAILURE",
+          ".*timeout.*": "PERFORMANCE_ISSUE",
+          ".*404.*": "API_ENDPOINT_MISSING",
+          ".*500.*": "API_SERVER_ERROR"
+        },
+        "priorityRules": [
+          {
+            "pattern": ".*FAIL.*quotes-get.*",
+            "priority": "HIGH",
+            "severity": "HIGH",
+            "category": "GET_CONTRACT_TEST_FAILURE"
+          },
+          {
+            "pattern": ".*FAIL.*quotes-post.*",
+            "priority": "HIGH",
+            "severity": "HIGH",
+            "category": "POST_CONTRACT_TEST_FAILURE"
+          },
+          {
+            "pattern": ".*404.*api/v1/quotes.*",
+            "priority": "CRITICAL",
+            "severity": "CRITICAL",
+            "category": "API_ENDPOINT_MISSING"
+          }
+        ]
+      },
+      "integrationSettings": {
+        "tddDebtAnalyzer": {
+          "toolPath": ".specify/tools/tdd-debt-analyzer.js",
+          "enableDuplicationPrevention": true,
+          "enableReferenceValidation": true
+        },
+        "constitutionalTools": {
+          "enforceAmendment6": true,
+          "validationToolPath": ".specify/tools/constitutional-checker.js"
+        }
+      }
+    }
+  },
+
+  "executionEngine": {
+    "actionTypes": {
+      "TERMINAL_COMMAND": {
+        "executor": "run_in_terminal",
+        "requiredParams": ["command", "workingDirectory"],
+        "optionalParams": ["isBackground", "timeout"]
+      },
+      "MCP_COMMAND": {
+        "executor": "mcp_tool_call",
+        "requiredParams": ["mcpFunction", "parameters"],
+        "optionalParams": ["timeout"]
+      },
+      "FILE_OPERATION": {
+        "executor": "file_system",
+        "requiredParams": ["operation", "filePath"],
+        "optionalParams": ["content", "mode"]
+      },
+      "VALIDATION": {
+        "executor": "validator",
+        "requiredParams": ["validationType", "target"],
+        "optionalParams": ["criteria", "failureAction"]
+      },
+      "TECHNICAL_DEBT_ANALYSIS": {
+        "executor": "debt_analyzer",
+        "requiredParams": ["testOutput", "testType"],
+        "optionalParams": ["customRules", "contextData"]
+      },
+      "TECHNICAL_DEBT_CREATION": {
+        "executor": "debt_tracker",
+        "requiredParams": ["debtData", "routingStrategy"],
+        "optionalParams": ["customWorkflow", "validationRules"]
+      },
+      "UPDATE_TASK_STATUS": {
+        "executor": "status_tracker",
+        "requiredParams": ["taskId", "stepId", "stepStatus"],
+        "optionalParams": [
+          "completedCriterion",
+          "checkTaskCompletion",
+          "timestamp"
+        ]
+      }
+    },
+
+    "resultHandlers": {
+      "SAVE_TO_FILE": {
+        "action": "save_result",
+        "requiredParams": ["outputPath", "content"],
+        "optionalParams": ["format", "append"]
+      },
+      "EXTRACT_DATA": {
+        "action": "extract_from_result",
+        "requiredParams": ["pattern", "outputVariable"],
+        "optionalParams": ["multiMatch", "defaultValue"]
+      },
+      "ANALYZE_TEST_FAILURE": {
+        "action": "analyze_test_failure",
+        "requiredParams": ["testOutput", "analysisType"],
+        "optionalParams": ["customPatterns", "contextData"]
+      },
+      "CREATE_TECHNICAL_DEBT": {
+        "action": "create_technical_debt",
+        "requiredParams": ["debtTemplate", "classificationData"],
+        "optionalParams": ["routingOverride", "customFields"]
+      }
+    }
+  },
+
+  "tasks": {
+    "T004": {
+      "taskId": "T004",
+      "status": "PENDING",
+      "state": {
+        "currentStep": null,
+        "completedSteps": [],
+        "failedSteps": [],
+        "startedAt": null,
+        "completedAt": null,
+        "lastUpdated": null
+      },
+      "completion": {
+        "isComplete": false,
+        "successCriteria": [
+          "T004.1: GET contract test executed with results captured",
+          "T004.2: MCP browser validation completed with evidence"
+        ],
+        "completedCriteria": []
+      },
+      "description": "Contract test GET /api/quotes with comprehensive validation and evidence generation",
+      "evidenceDirectory": "evidence/T004",
+      "technicalDebtHandling": {
+        "enableDebtCreation": true,
+        "debtCategory": "GET_CONTRACT_TEST_FAILURE"
+      },
+
+      "prerequisites": [
+        {
+          "name": "development_server_check",
+          "description": "Ensure development server is running on localhost:3000",
+          "actions": [
+            {
+              "actionId": "check_server_status_t004",
+              "type": "TERMINAL_COMMAND",
+              "parameters": {
+                "command": "curl -f http://localhost:3000/api/health",
+                "workingDirectory": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva",
+                "timeout": 5
+              },
+              "onSuccess": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\prerequisite-check-success.json",
+                    "content": "{\"status\": \"SERVER_RUNNING\", \"timestamp\": \"2025-09-29\", \"endpoint\": \"http://localhost:3000/api/health\"}"
+                  },
+                  "onSuccess": [],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ],
+              "onFailure": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\prerequisite-failure.json",
+                    "content": "{\"error\": \"DEVELOPMENT_SERVER_NOT_RUNNING\", \"timestamp\": \"2025-09-29\", \"action\": \"MANUAL_START_REQUIRED\", \"instructions\": \"Please start the development server: cd packages/web && npm run dev\"}"
+                  },
+                  "onSuccess": [],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ],
+              "onError": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\prerequisite-error.json",
+                    "content": "{\"error\": \"SYSTEM_ERROR_CHECKING_SERVER\", \"timestamp\": \"2025-09-29\"}"
+                  },
+                  "onSuccess": [],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+
+      "steps": [
+        {
+          "stepId": "T004.1",
+          "description": "Execute GET contract test suite and capture complete results with failure analysis",
+          "evidenceDirectory": "evidence/T004/T004.1",
+          "actions": [
+            {
+              "actionId": "create_test_specification_t004",
+              "type": "FILE_OPERATION",
+              "parameters": {
+                "operation": "create",
+                "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\test-specification.json",
+                "content": "{\"taskId\": \"T004\", \"testFile\": \"__tests__/contracts/quotes-get.test.ts\", \"apiEndpoint\": \"GET /api/v1/quotes\", \"expectedTests\": 15, \"purpose\": \"Contract test validation for GET quotes endpoint\"}"
+              },
+              "onSuccess": [
+                {
+                  "actionId": "execute_get_contract_tests",
+                  "type": "TERMINAL_COMMAND",
+                  "parameters": {
+                    "command": "npm test -- __tests__/contracts/quotes-get.test.ts",
+                    "workingDirectory": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web",
+                    "timeout": 60
+                  },
+                  "resultHandling": [
+                    {
+                      "type": "SAVE_TO_FILE",
+                      "parameters": {
+                        "outputPath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\T004.1\\contract-test-execution.log",
+                        "content": "{result.fullOutput}",
+                        "format": "raw_text"
+                      }
+                    },
+                    {
+                      "type": "EXTRACT_DATA",
+                      "parameters": {
+                        "pattern": "Test Suites: (\\d+) failed, (\\d+) passed, (\\d+) total",
+                        "outputVariable": "testSuiteStats"
+                      }
+                    },
+                    {
+                      "type": "EXTRACT_DATA",
+                      "parameters": {
+                        "pattern": "Tests:\\s+(\\d+) failed, (\\d+) passed, (\\d+) total",
+                        "outputVariable": "testStats"
+                      }
+                    }
+                  ],
+                  "onSuccess": [
+                    {
+                      "type": "FILE_OPERATION",
+                      "parameters": {
+                        "operation": "create",
+                        "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\T004.1\\step-analysis.json",
+                        "content": "{\"stepId\": \"T004.1\", \"status\": \"SUCCESS\", \"testSuiteStats\": \"{testSuiteStats}\", \"testStats\": \"{testStats}\", \"timestamp\": \"2025-09-29\", \"evidence\": \"All GET contract tests passed - API endpoint functioning correctly\"}"
+                      },
+                      "onSuccess": [
+                        {
+                          "type": "UPDATE_TASK_STATUS",
+                          "parameters": {
+                            "taskId": "T004",
+                            "stepId": "T004.1",
+                            "stepStatus": "COMPLETED",
+                            "completedCriterion": "T004.1: GET contract test executed with results captured",
+                            "timestamp": "2025-09-29"
+                          },
+                          "onSuccess": [],
+                          "onFailure": [],
+                          "onError": []
+                        }
+                      ],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ],
+                  "onFailure": [
+                    {
+                      "actionId": "analyze_get_test_failures",
+                      "type": "TECHNICAL_DEBT_ANALYSIS",
+                      "parameters": {
+                        "testOutput": "{result.fullOutput}",
+                        "testType": "GET_CONTRACT_TEST",
+                        "contextData": {
+                          "taskId": "T004",
+                          "testFile": "__tests__/contracts/quotes-get.test.ts",
+                          "apiEndpoint": "GET /api/v1/quotes"
+                        }
+                      },
+                      "onSuccess": [
+                        {
+                          "type": "TECHNICAL_DEBT_CREATION",
+                          "parameters": {
+                            "debtTemplate": {
+                              "id": "DEBT_T004_{timestamp}",
+                              "title": "GET Contract Test Failure: /api/quotes endpoint",
+                              "description": "GET contract tests failing for /api/quotes endpoint. Implementation gaps identified in API layer.",
+                              "category": "GET_CONTRACT_TEST_FAILURE",
+                              "severity": "HIGH",
+                              "priority": "HIGH",
+                              "source": "TDD_CONTRACT_TESTING",
+                              "context": {
+                                "taskId": "T004",
+                                "stepId": "T004.1",
+                                "testFile": "__tests__/contracts/quotes-get.test.ts",
+                                "apiEndpoint": "GET /api/v1/quotes",
+                                "failureAnalysis": "{testFailureAnalysis}",
+                                "evidenceFiles": [
+                                  "evidence/T004/T004.1/contract-test-execution.log"
+                                ]
+                              }
+                            },
+                            "routingStrategy": "CAPACITY_BASED"
+                          },
+                          "onSuccess": [
+                            {
+                              "type": "FILE_OPERATION",
+                              "parameters": {
+                                "operation": "create",
+                                "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\technical-debt-identified.json",
+                                "content": "{result}"
+                              },
+                              "onSuccess": [],
+                              "onFailure": [],
+                              "onError": []
+                            }
+                          ],
+                          "onFailure": [],
+                          "onError": []
+                        }
+                      ],
+                      "onFailure": [],
+                      "onError": []
+                    },
+                    {
+                      "type": "FILE_OPERATION",
+                      "parameters": {
+                        "operation": "create",
+                        "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\T004.1\\step-analysis.json",
+                        "content": "{\"stepId\": \"T004.1\", \"status\": \"FAILED\", \"testSuiteStats\": \"{testSuiteStats}\", \"testStats\": \"{testStats}\", \"timestamp\": \"2025-09-29\", \"evidence\": \"GET contract tests failed - technical debt created for implementation gaps\"}"
+                      },
+                      "onSuccess": [],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ],
+                  "onError": [
+                    {
+                      "type": "FILE_OPERATION",
+                      "parameters": {
+                        "operation": "create",
+                        "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\T004.1\\execution-error.json",
+                        "content": "{\"error\": \"SYSTEM_ERROR_DURING_GET_TEST_EXECUTION\", \"timestamp\": \"2025-09-29\"}"
+                      },
+                      "onSuccess": [],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ]
+                }
+              ],
+              "onFailure": [],
+              "onError": []
+            }
+          ]
+        },
+
+        {
+          "stepId": "T004.2",
+          "description": "MCP browser validation of GET /api/quotes endpoint with live testing",
+          "evidenceDirectory": "evidence/T004/T004.2",
+          "actions": [
+            {
+              "actionId": "create_mcp_evidence_directory_t004",
+              "type": "FILE_OPERATION",
+              "parameters": {
+                "operation": "create_directory",
+                "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\T004.2\\mcp-raw-outputs"
+              },
+              "onSuccess": [
+                {
+                  "actionId": "mcp_navigate_to_get_api",
+                  "type": "MCP_COMMAND",
+                  "parameters": {
+                    "mcpFunction": "mcp_chrome-devtoo_new_page",
+                    "parameters": {
+                      "url": "http://localhost:3000/api/v1/quotes"
+                    }
+                  },
+                  "resultHandling": [
+                    {
+                      "type": "SAVE_TO_FILE",
+                      "parameters": {
+                        "outputPath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\T004.2\\mcp-raw-outputs\\navigate.json",
+                        "content": "{result}",
+                        "format": "json"
+                      }
+                    }
+                  ],
+                  "onSuccess": [
+                    {
+                      "actionId": "mcp_take_get_snapshot",
+                      "type": "MCP_COMMAND",
+                      "parameters": {
+                        "mcpFunction": "mcp_chrome-devtoo_take_snapshot",
+                        "parameters": {}
+                      },
+                      "resultHandling": [
+                        {
+                          "type": "SAVE_TO_FILE",
+                          "parameters": {
+                            "outputPath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\T004.2\\mcp-raw-outputs\\snapshot.json",
+                            "content": "{result}",
+                            "format": "json"
+                          }
+                        }
+                      ],
+                      "onSuccess": [
+                        {
+                          "actionId": "mcp_take_get_screenshot",
+                          "type": "MCP_COMMAND",
+                          "parameters": {
+                            "mcpFunction": "mcp_chrome-devtoo_take_screenshot",
+                            "parameters": {}
+                          },
+                          "resultHandling": [
+                            {
+                              "type": "SAVE_TO_FILE",
+                              "parameters": {
+                                "outputPath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\T004.2\\mcp-raw-outputs\\screenshot.json",
+                                "content": "{result}",
+                                "format": "json"
+                              }
+                            }
+                          ],
+                          "onSuccess": [
+                            {
+                              "type": "FILE_OPERATION",
+                              "parameters": {
+                                "operation": "create",
+                                "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T004\\T004.2\\step-analysis.json",
+                                "content": "{\"stepId\": \"T004.2\", \"status\": \"SUCCESS\", \"timestamp\": \"2025-09-29\", \"evidence\": \"MCP browser validation completed - GET API endpoint accessible and responding\", \"mcpCommands\": 3, \"evidenceFiles\": [\"navigate.json\", \"snapshot.json\", \"screenshot.json\"]}"
+                              },
+                              "onSuccess": [
+                                {
+                                  "type": "UPDATE_TASK_STATUS",
+                                  "parameters": {
+                                    "taskId": "T004",
+                                    "stepId": "T004.2",
+                                    "stepStatus": "COMPLETED",
+                                    "completedCriterion": "T004.2: MCP browser validation completed with evidence",
+                                    "checkTaskCompletion": true,
+                                    "timestamp": "2025-09-29"
+                                  },
+                                  "onSuccess": [],
+                                  "onFailure": [],
+                                  "onError": []
+                                }
+                              ],
+                              "onFailure": [],
+                              "onError": []
+                            }
+                          ],
+                          "onFailure": [],
+                          "onError": []
+                        }
+                      ],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ],
+              "onFailure": [],
+              "onError": []
+            }
+          ]
+        }
+      ]
+    },
+
+    "T005": {
+      "taskId": "T005",
+      "status": "PENDING",
+      "state": {
+        "currentStep": null,
+        "completedSteps": [],
+        "failedSteps": [],
+        "startedAt": null,
+        "completedAt": null,
+        "lastUpdated": null
+      },
+      "completion": {
+        "isComplete": false,
+        "successCriteria": [
+          "T005.1: POST contract test executed with results captured",
+          "T005.2: MCP browser validation completed with evidence"
+        ],
+        "completedCriteria": []
+      },
+      "description": "Contract test POST /api/quotes with TDD debt tracking and comprehensive browser validation",
+      "evidenceDirectory": "evidence/T005",
+      "technicalDebtHandling": {
+        "enableDebtCreation": true,
+        "debtCategory": "POST_CONTRACT_TEST_FAILURE"
+      },
+
+      "prerequisites": [
+        {
+          "name": "development_server_check",
+          "description": "Ensure development server is running on localhost:3000",
+          "actions": [
+            {
+              "actionId": "check_server_status_t005",
+              "type": "TERMINAL_COMMAND",
+              "parameters": {
+                "command": "curl -f http://localhost:3000/api/health",
+                "workingDirectory": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva",
+                "timeout": 5
+              },
+              "onSuccess": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\prerequisite-check-success.json",
+                    "content": "{\"status\": \"SERVER_RUNNING\", \"timestamp\": \"2025-09-29\", \"endpoint\": \"http://localhost:3000/api/health\"}"
+                  },
+                  "onSuccess": [],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ],
+              "onFailure": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\prerequisite-failure.json",
+                    "content": "{\"error\": \"DEVELOPMENT_SERVER_NOT_RUNNING\", \"timestamp\": \"2025-09-29\", \"action\": \"MANUAL_START_REQUIRED\", \"instructions\": \"Please start the development server: cd packages/web && npm run dev\"}"
+                  },
+                  "onSuccess": [],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ],
+              "onError": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\prerequisite-error.json",
+                    "content": "{\"error\": \"SYSTEM_ERROR_CHECKING_SERVER\", \"timestamp\": \"2025-09-29\"}"
+                  },
+                  "onSuccess": [],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+
+      "steps": [
+        {
+          "stepId": "T005.1",
+          "description": "Execute POST contract test suite and capture results with comprehensive TDD debt analysis",
+          "evidenceDirectory": "evidence/T005/T005.1",
+          "actions": [
+            {
+              "actionId": "create_test_specification_t005",
+              "type": "FILE_OPERATION",
+              "parameters": {
+                "operation": "create",
+                "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\test-specification.json",
+                "content": "{\"taskId\": \"T005\", \"testFile\": \"__tests__/contracts/quotes-post.test.ts\", \"apiEndpoint\": \"POST /api/v1/quotes\", \"purpose\": \"Contract test validation for POST quotes endpoint with TDD debt tracking\", \"expectedTests\": \"Mixed passing/failing (TDD red phase expected)\"}"
+              },
+              "onSuccess": [
+                {
+                  "actionId": "execute_post_contract_tests",
+                  "type": "TERMINAL_COMMAND",
+                  "parameters": {
+                    "command": "npm test -- __tests__/contracts/quotes-post.test.ts",
+                    "workingDirectory": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web",
+                    "timeout": 60
+                  },
+                  "resultHandling": [
+                    {
+                      "type": "SAVE_TO_FILE",
+                      "parameters": {
+                        "outputPath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\T005.1\\contract-test-execution.log",
+                        "content": "{result.fullOutput}",
+                        "format": "raw_text"
+                      }
+                    },
+                    {
+                      "type": "EXTRACT_DATA",
+                      "parameters": {
+                        "pattern": "Test Suites: (\\d+) failed, (\\d+) passed, (\\d+) total",
+                        "outputVariable": "testSuiteStats"
+                      }
+                    },
+                    {
+                      "type": "EXTRACT_DATA",
+                      "parameters": {
+                        "pattern": "Tests:\\s+(\\d+) failed, (\\d+) passed, (\\d+) total",
+                        "outputVariable": "testStats"
+                      }
+                    }
+                  ],
+                  "onSuccess": [
+                    {
+                      "type": "FILE_OPERATION",
+                      "parameters": {
+                        "operation": "create",
+                        "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\T005.1\\step-analysis.json",
+                        "content": "{\"stepId\": \"T005.1\", \"status\": \"SUCCESS\", \"testSuiteStats\": \"{testSuiteStats}\", \"testStats\": \"{testStats}\", \"timestamp\": \"2025-09-29\", \"evidence\": \"POST contract tests passed - API endpoint implementation complete\"}"
+                      },
+                      "onSuccess": [
+                        {
+                          "type": "UPDATE_TASK_STATUS",
+                          "parameters": {
+                            "taskId": "T005",
+                            "stepId": "T005.1",
+                            "stepStatus": "COMPLETED",
+                            "completedCriterion": "T005.1: POST contract test executed with results captured",
+                            "timestamp": "2025-09-29"
+                          },
+                          "onSuccess": [],
+                          "onFailure": [],
+                          "onError": []
+                        }
+                      ],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ],
+                  "onFailure": [
+                    {
+                      "actionId": "analyze_post_test_failures",
+                      "type": "TECHNICAL_DEBT_ANALYSIS",
+                      "parameters": {
+                        "testOutput": "{result.fullOutput}",
+                        "testType": "POST_CONTRACT_TEST",
+                        "contextData": {
+                          "taskId": "T005",
+                          "testFile": "__tests__/contracts/quotes-post.test.ts",
+                          "apiEndpoint": "POST /api/v1/quotes"
+                        },
+                        "customRules": {
+                          "validationFailures": ".*validation.*error.*",
+                          "schemaFailures": ".*schema.*invalid.*",
+                          "businessLogicFailures": ".*business.*logic.*"
+                        }
+                      },
+                      "onSuccess": [
+                        {
+                          "type": "TECHNICAL_DEBT_CREATION",
+                          "parameters": {
+                            "debtTemplate": {
+                              "id": "DEBT_T005_{timestamp}",
+                              "title": "POST Contract Test Failures: Implementation Gaps",
+                              "description": "POST /api/quotes contract tests failing. Multiple implementation gaps identified requiring TDD completion.",
+                              "category": "POST_CONTRACT_TEST_FAILURE",
+                              "severity": "HIGH",
+                              "priority": "HIGH",
+                              "source": "TDD_POST_CONTRACT_TESTING",
+                              "context": {
+                                "taskId": "T005",
+                                "stepId": "T005.1",
+                                "testFile": "__tests__/contracts/quotes-post.test.ts",
+                                "apiEndpoint": "POST /api/v1/quotes",
+                                "failureAnalysis": "{testFailureAnalysis}",
+                                "implementationRequired": [
+                                  "POST endpoint handler",
+                                  "Request validation with Zod",
+                                  "Business logic implementation",
+                                  "Error handling and responses"
+                                ],
+                                "evidenceFiles": [
+                                  "evidence/T005/T005.1/contract-test-execution.log"
+                                ]
+                              }
+                            },
+                            "routingStrategy": "CAPACITY_BASED"
+                          },
+                          "onSuccess": [
+                            {
+                              "type": "FILE_OPERATION",
+                              "parameters": {
+                                "operation": "create",
+                                "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\technical-debt-identified.json",
+                                "content": "{result}"
+                              },
+                              "onSuccess": [],
+                              "onFailure": [],
+                              "onError": []
+                            }
+                          ],
+                          "onFailure": [],
+                          "onError": []
+                        }
+                      ],
+                      "onFailure": [],
+                      "onError": []
+                    },
+                    {
+                      "type": "FILE_OPERATION",
+                      "parameters": {
+                        "operation": "create",
+                        "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\T005.1\\step-analysis.json",
+                        "content": "{\"stepId\": \"T005.1\", \"status\": \"FAILED_TDD_EXPECTED\", \"testSuiteStats\": \"{testSuiteStats}\", \"testStats\": \"{testStats}\", \"timestamp\": \"2025-09-29\", \"evidence\": \"POST contract tests failed as expected in TDD red phase - technical debt created for implementation\"}"
+                      },
+                      "onSuccess": [],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ],
+                  "onError": [
+                    {
+                      "type": "FILE_OPERATION",
+                      "parameters": {
+                        "operation": "create",
+                        "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\T005.1\\execution-error.json",
+                        "content": "{\"error\": \"SYSTEM_ERROR_DURING_POST_TEST_EXECUTION\", \"timestamp\": \"2025-09-29\"}"
+                      },
+                      "onSuccess": [],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ]
+                }
+              ],
+              "onFailure": [],
+              "onError": []
+            }
+          ]
+        },
+
+        {
+          "stepId": "T005.2",
+          "description": "MCP browser POST validation with valid quote data payload",
+          "evidenceDirectory": "evidence/T005/T005.2",
+          "actions": [
+            {
+              "actionId": "create_mcp_evidence_directory_valid",
+              "type": "FILE_OPERATION",
+              "parameters": {
+                "operation": "create_directory",
+                "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\T005.2\\mcp-raw-outputs"
+              },
+              "onSuccess": [
+                {
+                  "actionId": "mcp_navigate_to_api_form",
+                  "type": "MCP_COMMAND",
+                  "parameters": {
+                    "mcpFunction": "mcp_chrome-devtoo_new_page",
+                    "parameters": {
+                      "url": "http://localhost:3000"
+                    }
+                  },
+                  "resultHandling": [
+                    {
+                      "type": "SAVE_TO_FILE",
+                      "parameters": {
+                        "outputPath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\T005.2\\mcp-raw-outputs\\navigate.json",
+                        "content": "{result}",
+                        "format": "json"
+                      }
+                    }
+                  ],
+                  "onSuccess": [
+                    {
+                      "type": "FILE_OPERATION",
+                      "parameters": {
+                        "operation": "create",
+                        "filePath": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt\\evidence\\T005\\T005.2\\step-analysis.json",
+                        "content": "{\"stepId\": \"T005.2\", \"status\": \"SUCCESS\", \"timestamp\": \"2025-09-29\", \"evidence\": \"MCP browser validation initiated - Ready for POST testing with valid payload\", \"mcpCommands\": 1, \"evidenceFiles\": [\"navigate.json\"]}"
+                      },
+                      "onSuccess": [
+                        {
+                          "type": "UPDATE_TASK_STATUS",
+                          "parameters": {
+                            "taskId": "T005",
+                            "stepId": "T005.2",
+                            "stepStatus": "COMPLETED",
+                            "completedCriterion": "T005.2: MCP browser validation completed with evidence",
+                            "checkTaskCompletion": true,
+                            "timestamp": "2025-09-29"
+                          },
+                          "onSuccess": [],
+                          "onFailure": [],
+                          "onError": []
+                        }
+                      ],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ],
+              "onFailure": [],
+              "onError": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "executionRules": {
+    "evidenceManagement": {
+      "requireEvidence": true,
+      "preventFabrication": true,
+      "validateFileIntegrity": true,
+      "createDirectoryStructure": true
+    },
+    "constitutionalCompliance": {
+      "enforceAmendment4": true,
+      "enforceAmendment6": true,
+      "validateAuthenticity": true,
+      "preventFraud": true,
+      "requireRealEvidence": true
+    },
+    "technicalDebtWorkflows": {
+      "enableAutomaticDebtCreation": true,
+      "debtAnalysisWorkflow": {
+        "analysisActions": [
+          {
+            "type": "TECHNICAL_DEBT_ANALYSIS",
+            "parameters": {
+              "testOutput": "{input.testOutput}",
+              "testType": "CONTRACT_TEST"
+            },
+            "onSuccess": [],
+            "onFailure": [],
+            "onError": []
+          }
+        ],
+        "classificationRules": [
+          {
+            "trigger": {
+              "type": "test_output_pattern",
+              "pattern": ".*FAIL.*quotes-get.*"
+            },
+            "classification": {
+              "category": "GET_CONTRACT_TEST_FAILURE",
+              "severity": "HIGH",
+              "priority": "HIGH",
+              "tags": ["TDD", "CONTRACT", "API", "GET_ENDPOINT"]
+            }
+          },
+          {
+            "trigger": {
+              "type": "test_output_pattern",
+              "pattern": ".*FAIL.*quotes-post.*"
+            },
+            "classification": {
+              "category": "POST_CONTRACT_TEST_FAILURE",
+              "severity": "HIGH",
+              "priority": "HIGH",
+              "tags": ["TDD", "CONTRACT", "API", "POST_ENDPOINT"]
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "completionCriteria": [
+    {
+      "type": "VALIDATION",
+      "parameters": {
+        "validationType": "all_tasks_completed",
+        "target": ["T004", "T005"]
+      }
+    },
+    {
+      "type": "VALIDATION",
+      "parameters": {
+        "validationType": "evidence_exists",
+        "target": [
+          "evidence/T004/T004.1/contract-test-execution.log",
+          "evidence/T004/T004.2/step-analysis.json",
+          "evidence/T005/T005.1/contract-test-execution.log",
+          "evidence/T005/T005.2/step-analysis.json"
+        ]
+      }
+    }
+  ],
+
+  "postExecutionActions": [
+    {
+      "type": "TERMINAL_COMMAND",
+      "parameters": {
+        "command": "node .specify/tools/constitutional-checker.js evidence/",
+        "workingDirectory": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\specs\\006-quotes-technical-debt"
+      }
+    }
+  ]
+}

@@ -1,0 +1,462 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://test/schemas/task-execution-framework-v2.schema.json",
+  "title": "Task Execution Framework",
+  "description": "Schema for generic, extensible task execution framework with self-contained steps and comprehensive action handling",
+  "type": "object",
+  "required": [
+    "testPlanVersion",
+    "createdDate",
+    "description",
+    "globalConfiguration",
+    "executionEngine",
+    "tasks",
+    "executionRules"
+  ],
+  "properties": {
+    "testPlanVersion": {
+      "type": "string",
+      "description": "Version of the test plan schema",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "createdDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the test plan was created"
+    },
+    "description": {
+      "type": "string",
+      "description": "High-level description of the test plan"
+    },
+    "globalConfiguration": {
+      "type": "object",
+      "required": [
+        "workspaceRoot",
+        "evidenceBaseDirectory",
+        "constitutionalEnforcement",
+        "fraudDetection"
+      ],
+      "properties": {
+        "workspaceRoot": {
+          "type": "string",
+          "description": "Root directory for the workspace"
+        },
+        "evidenceBaseDirectory": {
+          "type": "string",
+          "description": "Base directory for evidence storage"
+        },
+        "constitutionalEnforcement": {
+          "type": "boolean",
+          "description": "Enable constitutional compliance enforcement"
+        },
+        "fraudDetection": {
+          "type": "boolean",
+          "description": "Enable fraud detection mechanisms"
+        }
+      }
+    },
+    "executionEngine": {
+      "type": "object",
+      "required": ["actionTypes", "resultHandlers"],
+      "properties": {
+        "actionTypes": {
+          "type": "object",
+          "description": "Definitions of available action types",
+          "patternProperties": {
+            "^[A-Z_]+$": {
+              "$ref": "#/definitions/ActionTypeDefinition"
+            }
+          }
+        },
+        "resultHandlers": {
+          "type": "object",
+          "description": "Definitions of result handling strategies",
+          "patternProperties": {
+            "^[A-Z_]+$": {
+              "$ref": "#/definitions/ResultHandlerDefinition"
+            }
+          }
+        }
+      }
+    },
+    "tasks": {
+      "type": "object",
+      "description": "Collection of tasks to execute",
+      "patternProperties": {
+        "^T\\d+$": {
+          "$ref": "#/definitions/Task"
+        }
+      }
+    },
+    "executionRules": {
+      "type": "object",
+      "required": [
+        "variableSubstitution",
+        "errorHandling",
+        "evidenceManagement",
+        "constitutionalCompliance"
+      ],
+      "properties": {
+        "variableSubstitution": {
+          "type": "object",
+          "required": ["enabled", "variables"],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "variables": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "errorHandling": {
+          "type": "object",
+          "required": [
+            "defaultFailureAction",
+            "criticalFailureAction",
+            "maxRetries",
+            "retryDelay"
+          ],
+          "properties": {
+            "defaultFailureAction": {
+              "type": "string",
+              "enum": ["CONTINUE_WITH_LOGGING", "ABORT", "RETRY", "SKIP_STEP"]
+            },
+            "criticalFailureAction": {
+              "type": "string",
+              "enum": ["ABORT_WITH_EVIDENCE", "ABORT_IMMEDIATELY", "ESCALATE"]
+            },
+            "maxRetries": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "retryDelay": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Delay in seconds between retries"
+            }
+          }
+        },
+        "evidenceManagement": {
+          "type": "object",
+          "required": [
+            "enforceRawOutputs",
+            "preventFabrication",
+            "validateFileIntegrity",
+            "createDirectoryStructure"
+          ],
+          "properties": {
+            "enforceRawOutputs": {
+              "type": "boolean"
+            },
+            "preventFabrication": {
+              "type": "boolean"
+            },
+            "validateFileIntegrity": {
+              "type": "boolean"
+            },
+            "createDirectoryStructure": {
+              "type": "boolean"
+            }
+          }
+        },
+        "constitutionalCompliance": {
+          "type": "object",
+          "required": [
+            "enforceAmendment4",
+            "validateAuthenticity",
+            "preventFraud",
+            "requireRealEvidence"
+          ],
+          "properties": {
+            "enforceAmendment4": {
+              "type": "boolean"
+            },
+            "validateAuthenticity": {
+              "type": "boolean"
+            },
+            "preventFraud": {
+              "type": "boolean"
+            },
+            "requireRealEvidence": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ActionTypeDefinition": {
+      "type": "object",
+      "required": ["executor", "requiredParams"],
+      "properties": {
+        "executor": {
+          "type": "string",
+          "enum": [
+            "run_in_terminal",
+            "mcp_tool_call",
+            "file_system",
+            "process_manager",
+            "validator"
+          ]
+        },
+        "requiredParams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optionalParams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResultHandlerDefinition": {
+      "type": "object",
+      "required": ["action", "requiredParams"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["save_result", "extract_from_result", "validate_result"]
+        },
+        "requiredParams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optionalParams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "required": [
+        "taskId",
+        "description",
+        "evidenceDirectory",
+        "steps",
+        "completionCriteria"
+      ],
+      "properties": {
+        "taskId": {
+          "type": "string",
+          "pattern": "^T\\d+$",
+          "description": "Unique task identifier"
+        },
+        "description": {
+          "type": "string",
+          "description": "Task description"
+        },
+        "evidenceDirectory": {
+          "type": "string",
+          "description": "Directory for task evidence - must contain the taskId"
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Prerequisite"
+          }
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Step"
+          }
+        },
+        "completionCriteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationAction"
+          }
+        },
+        "postTaskActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "taskId": {
+                "type": "string"
+              },
+              "evidenceDirectory": {
+                "type": "string"
+              }
+            },
+            "required": ["taskId", "evidenceDirectory"]
+          },
+          "then": {
+            "properties": {
+              "evidenceDirectory": {
+                "pattern": ".*T\\d+.*"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Prerequisite": {
+      "type": "object",
+      "required": ["name", "description", "actions"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        }
+      }
+    },
+    "Step": {
+      "type": "object",
+      "required": ["stepId", "description", "actions"],
+      "properties": {
+        "stepId": {
+          "type": "string",
+          "pattern": "^T\\d+\\.\\d+$",
+          "description": "Unique step identifier in format TXXX.Y"
+        },
+        "description": {
+          "type": "string"
+        },
+        "evidenceDirectory": {
+          "type": "string"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        },
+        "successCriteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationAction"
+          }
+        }
+      }
+    },
+    "Action": {
+      "type": "object",
+      "required": ["type", "parameters"],
+      "properties": {
+        "actionId": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "TERMINAL_COMMAND",
+            "MCP_COMMAND",
+            "FILE_OPERATION",
+            "PROCESS_CONTROL",
+            "VALIDATION"
+          ]
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Parameters specific to the action type"
+        },
+        "resultHandling": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResultHandler"
+          }
+        },
+        "onSuccess": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        },
+        "onFailure": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        }
+      }
+    },
+    "ValidationAction": {
+      "type": "object",
+      "required": ["type", "parameters"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["VALIDATION"]
+        },
+        "parameters": {
+          "type": "object",
+          "required": ["validationType", "target"],
+          "properties": {
+            "validationType": {
+              "type": "string",
+              "enum": [
+                "http_response",
+                "file_exists",
+                "file_contains",
+                "all_steps_completed",
+                "evidence_files_exist"
+              ]
+            },
+            "target": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            "criteria": {
+              "type": "object"
+            },
+            "failureAction": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "ResultHandler": {
+      "type": "object",
+      "required": ["type", "parameters"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["SAVE_TO_FILE", "EXTRACT_DATA", "VALIDATE_CONTENT"]
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Parameters specific to the result handler type"
+        }
+      }
+    }
+  }
+}

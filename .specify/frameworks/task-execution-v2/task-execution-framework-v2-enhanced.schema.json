@@ -1,0 +1,589 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://test/schemas/task-execution-framework-v2.schema.json",
+  "title": "Task Execution Framework v2.0",
+  "description": "Generic, extensible task execution framework for automated testing and deployment workflows. This framework provides self-contained steps with comprehensive action handling, constitutional compliance enforcement, and evidence-based validation. Each task defines its complete execution flow including prerequisites, steps, success/failure handling, and evidence generation without requiring external interpretation.",
+  "type": "object",
+  "required": [
+    "testPlanVersion",
+    "createdDate",
+    "description",
+    "globalConfiguration",
+    "executionEngine",
+    "tasks",
+    "executionRules"
+  ],
+  "properties": {
+    "testPlanVersion": {
+      "type": "string",
+      "description": "Semantic version of the framework schema (e.g., '2.0.0'). Used for compatibility checking and framework evolution. Must follow semantic versioning format.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["2.0.0", "2.1.3"]
+    },
+    "createdDate": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when this task execution plan was created. Used for tracking plan evolution and debugging historical executions."
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of what this task execution plan accomplishes. Should describe the overall purpose, scope, and expected outcomes of the task collection.",
+      "minLength": 10,
+      "maxLength": 500
+    },
+    "globalConfiguration": {
+      "type": "object",
+      "description": "Framework-wide configuration settings that apply to all tasks. These settings establish the execution environment, compliance requirements, and baseline behavior for the entire task execution session.",
+      "required": [
+        "workspaceRoot",
+        "evidenceBaseDirectory",
+        "constitutionalEnforcement",
+        "fraudDetection"
+      ],
+      "properties": {
+        "workspaceRoot": {
+          "type": "string",
+          "description": "Absolute path to the project workspace root directory. All relative paths in tasks will be resolved against this directory. Must be an existing, accessible directory path.",
+          "minLength": 3,
+          "examples": [
+            "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva",
+            "/home/user/projects/myapp"
+          ]
+        },
+        "evidenceBaseDirectory": {
+          "type": "string",
+          "description": "Relative path from workspaceRoot where all task evidence will be stored. The framework will create task-specific subdirectories under this path. Should be version-controlled for audit trails.",
+          "minLength": 1,
+          "examples": [
+            "specs/006-quotes-technical-debt/evidence",
+            "test-evidence",
+            "execution-logs"
+          ]
+        },
+        "constitutionalEnforcement": {
+          "type": "boolean",
+          "description": "Enable constitutional compliance enforcement (Amendment 4 fraud detection). When true, all evidence files are validated for authenticity and fabrication is prevented. Required for production use.",
+          "default": true
+        },
+        "fraudDetection": {
+          "type": "boolean",
+          "description": "Enable fraud detection mechanisms for evidence authenticity. When true, the framework validates that all evidence files contain genuine tool outputs rather than manually created content. Critical for audit compliance.",
+          "default": true
+        }
+      }
+    },
+    "executionEngine": {
+      "type": "object",
+      "description": "Defines the available action types and result handlers that tasks can use. This extensible registry allows new action types to be added without breaking existing tasks. Each action type defines its execution requirements and parameter validation.",
+      "required": ["actionTypes", "resultHandlers"],
+      "properties": {
+        "actionTypes": {
+          "type": "object",
+          "description": "Registry of available action types that can be executed by tasks. Each action type defines its executor, required parameters, and optional parameters for validation and execution.",
+          "patternProperties": {
+            "^[A-Z_]+$": {
+              "$ref": "#/definitions/ActionTypeDefinition"
+            }
+          },
+          "additionalProperties": false
+        },
+        "resultHandlers": {
+          "type": "object",
+          "description": "Registry of available result handling strategies. Result handlers process action outputs to save evidence, extract data, or validate results. New handlers can be added to extend framework capabilities.",
+          "patternProperties": {
+            "^[A-Z_]+$": {
+              "$ref": "#/definitions/ResultHandlerDefinition"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "tasks": {
+      "type": "object",
+      "description": "Collection of tasks to be executed by the framework. Each task represents a complete, self-contained unit of work with its own prerequisites, steps, and evidence generation. Tasks execute independently and can be run in parallel.",
+      "patternProperties": {
+        "^T\\d+$": {
+          "$ref": "#/definitions/Task"
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+    "executionRules": {
+      "type": "object",
+      "description": "Framework-wide execution rules that govern how tasks are processed, variables are substituted, errors are handled, and evidence is managed. These rules ensure consistent behavior across all tasks.",
+      "required": [
+        "variableSubstitution",
+        "errorHandling",
+        "evidenceManagement",
+        "constitutionalCompliance"
+      ],
+      "properties": {
+        "variableSubstitution": {
+          "type": "object",
+          "description": "Configuration for template variable substitution throughout task definitions. Variables allow dynamic resolution of paths, timestamps, and other runtime values.",
+          "required": ["enabled", "variables"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable variable substitution in task parameters. When true, template variables like {workspaceRoot} are resolved at execution time.",
+              "default": true
+            },
+            "variables": {
+              "type": "object",
+              "description": "Dictionary of available template variables and their resolution patterns. Variables can reference other variables and system values.",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "examples": [
+                {
+                  "workspaceRoot": "{globalConfiguration.workspaceRoot}",
+                  "timestamp": "{system.currentTimestamp}",
+                  "taskId": "{task.taskId}"
+                }
+              ]
+            }
+          }
+        },
+        "errorHandling": {
+          "type": "object",
+          "description": "Framework-wide error handling policies. Defines how different types of failures are handled, retry behavior, and escalation procedures.",
+          "required": [
+            "defaultFailureAction",
+            "criticalFailureAction",
+            "maxRetries",
+            "retryDelay"
+          ],
+          "properties": {
+            "defaultFailureAction": {
+              "type": "string",
+              "description": "Default action when an action fails (non-zero exit code, expected failure). This is for recoverable failures where execution can continue with logging.",
+              "enum": ["CONTINUE_WITH_LOGGING", "ABORT", "RETRY", "SKIP_STEP"],
+              "default": "CONTINUE_WITH_LOGGING"
+            },
+            "criticalFailureAction": {
+              "type": "string",
+              "description": "Action for critical failures (execution errors, system unavailable). These are unrecoverable errors that require immediate attention.",
+              "enum": ["ABORT_WITH_EVIDENCE", "ABORT_IMMEDIATELY", "ESCALATE"],
+              "default": "ABORT_WITH_EVIDENCE"
+            },
+            "maxRetries": {
+              "type": "integer",
+              "description": "Maximum number of retry attempts for failed actions before giving up. Only applies to retryable failures.",
+              "minimum": 0,
+              "maximum": 10,
+              "default": 2
+            },
+            "retryDelay": {
+              "type": "integer",
+              "description": "Delay in seconds between retry attempts. Allows system recovery time between retries.",
+              "minimum": 0,
+              "maximum": 300,
+              "default": 5
+            }
+          }
+        },
+        "evidenceManagement": {
+          "type": "object",
+          "description": "Configuration for evidence collection, validation, and storage. Ensures all task execution generates authentic, traceable evidence for audit and debugging.",
+          "required": [
+            "enforceRawOutputs",
+            "preventFabrication",
+            "validateFileIntegrity",
+            "createDirectoryStructure"
+          ],
+          "properties": {
+            "enforceRawOutputs": {
+              "type": "boolean",
+              "description": "Require all evidence files to contain raw, unmodified tool outputs. When true, processed or analyzed outputs are rejected.",
+              "default": true
+            },
+            "preventFabrication": {
+              "type": "boolean",
+              "description": "Enable fraud detection to prevent manually created evidence files. When true, evidence must be generated by actual tool execution.",
+              "default": true
+            },
+            "validateFileIntegrity": {
+              "type": "boolean",
+              "description": "Validate evidence file integrity and authenticity after creation. Checks for tampering or corruption.",
+              "default": true
+            },
+            "createDirectoryStructure": {
+              "type": "boolean",
+              "description": "Automatically create required evidence directory structure before task execution. Ensures evidence storage locations exist.",
+              "default": true
+            }
+          }
+        },
+        "constitutionalCompliance": {
+          "type": "object",
+          "description": "Constitutional Amendment 4 compliance enforcement settings. Ensures all evidence collection follows constitutional principles and prevents evidence fabrication.",
+          "required": [
+            "enforceAmendment4",
+            "validateAuthenticity",
+            "preventFraud",
+            "requireRealEvidence"
+          ],
+          "properties": {
+            "enforceAmendment4": {
+              "type": "boolean",
+              "description": "Enforce Constitutional Amendment 4 fraud detection protocols. When true, all evidence is validated for authenticity.",
+              "default": true
+            },
+            "validateAuthenticity": {
+              "type": "boolean",
+              "description": "Validate that all evidence files contain authentic tool outputs rather than fabricated content.",
+              "default": true
+            },
+            "preventFraud": {
+              "type": "boolean",
+              "description": "Actively prevent evidence fraud through detection mechanisms and validation checks.",
+              "default": true
+            },
+            "requireRealEvidence": {
+              "type": "boolean",
+              "description": "Require all evidence to be generated by actual tool execution, not manually created or simulated.",
+              "default": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ActionTypeDefinition": {
+      "type": "object",
+      "description": "Defines an available action type with its execution requirements. Action types are extensible - new types can be added by extending this registry.",
+      "required": ["executor", "requiredParams"],
+      "properties": {
+        "executor": {
+          "type": "string",
+          "description": "Internal executor name that handles this action type. Maps to framework implementation modules.",
+          "enum": [
+            "run_in_terminal",
+            "mcp_tool_call",
+            "file_system",
+            "process_manager",
+            "validator"
+          ]
+        },
+        "requiredParams": {
+          "type": "array",
+          "description": "List of parameter names that must be provided when using this action type. Framework validates these parameters exist before execution.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "optionalParams": {
+          "type": "array",
+          "description": "List of optional parameter names that can be provided for this action type. Used for parameter validation and documentation.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResultHandlerDefinition": {
+      "type": "object",
+      "description": "Defines a result handling strategy for processing action outputs. Result handlers are extensible and can be added to support new output processing needs.",
+      "required": ["action", "requiredParams"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "Internal action name for this result handler. Maps to framework processing modules.",
+          "enum": ["save_result", "extract_from_result", "validate_result"]
+        },
+        "requiredParams": {
+          "type": "array",
+          "description": "List of parameter names required when using this result handler.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "optionalParams": {
+          "type": "array",
+          "description": "List of optional parameter names for this result handler.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "description": "A complete, self-contained unit of work with prerequisites, execution steps, and validation criteria. Tasks represent high-level objectives like 'test API endpoint' or 'deploy application'.",
+      "required": [
+        "taskId",
+        "description",
+        "evidenceDirectory",
+        "steps",
+        "completionCriteria"
+      ],
+      "properties": {
+        "taskId": {
+          "type": "string",
+          "pattern": "^T\\d+$",
+          "description": "Unique identifier for this task in format TXXX (e.g., T001, T042). Used for evidence organization and task tracking."
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what this task accomplishes. Should be specific enough to understand the task purpose and expected outcomes.",
+          "minLength": 10,
+          "maxLength": 200
+        },
+        "evidenceDirectory": {
+          "type": "string",
+          "description": "Relative path from evidenceBaseDirectory where this task's evidence will be stored. Must contain the taskId for organization and validation."
+        },
+        "prerequisites": {
+          "type": "array",
+          "description": "List of prerequisites that must be satisfied before executing task steps. Prerequisites have their own actions and can auto-remediate failures (e.g., start servers, install dependencies).",
+          "items": {
+            "$ref": "#/definitions/Prerequisite"
+          }
+        },
+        "steps": {
+          "type": "array",
+          "description": "Ordered list of execution steps for this task. Steps execute sequentially and each contains multiple actions. Steps represent logical phases like 'setup', 'execute tests', 'collect evidence'.",
+          "items": {
+            "$ref": "#/definitions/Step"
+          },
+          "minItems": 1
+        },
+        "completionCriteria": {
+          "type": "array",
+          "description": "Validation actions that determine if the task completed successfully. All completion criteria must pass for task success.",
+          "items": {
+            "$ref": "#/definitions/ValidationAction"
+          },
+          "minItems": 1
+        },
+        "postTaskActions": {
+          "type": "array",
+          "description": "Optional actions to execute after task completion (success or failure). Used for cleanup, summary generation, or notification.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "taskId": {
+                "type": "string"
+              },
+              "evidenceDirectory": {
+                "type": "string"
+              }
+            },
+            "required": ["taskId", "evidenceDirectory"]
+          },
+          "then": {
+            "properties": {
+              "evidenceDirectory": {
+                "pattern": ".*T\\d+.*",
+                "description": "Evidence directory must contain the task ID for proper organization"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Prerequisite": {
+      "type": "object",
+      "description": "A prerequisite condition that must be satisfied before task execution. Prerequisites can check system state and automatically remediate issues (e.g., start missing servers).",
+      "required": ["name", "description", "actions"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique name for this prerequisite within the task. Used for logging and debugging prerequisite failures.",
+          "minLength": 3,
+          "maxLength": 50
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what this prerequisite ensures. Should explain what condition is being checked and why it's required.",
+          "minLength": 10,
+          "maxLength": 200
+        },
+        "actions": {
+          "type": "array",
+          "description": "Actions to execute for this prerequisite. Typically includes a check action with onFailure remediation actions (e.g., check server running, start if not).",
+          "items": {
+            "$ref": "#/definitions/Action"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "Step": {
+      "type": "object",
+      "description": "A logical execution phase within a task containing related actions. Steps execute sequentially and represent coherent units of work like 'run tests' or 'collect evidence'.",
+      "required": ["stepId", "description", "actions"],
+      "properties": {
+        "stepId": {
+          "type": "string",
+          "pattern": "^T\\d+\\.\\d+$",
+          "description": "Unique identifier for this step in format TXXX.Y (e.g., T001.1, T042.3). Must match parent task ID prefix."
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what this step accomplishes. Should be specific enough to understand the step's role in the overall task.",
+          "minLength": 10,
+          "maxLength": 200
+        },
+        "evidenceDirectory": {
+          "type": "string",
+          "description": "Optional relative path for step-specific evidence storage. If not provided, evidence is stored in task evidenceDirectory. Allows step-level evidence organization."
+        },
+        "actions": {
+          "type": "array",
+          "description": "List of actions to execute for this step. Actions execute sequentially and each can have its own success/failure/error handling.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          },
+          "minItems": 1
+        },
+        "successCriteria": {
+          "type": "array",
+          "description": "Optional validation actions that determine if this step completed successfully. If not provided, step success is determined by action success.",
+          "items": {
+            "$ref": "#/definitions/ValidationAction"
+          }
+        }
+      }
+    },
+    "Action": {
+      "type": "object",
+      "description": "A single, atomic unit of execution within a step. Actions are self-contained and define their complete behavior including parameters, result handling, and success/failure/error responses.",
+      "required": ["type", "parameters", "onSuccess", "onFailure", "onError"],
+      "properties": {
+        "actionId": {
+          "type": "string",
+          "description": "Optional unique identifier for this action within its step. Used for debugging, logging, and referencing in success/failure chains. Should be descriptive of the action purpose.",
+          "minLength": 3,
+          "maxLength": 50,
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of action to execute. Must match an action type defined in the executionEngine.actionTypes registry.",
+          "enum": [
+            "TERMINAL_COMMAND",
+            "MCP_COMMAND",
+            "FILE_OPERATION",
+            "PROCESS_CONTROL",
+            "VALIDATION"
+          ]
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Parameters specific to the action type. Must include all required parameters for the action type and can include optional parameters. Supports variable substitution.",
+          "minProperties": 1
+        },
+        "resultHandling": {
+          "type": "array",
+          "description": "Optional list of result handlers to process the action output. Used for saving evidence, extracting data, or validating results. Handlers execute in order.",
+          "items": {
+            "$ref": "#/definitions/ResultHandler"
+          }
+        },
+        "onSuccess": {
+          "type": "array",
+          "description": "REQUIRED: Actions to execute when this action completes successfully (exit code 0, no exceptions). Can include evidence generation, logging, or follow-up actions.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        },
+        "onFailure": {
+          "type": "array",
+          "description": "REQUIRED: Actions to execute when this action fails (non-zero exit code, expected failure condition). Used for technical debt creation, alternative paths, or failure logging.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        },
+        "onError": {
+          "type": "array",
+          "description": "REQUIRED: Actions to execute when this action encounters an execution error (network timeout, file not found, system unavailable). Used for error logging and recovery attempts.",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        }
+      }
+    },
+    "ValidationAction": {
+      "type": "object",
+      "description": "A specialized action for validating conditions, file existence, content, or system state. Used in completion criteria and success criteria to determine if objectives are met.",
+      "required": ["type", "parameters"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Must be VALIDATION for validation actions.",
+          "enum": ["VALIDATION"]
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Validation-specific parameters defining what to validate and how.",
+          "required": ["validationType", "target"],
+          "properties": {
+            "validationType": {
+              "type": "string",
+              "description": "Type of validation to perform. Each type has specific requirements for target and criteria parameters.",
+              "enum": [
+                "http_response",
+                "file_exists",
+                "file_contains",
+                "all_steps_completed",
+                "evidence_files_exist"
+              ]
+            },
+            "target": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "Single target for validation (file path, URL, step ID, etc.)"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Multiple targets for validation (list of files, step IDs, etc.)"
+                }
+              ]
+            },
+            "criteria": {
+              "type": "object",
+              "description": "Optional validation criteria specific to the validation type. For example, expected status codes, file content patterns, etc."
+            },
+            "failureAction": {
+              "type": "string",
+              "description": "Optional action to take if validation fails. If not specified, uses framework default failure handling."
+            }
+          }
+        }
+      }
+    },
+    "ResultHandler": {
+      "type": "object",
+      "description": "Processes action output to save evidence, extract data, or validate results. Result handlers are essential for evidence generation and data flow between actions.",
+      "required": ["type", "parameters"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of result handling to perform. Must match a handler defined in executionEngine.resultHandlers.",
+          "enum": ["SAVE_TO_FILE", "EXTRACT_DATA", "VALIDATE_CONTENT"]
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Parameters specific to the result handler type. Must include all required parameters for the handler type.",
+          "minProperties": 1
+        }
+      }
+    }
+  }
+}

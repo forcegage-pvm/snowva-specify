@@ -1,0 +1,548 @@
+{
+  "testPlanVersion": "2.1.0",
+  "createdDate": "2025-09-29",
+  "description": "TDD Test Execution with Automatic Technical Debt Creation - Example showing how test failures trigger debt analysis, classification, and routing workflows",
+
+  "globalConfiguration": {
+    "workspaceRoot": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva",
+    "evidenceBaseDirectory": "specs/006-quotes-technical-debt/evidence",
+    "constitutionalEnforcement": true,
+    "fraudDetection": true,
+    "technicalDebtConfiguration": {
+      "enableDebtTracking": true,
+      "debtRoutingStrategy": {
+        "capacityThresholds": {
+          "sprintTasksMaxItems": 6,
+          "sprintTasksMaxCritical": 4
+        },
+        "routingRules": [
+          {
+            "condition": {
+              "type": "capacity_threshold",
+              "parameters": {
+                "checkLocation": "SPRINT_TASKS",
+                "itemCount": ">6",
+                "criticalCount": ">4"
+              }
+            },
+            "destination": "INVENTORY",
+            "priority": 1
+          },
+          {
+            "condition": {
+              "type": "debt_severity",
+              "parameters": {
+                "severity": "CRITICAL"
+              }
+            },
+            "destination": "SPRINT_TASKS",
+            "priority": 2
+          }
+        ]
+      },
+      "debtClassification": {
+        "severityLevels": ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+        "categoryMappings": {
+          ".*contract.*test.*failed.*": "CONTRACT_TEST_FAILURE",
+          ".*unit.*test.*failed.*": "UNIT_TEST_FAILURE",
+          ".*integration.*test.*failed.*": "INTEGRATION_TEST_FAILURE",
+          ".*expect.*received.*": "ASSERTION_FAILURE",
+          ".*timeout.*": "PERFORMANCE_ISSUE"
+        },
+        "priorityRules": [
+          {
+            "pattern": ".*FAIL.*contract.*quotes.*",
+            "priority": "HIGH",
+            "severity": "HIGH",
+            "category": "CONTRACT_TEST_FAILURE"
+          },
+          {
+            "pattern": ".*expect.*received.*",
+            "priority": "MEDIUM",
+            "severity": "MEDIUM",
+            "category": "ASSERTION_FAILURE"
+          }
+        ]
+      },
+      "integrationSettings": {
+        "tddDebtAnalyzer": {
+          "toolPath": ".specify/tools/tdd-debt-analyzer.js",
+          "enableDuplicationPrevention": true,
+          "enableReferenceValidation": true
+        },
+        "constitutionalTools": {
+          "enforceAmendment6": true,
+          "validationToolPath": ".specify/tools/constitutional-checker.js"
+        }
+      }
+    }
+  },
+
+  "executionEngine": {
+    "actionTypes": {
+      "TERMINAL_COMMAND": {
+        "executor": "run_in_terminal",
+        "requiredParams": ["command", "workingDirectory"],
+        "optionalParams": ["isBackground", "timeout"]
+      },
+      "MCP_COMMAND": {
+        "executor": "mcp_tool_call",
+        "requiredParams": ["mcpFunction", "parameters"],
+        "optionalParams": ["timeout"]
+      },
+      "FILE_OPERATION": {
+        "executor": "file_system",
+        "requiredParams": ["operation", "filePath"],
+        "optionalParams": ["content", "mode"]
+      },
+      "VALIDATION": {
+        "executor": "validator",
+        "requiredParams": ["validationType", "target"],
+        "optionalParams": ["criteria", "failureAction"]
+      },
+      "TECHNICAL_DEBT_ANALYSIS": {
+        "executor": "debt_analyzer",
+        "requiredParams": ["testOutput", "testType"],
+        "optionalParams": ["customRules", "contextData"]
+      },
+      "TECHNICAL_DEBT_CREATION": {
+        "executor": "debt_tracker",
+        "requiredParams": ["debtData", "routingStrategy"],
+        "optionalParams": ["customWorkflow", "validationRules"]
+      },
+      "TEST_FAILURE_ANALYSIS": {
+        "executor": "test_analyzer",
+        "requiredParams": ["testOutput", "testFile"],
+        "optionalParams": ["analysisDepth", "extractionRules"]
+      }
+    },
+
+    "resultHandlers": {
+      "SAVE_TO_FILE": {
+        "action": "save_result",
+        "requiredParams": ["outputPath", "content"],
+        "optionalParams": ["format", "append"]
+      },
+      "EXTRACT_DATA": {
+        "action": "extract_from_result",
+        "requiredParams": ["pattern", "outputVariable"],
+        "optionalParams": ["multiMatch", "defaultValue"]
+      },
+      "ANALYZE_TEST_FAILURE": {
+        "action": "analyze_test_failure",
+        "requiredParams": ["testOutput", "analysisType"],
+        "optionalParams": ["customPatterns", "contextData"]
+      },
+      "CREATE_TECHNICAL_DEBT": {
+        "action": "create_technical_debt",
+        "requiredParams": ["debtTemplate", "classificationData"],
+        "optionalParams": ["routingOverride", "customFields"]
+      },
+      "CLASSIFY_DEBT_SEVERITY": {
+        "action": "classify_debt",
+        "requiredParams": ["testFailureData", "classificationRules"],
+        "optionalParams": ["contextWeight", "overrideRules"]
+      },
+      "ROUTE_DEBT_TO_TRACKING": {
+        "action": "route_debt",
+        "requiredParams": ["debtEntry", "routingRules"],
+        "optionalParams": ["capacityCheck", "validationRequired"]
+      }
+    }
+  },
+
+  "tasks": {
+    "T005": {
+      "taskId": "T005",
+      "description": "Execute TDD tests with automatic technical debt creation on failure",
+      "evidenceDirectory": "evidence/T005",
+      "technicalDebtHandling": {
+        "enableDebtCreation": true,
+        "debtCategory": "TDD_TEST_FAILURE",
+        "customDebtWorkflow": [
+          {
+            "type": "TECHNICAL_DEBT_ANALYSIS",
+            "parameters": {
+              "testOutput": "{previousAction.result.fullOutput}",
+              "testType": "CONTRACT_TEST",
+              "contextData": {
+                "taskId": "T005",
+                "testFile": "__tests__/contracts/quotes-get.test.ts"
+              }
+            },
+            "onSuccess": [
+              {
+                "type": "TECHNICAL_DEBT_CREATION",
+                "parameters": {
+                  "debtData": "{debtAnalysis.result}",
+                  "routingStrategy": "CAPACITY_BASED"
+                }
+              }
+            ],
+            "onFailure": [],
+            "onError": []
+          }
+        ]
+      },
+
+      "steps": [
+        {
+          "stepId": "T005.1",
+          "description": "Execute contract tests with comprehensive failure handling",
+          "evidenceDirectory": "{evidenceDirectory}/T005.1",
+          "actions": [
+            {
+              "actionId": "execute_contract_tests",
+              "type": "TERMINAL_COMMAND",
+              "parameters": {
+                "command": "npm test -- __tests__/contracts/quotes-get.test.ts",
+                "workingDirectory": "{workspaceRoot}/packages/web",
+                "timeout": 30
+              },
+              "resultHandling": [
+                {
+                  "type": "SAVE_TO_FILE",
+                  "parameters": {
+                    "outputPath": "{evidenceDirectory}/contract-test-raw-output.log",
+                    "content": "{result.fullOutput}",
+                    "format": "raw_text"
+                  }
+                },
+                {
+                  "type": "ANALYZE_TEST_FAILURE",
+                  "parameters": {
+                    "testOutput": "{result.fullOutput}",
+                    "analysisType": "COMPREHENSIVE",
+                    "customPatterns": [
+                      "Test Suites: (\\d+) failed, (\\d+) total",
+                      "Tests:\\s+(\\d+) failed, (\\d+) passed, (\\d+) total",
+                      "FAIL\\s+(.+?)\\s+●(.+?)(?=\\n)",
+                      "expect\\((.+?)\\)\\.(.+?)\\((.+?)\\)",
+                      "Received:\\s+(.+?)(?=\\n)"
+                    ]
+                  }
+                }
+              ],
+              "onSuccess": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "{evidenceDirectory}/test-execution-success.json",
+                    "content": "{\"stepId\": \"T005.1\", \"status\": \"SUCCESS\", \"timestamp\": \"{timestamp}\", \"testResults\": \"{testAnalysis.result}\"}"
+                  },
+                  "onSuccess": [],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ],
+              "onFailure": [
+                {
+                  "actionId": "analyze_test_failure",
+                  "type": "TEST_FAILURE_ANALYSIS",
+                  "parameters": {
+                    "testOutput": "{result.fullOutput}",
+                    "testFile": "__tests__/contracts/quotes-get.test.ts",
+                    "analysisDepth": "DETAILED",
+                    "extractionRules": {
+                      "failedTests": "FAIL\\s+(.+?)\\s+●(.+?)(?=\\n)",
+                      "assertions": "expect\\((.+?)\\)\\.(.+?)\\((.+?)\\)",
+                      "errorMessages": "Error:\\s+(.+?)(?=\\n)",
+                      "stackTrace": "at\\s+(.+?)\\s+\\((.+?)\\)"
+                    }
+                  },
+                  "resultHandling": [
+                    {
+                      "type": "SAVE_TO_FILE",
+                      "parameters": {
+                        "outputPath": "{evidenceDirectory}/test-failure-analysis.json",
+                        "content": "{result}",
+                        "format": "json"
+                      }
+                    },
+                    {
+                      "type": "CLASSIFY_DEBT_SEVERITY",
+                      "parameters": {
+                        "testFailureData": "{result}",
+                        "classificationRules": "{globalConfiguration.technicalDebtConfiguration.debtClassification}"
+                      }
+                    }
+                  ],
+                  "onSuccess": [
+                    {
+                      "actionId": "create_technical_debt_entry",
+                      "type": "TECHNICAL_DEBT_CREATION",
+                      "parameters": {
+                        "debtTemplate": {
+                          "id": "DEBT_{timestamp}_{taskId}",
+                          "title": "Contract Test Failure: {testFailureAnalysis.testName}",
+                          "description": "Test failure in {testFailureAnalysis.testFile}: {testFailureAnalysis.errorSummary}",
+                          "category": "{debtClassification.category}",
+                          "severity": "{debtClassification.severity}",
+                          "priority": "{debtClassification.priority}",
+                          "source": "TDD_TEST_EXECUTION",
+                          "context": {
+                            "taskId": "T005",
+                            "stepId": "T005.1",
+                            "testFile": "__tests__/contracts/quotes-get.test.ts",
+                            "failureDetails": "{testFailureAnalysis}",
+                            "evidenceFiles": [
+                              "{evidenceDirectory}/contract-test-raw-output.log",
+                              "{evidenceDirectory}/test-failure-analysis.json"
+                            ]
+                          }
+                        },
+                        "routingStrategy": "CAPACITY_BASED"
+                      },
+                      "resultHandling": [
+                        {
+                          "type": "ROUTE_DEBT_TO_TRACKING",
+                          "parameters": {
+                            "debtEntry": "{result}",
+                            "routingRules": "{globalConfiguration.technicalDebtConfiguration.debtRoutingStrategy.routingRules}",
+                            "capacityCheck": true,
+                            "validationRequired": true
+                          }
+                        }
+                      ],
+                      "onSuccess": [
+                        {
+                          "type": "TERMINAL_COMMAND",
+                          "parameters": {
+                            "command": "node .specify/tools/tdd-debt-analyzer.js --validate-debt '{result.debtId}' --check-duplication --enforce-amendment-6",
+                            "workingDirectory": "{workspaceRoot}"
+                          },
+                          "onSuccess": [
+                            {
+                              "type": "FILE_OPERATION",
+                              "parameters": {
+                                "operation": "create",
+                                "filePath": "{evidenceDirectory}/debt-creation-success.json",
+                                "content": "{\"debtId\": \"{debtEntry.id}\", \"routedTo\": \"{routingResult.destination}\", \"validationStatus\": \"PASSED\", \"timestamp\": \"{timestamp}\"}"
+                              },
+                              "onSuccess": [],
+                              "onFailure": [],
+                              "onError": []
+                            }
+                          ],
+                          "onFailure": [
+                            {
+                              "type": "FILE_OPERATION",
+                              "parameters": {
+                                "operation": "create",
+                                "filePath": "{evidenceDirectory}/debt-validation-failure.json",
+                                "content": "{\"error\": \"Constitutional validation failed\", \"debtId\": \"{debtEntry.id}\", \"validationErrors\": \"{result.errors}\", \"timestamp\": \"{timestamp}\"}"
+                              },
+                              "onSuccess": [],
+                              "onFailure": [],
+                              "onError": []
+                            }
+                          ],
+                          "onError": []
+                        }
+                      ],
+                      "onFailure": [
+                        {
+                          "type": "FILE_OPERATION",
+                          "parameters": {
+                            "operation": "create",
+                            "filePath": "{evidenceDirectory}/debt-creation-failure.json",
+                            "content": "{\"error\": \"Failed to create technical debt entry\", \"analysisData\": \"{testFailureAnalysis}\", \"timestamp\": \"{timestamp}\"}"
+                          },
+                          "onSuccess": [],
+                          "onFailure": [],
+                          "onError": []
+                        }
+                      ],
+                      "onError": [
+                        {
+                          "type": "FILE_OPERATION",
+                          "parameters": {
+                            "operation": "create",
+                            "filePath": "{evidenceDirectory}/debt-creation-error.json",
+                            "content": "{\"error\": \"System error during debt creation\", \"errorDetails\": \"{error}\", \"timestamp\": \"{timestamp}\"}"
+                          },
+                          "onSuccess": [],
+                          "onFailure": [],
+                          "onError": []
+                        }
+                      ]
+                    }
+                  ],
+                  "onFailure": [
+                    {
+                      "type": "FILE_OPERATION",
+                      "parameters": {
+                        "operation": "create",
+                        "filePath": "{evidenceDirectory}/test-analysis-failure.json",
+                        "content": "{\"error\": \"Failed to analyze test failure\", \"rawOutput\": \"{previousAction.result.fullOutput}\", \"timestamp\": \"{timestamp}\"}"
+                      },
+                      "onSuccess": [],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ],
+                  "onError": [
+                    {
+                      "type": "FILE_OPERATION",
+                      "parameters": {
+                        "operation": "create",
+                        "filePath": "{evidenceDirectory}/system-error.json",
+                        "content": "{\"error\": \"System error during test analysis\", \"errorDetails\": \"{error}\", \"timestamp\": \"{timestamp}\"}"
+                      },
+                      "onSuccess": [],
+                      "onFailure": [],
+                      "onError": []
+                    }
+                  ]
+                }
+              ],
+              "onError": [
+                {
+                  "type": "FILE_OPERATION",
+                  "parameters": {
+                    "operation": "create",
+                    "filePath": "{evidenceDirectory}/execution-error.json",
+                    "content": "{\"error\": \"Test execution system error\", \"errorDetails\": \"{error}\", \"timestamp\": \"{timestamp}\"}"
+                  },
+                  "onSuccess": [],
+                  "onFailure": [],
+                  "onError": []
+                }
+              ]
+            }
+          ],
+          "debtHandlingOnFailure": [
+            {
+              "type": "VALIDATION",
+              "parameters": {
+                "validationType": "debt_tracking_compliance",
+                "target": "{evidenceDirectory}/debt-creation-success.json",
+                "criteria": {
+                  "amendmentCompliance": "AMENDMENT_6",
+                  "validationRequired": true
+                }
+              },
+              "onSuccess": [],
+              "onFailure": [],
+              "onError": []
+            }
+          ]
+        }
+      ],
+
+      "completionCriteria": [
+        {
+          "type": "VALIDATION",
+          "parameters": {
+            "validationType": "evidence_files_exist",
+            "target": [
+              "{evidenceDirectory}/T005.1/contract-test-raw-output.log",
+              "{evidenceDirectory}/T005.1/test-execution-success.json"
+            ],
+            "failureAction": "CHECK_DEBT_CREATION"
+          }
+        },
+        {
+          "type": "VALIDATION",
+          "parameters": {
+            "validationType": "debt_tracking_compliance",
+            "target": "{evidenceDirectory}",
+            "criteria": {
+              "checkForDebtFiles": true,
+              "validateConstitutionalCompliance": true,
+              "enforceAmendment6": true
+            }
+          }
+        }
+      ]
+    }
+  },
+
+  "executionRules": {
+    "evidenceManagement": {
+      "requireEvidence": true,
+      "preventFabrication": true,
+      "validateFileIntegrity": true,
+      "createDirectoryStructure": true
+    },
+    "constitutionalCompliance": {
+      "enforceAmendment4": true,
+      "enforceAmendment6": true,
+      "validateAuthenticity": true,
+      "preventFraud": true,
+      "requireRealEvidence": true
+    },
+    "technicalDebtWorkflows": {
+      "enableAutomaticDebtCreation": true,
+      "debtAnalysisWorkflow": {
+        "analysisActions": [
+          {
+            "type": "TEST_FAILURE_ANALYSIS",
+            "parameters": {
+              "testOutput": "{input.testOutput}",
+              "testFile": "{input.testFile}",
+              "analysisDepth": "COMPREHENSIVE"
+            },
+            "onSuccess": [],
+            "onFailure": [],
+            "onError": []
+          }
+        ],
+        "classificationRules": [
+          {
+            "trigger": {
+              "type": "test_output_pattern",
+              "pattern": ".*FAIL.*contract.*quotes.*"
+            },
+            "classification": {
+              "category": "CONTRACT_TEST_FAILURE",
+              "severity": "HIGH",
+              "priority": "HIGH",
+              "tags": ["TDD", "CONTRACT", "API"]
+            },
+            "actions": [
+              {
+                "type": "TECHNICAL_DEBT_CREATION",
+                "parameters": {
+                  "debtTemplate": "{standardDebtTemplate}",
+                  "routingStrategy": "HIGH_PRIORITY"
+                },
+                "onSuccess": [],
+                "onFailure": [],
+                "onError": []
+              }
+            ]
+          }
+        ]
+      },
+      "debtTrackingWorkflow": {
+        "trackingActions": [
+          {
+            "type": "FILE_OPERATION",
+            "parameters": {
+              "operation": "create",
+              "filePath": "{routingDestination}/{debtId}.md",
+              "content": "{debtEntry.formatted}"
+            },
+            "onSuccess": [],
+            "onFailure": [],
+            "onError": []
+          }
+        ],
+        "routingActions": [
+          {
+            "type": "TERMINAL_COMMAND",
+            "parameters": {
+              "command": "node .specify/tools/tdd-debt-analyzer.js --route-debt '{debtId}' --capacity-check --amendment-6-compliance",
+              "workingDirectory": "{workspaceRoot}"
+            },
+            "onSuccess": [],
+            "onFailure": [],
+            "onError": []
+          }
+        ]
+      }
+    }
+  }
+}
