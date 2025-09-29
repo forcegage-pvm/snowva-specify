@@ -34,8 +34,14 @@
 - T005-T010: All contract tests can run simultaneously
 - T011-T014: Integration tests (after contract tests complete)
 
-**⚠️ BLOCKED UNTIL TEST COMPLETION**:
-- T015-T030: Core implementation and features (MUST wait for failing tests)
+**🔧 TDD-DRIVEN API FIXES** (Auto-Generated from Test Failures):
+- T014.1-T014.3: CRITICAL API fixes identified by T005 contract tests (🚨 BLOCKING DEVELOPMENT)
+- T014.4: HIGH priority API validation fix identified by T005 contract tests  
+- T014.5-T014.6: MEDIUM priority API consistency fixes identified by T005 contract tests
+- T014.7-T014.8: PENDING - Auto-generated after T006/T007 contract test execution
+
+**⚠️ BLOCKED UNTIL API FIXES COMPLETE**:
+- T015-T030: Core implementation and features (MUST wait for API layer stability)
 
 **🏗️ CURRENT PHASE**: Phase 2 - Test-First Development (TDD)
 **📊 CONSTITUTIONAL STATUS**: ✅ COMPLIANT - MCP Two-File Validation System Active
@@ -73,11 +79,13 @@
   - Completion: node .specify/tools/post-task-validation.js T004
   - **COMPLETED**: September 29, 2025 - Contract tests passing (15/15), MCP validation complete, constitutional compliance approved
 
-- [ ] T005 [P] Contract test POST /api/quotes in packages/web/tests/contract/quotes-post.test.ts
-  - Evidence: evidence/T005/ with failing test results, contract validation
+- [x] T005 [P] Contract test POST /api/quotes in packages/web/tests/contract/quotes-post.test.ts
+  - Evidence: evidence/T005/ with failing test results, contract validation, **technical-debt.json**
   - MCP: Browser test quote creation API with request/response validation
   - Validation: node .specify/tools/pre-task-check.js T005
   - Completion: node .specify/tools/post-task-validation.js T005
+  - ✅ **COMPLETED**: September 29, 2025 - Constitutional compliance achieved with MANDATE 10 validation, proper POST testing completed, contract tests identifying real business logic gaps (discount calculation, unique ID generation)
+  - 📊 **Technical Debt**: 6 items identified (3 CRITICAL, 1 HIGH, 2 MEDIUM) → Generated T014.1-T014.6 implementation tasks
 
 - [ ] T006 [P] Contract test PUT /api/quotes/{id} in packages/web/tests/contract/quotes-put.test.ts
   - Evidence: evidence/T006/ with failing test results, update validation tests
@@ -133,7 +141,77 @@
   - Validation: node .specify/tools/pre-task-check.js T014
   - Completion: node .specify/tools/post-task-validation.js T014
 
-## Phase 3: Core Implementation (ONLY after tests are failing)
+## Phase 2.5: TDD-Identified Technical Debt Resolution
+
+**CONSTITUTIONAL REQUIREMENT**: These tasks address business logic gaps identified by failing contract tests. They MUST be completed before Phase 3 UI implementation to ensure functional dependencies are satisfied.
+
+- [ ] T014.1 [CRITICAL] Fix POST /api/quotes line item calculation logic in packages/web/src/app/api/v1/quotes/route.ts  
+  - **TDD Source**: T005 contract test failures - "Expected: 135, Received: 150" for multi-item calculations
+  - **Business Impact**: Incorrect quote totals, business calculation errors  
+  - **Auto-Generated**: September 29, 2025 by tdd-debt-analyzer.js
+  - Evidence: evidence/T014.1/ with line item calculation implementation, business logic validation
+  - MCP: **REQUIRED** - Browser test quote creation with multiple items via API
+  - Validation: node .specify/tools/pre-task-check.js T014.1
+  - Completion: node .specify/tools/post-task-validation.js T014.1
+
+- [ ] T014.2 [CRITICAL] Fix POST /api/quotes discount calculation logic in packages/web/src/app/api/v1/quotes/route.ts
+  - **TDD Source**: T005 contract test failures - "Expected: 850, Received: 1000" for discount calculations
+  - **Business Impact**: Quote totals incorrect, pricing integrity compromised
+  - **Auto-Generated**: September 29, 2025 by tdd-debt-analyzer.js
+  - Evidence: evidence/T014.2/ with discount calculation implementation, business logic validation
+  - MCP: **REQUIRED** - Browser test quote creation with discount calculations via API
+  - Validation: node .specify/tools/pre-task-check.js T014.2
+  - Completion: node .specify/tools/post-task-validation.js T014.2
+
+- [ ] T014.3 [CRITICAL] Fix POST /api/quotes unique ID generation in packages/web/src/app/api/v1/quotes/route.ts
+  - **TDD Source**: T005 contract test failures - duplicate IDs in concurrent requests "quote-1759139791801"
+  - **Business Impact**: Potential duplicate quote IDs in high-traffic scenarios
+  - **Auto-Generated**: September 29, 2025 by tdd-debt-analyzer.js
+  - Evidence: evidence/T014.3/ with UUID implementation, concurrency testing
+  - MCP: **REQUIRED** - Browser test rapid quote creation to validate unique IDs
+  - Validation: node .specify/tools/pre-task-check.js T014.3
+  - Completion: node .specify/tools/post-task-validation.js T014.3
+
+- [ ] T014.4 [HIGH] Fix POST /api/quotes discount validation in packages/web/src/app/api/v1/quotes/route.ts
+  - **TDD Source**: T005 contract test failures - "Expected: 400, Received: 201" for invalid discount values
+  - **Business Impact**: Invalid discount values accepted, data integrity risks
+  - **Auto-Generated**: September 29, 2025 by tdd-debt-analyzer.js
+  - Evidence: evidence/T014.4/ with discount validation implementation, error handling validation
+  - MCP: **REQUIRED** - Browser test invalid discount scenarios via API
+  - Validation: node .specify/tools/pre-task-check.js T014.4
+  - Completion: node .specify/tools/post-task-validation.js T014.4
+
+- [ ] T014.5 [MEDIUM] Fix POST /api/quotes response structure consistency in packages/web/src/app/api/v1/quotes/route.ts
+  - **TDD Source**: T005 contract test failures - toMatchObject expected vs received format differences
+  - **Business Impact**: Response format inconsistency, type matching issues
+  - **Auto-Generated**: September 29, 2025 by tdd-debt-analyzer.js
+  - Evidence: evidence/T014.5/ with response structure fixes, type validation
+  - MCP: **REQUIRED** - Browser test API response structure validation
+  - Validation: node .specify/tools/pre-task-check.js T014.5
+  - Completion: node .specify/tools/post-task-validation.js T014.5
+
+- [ ] T014.6 [MEDIUM] Fix POST /api/quotes date comparison logic in packages/web/src/app/api/v1/quotes/route.ts
+  - **TDD Source**: T005 contract test failures - "toBe vs toStrictEqual" for expiry date comparisons
+  - **Business Impact**: Date comparison test failures, minor API inconsistency  
+  - **Auto-Generated**: September 29, 2025 by tdd-debt-analyzer.js
+  - Evidence: evidence/T014.6/ with date comparison fixes, test alignment
+  - MCP: **REQUIRED** - Browser test date field consistency via API
+  - Validation: node .specify/tools/pre-task-check.js T014.6
+  - Completion: node .specify/tools/post-task-validation.js T014.6
+
+- [ ] T014.7 [PENDING] Fix PUT /api/quotes/{id} business logic gaps (TDD-driven)
+  - **TDD Source**: T006 contract test results (pending execution)
+  - **Status**: Task will be auto-generated based on T006 failing test analysis
+  - Evidence: Auto-generated after T006 contract test completion
+  - Dependencies: T006 contract test must run first
+
+- [ ] T014.8 [PENDING] Fix POST /api/quotes/{id}/duplicate business logic gaps (TDD-driven)
+  - **TDD Source**: T007 contract test results (pending execution)
+  - **Status**: Task will be auto-generated based on T007 failing test analysis
+  - Evidence: Auto-generated after T007 contract test completion
+  - Dependencies: T007 contract test must run first
+
+## Phase 3: Core Implementation (ONLY after tests are failing AND API fixes complete)
 
 - [ ] T015 Fix QuoteActionMenu console.log placeholders in packages/web/src/components/quotes/QuoteActionMenu.tsx
   - Evidence: evidence/T015/ with before/after code comparison, functional validation

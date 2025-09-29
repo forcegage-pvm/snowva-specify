@@ -36,6 +36,7 @@ class PreTaskChecker {
     await this.checkGitStatus();
     await this.checkTaskExists();
     await this.checkTaskNotAlreadyComplete();
+    await this.checkTDDDebtBlocking(); // Constitutional Amendment 6
     await this.checkDependencies();
     await this.checkMCPBrowserReady();
     await this.checkConstitutionalTools();
@@ -184,6 +185,61 @@ class PreTaskChecker {
       );
     } else {
       console.log("✓ Constitutional tools available");
+    }
+  }
+
+  async checkTDDDebtBlocking() {
+    // Constitutional Amendment 6: Check for blocking CRITICAL TDD debt
+    const debtInventoryPath = path.join(
+      this.repoRoot,
+      ".specify",
+      "memory",
+      "tdd-debt-inventory.json"
+    );
+
+    if (!fs.existsSync(debtInventoryPath)) {
+      console.log("✓ No TDD debt inventory found - proceeding");
+      return;
+    }
+
+    try {
+      const debtData = JSON.parse(fs.readFileSync(debtInventoryPath, "utf8"));
+      const criticalDebt = debtData.debt?.critical || [];
+
+      if (criticalDebt.length === 0) {
+        console.log("✓ No CRITICAL TDD debt blocking development");
+        return;
+      }
+
+      // Check if current task is a TDD debt resolution task
+      const isTDDDebtTask =
+        this.taskId.match(/^T014\.[1-9]/) ||
+        this.taskId.includes("Fix") ||
+        this.taskId.includes("debt");
+
+      if (isTDDDebtTask) {
+        console.log(
+          `✓ Task ${this.taskId} is TDD debt resolution - allowed to proceed`
+        );
+        return;
+      }
+
+      // Block non-debt tasks when CRITICAL debt exists
+      this.errors.push(
+        `CONSTITUTIONAL AMENDMENT 6 VIOLATION: ${criticalDebt.length} CRITICAL TDD debt items must be resolved before proceeding with non-debt tasks`
+      );
+
+      console.log(`❌ CRITICAL TDD DEBT BLOCKING DEVELOPMENT:`);
+      criticalDebt.forEach((debt, index) => {
+        console.log(
+          `   ${index + 1}. ${debt.description} (Source: ${debt.sourceTest})`
+        );
+      });
+      console.log(
+        `\n🔧 Resolve these debt items first: T014.1, T014.2, T014.3`
+      );
+    } catch (error) {
+      this.warnings.push(`Could not read TDD debt inventory: ${error.message}`);
     }
   }
 

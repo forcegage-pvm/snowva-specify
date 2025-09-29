@@ -1,0 +1,105 @@
+{
+  "auditId": "audit_1759141758387",
+  "timestamp": "2025-09-29T10:29:18.387Z",
+  "tasksAudited": 5,
+  "taskResults": {
+    "T001": {
+      "taskId": "T001",
+      "timestamp": "2025-09-29T10:29:17.972Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": true,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed"
+      ],
+      "warnings": [
+        "MCP N/A: N/A (schema definition)"
+      ]
+    },
+    "T002": {
+      "taskId": "T002",
+      "timestamp": "2025-09-29T10:29:18.044Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": true,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed"
+      ],
+      "warnings": [
+        "MCP N/A: N/A (service layer)"
+      ]
+    },
+    "T003": {
+      "taskId": "T003",
+      "timestamp": "2025-09-29T10:29:18.100Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": true,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed"
+      ],
+      "warnings": [
+        "MCP N/A: N/A (service layer)"
+      ]
+    },
+    "T004": {
+      "taskId": "T004",
+      "timestamp": "2025-09-29T10:29:18.166Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": true,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed"
+      ],
+      "warnings": []
+    },
+    "T005": {
+      "taskId": "T005",
+      "timestamp": "2025-09-29T10:29:18.230Z",
+      "constitutionalCompliance": false,
+      "mcpEvidence": false,
+      "implementationExists": true,
+      "testCoverage": true,
+      "errors": [
+        "Constitutional compliance failed",
+        "Missing MCP evidence: functional-test-results.json, screenshots"
+      ],
+      "warnings": []
+    }
+  },
+  "overallCompliance": 0,
+  "criticalViolations": 6,
+  "warnings": 0,
+  "recommendations": [
+    {
+      "type": "critical",
+      "issue": "Missing MCP Evidence",
+      "affected": [
+        "T005"
+      ],
+      "action": "Perform MCP browser testing and capture evidence for all affected tasks"
+    },
+    {
+      "type": "critical",
+      "issue": "Constitutional Violations",
+      "affected": [
+        "T001",
+        "T002",
+        "T003",
+        "T004",
+        "T005"
+      ],
+      "action": "Review and fix constitutional compliance issues for all affected tasks"
+    },
+    {
+      "type": "process",
+      "issue": "High Error Rate",
+      "action": "Review and strengthen constitutional enforcement processes"
+    }
+  ],
+  "auditor": "constitutional-audit.js"
+}

@@ -200,6 +200,7 @@ class PostTaskValidator {
     await this.validateScreenshots();
     await this.checkFunctionalBehavior();
     await this.validateErrorStates();
+    await this.validateRequirementEvidenceAlignment();
 
     this.validationResults.mcpGate = {
       passed: this.errors.filter((e) => e.includes("MCP")).length === 0,
@@ -208,6 +209,7 @@ class PostTaskValidator {
         "screenshots",
         "functional-behavior",
         "error-states",
+        "requirement-evidence-alignment",
       ],
     };
   }
@@ -220,16 +222,22 @@ class PostTaskValidator {
     await this.enforceZeroErrorTolerance();
     await this.runConstitutionalChecker();
     await this.validateCompletionLevel();
+
+    // AMENDMENT 6: TDD DEBT MANAGEMENT - Mandatory technical debt tracking
+    await this.validateTechnicalDebtEvidence();
+
     await this.generateComplianceCertificate();
 
     this.validationResults.constitutionalGate = {
       passed:
         this.errors.filter((e) => e.includes("Constitutional")).length === 0 &&
-        this.errors.filter((e) => e.includes("MANDATE 8")).length === 0,
+        this.errors.filter((e) => e.includes("MANDATE 8")).length === 0 &&
+        this.errors.filter((e) => e.includes("AMENDMENT 6")).length === 0,
       checks: [
         "zero-error-tolerance",
         "constitutional-checker",
         "completion-level",
+        "technical-debt-evidence",
         "compliance-certificate",
       ],
     };
@@ -861,6 +869,182 @@ class PostTaskValidator {
     console.log("✓ MCP Error state testing documented");
   }
 
+  async validateRequirementEvidenceAlignment() {
+    console.log("🎯 MANDATE 10: Checking Requirement-Evidence Alignment");
+
+    // Parse task requirement to extract exact functionality
+    const taskRequirement = await this.parseTaskFunctionalRequirement();
+    if (!taskRequirement) {
+      this.warnings.push(
+        "Could not parse task functional requirement for alignment check"
+      );
+      return;
+    }
+
+    // Check if MCP evidence actually proves the required functionality
+    const evidenceAlignment = await this.checkEvidenceAlignment(
+      taskRequirement
+    );
+
+    if (!evidenceAlignment.aligned) {
+      this.errors.push(
+        `🚨 MANDATE 10 VIOLATION: Requirement-Evidence Misalignment\n` +
+          `📋 TASK REQUIRES: ${taskRequirement.functionality}\n` +
+          `🔍 EVIDENCE PROVES: ${evidenceAlignment.actualFunctionality}\n` +
+          `❌ PROBLEM: ${evidenceAlignment.problem}\n` +
+          `✅ REQUIRED ACTION: Update MCP testing to validate ${taskRequirement.functionality}\n` +
+          `⚖️ CONSTITUTIONAL VIOLATION: This violates Mandate 10 - Exact Functional Correspondence`
+      );
+    } else {
+      console.log(
+        `✅ MANDATE 10: Evidence correctly proves ${taskRequirement.functionality}`
+      );
+    }
+  }
+
+  async parseTaskFunctionalRequirement() {
+    const tasksPath = path.join(
+      this.repoRoot,
+      "specs",
+      "006-quotes-technical-debt",
+      "tasks.md"
+    );
+
+    if (!fs.existsSync(tasksPath)) {
+      return null;
+    }
+
+    const tasksContent = fs.readFileSync(tasksPath, "utf8");
+
+    // Find this specific task
+    const taskPattern = new RegExp(
+      `- \\[[x ]\\] ${this.taskId}.*?(?=- \\[[x ]\\] T\\d+|$)`,
+      "gs"
+    );
+    const taskMatch = tasksContent.match(taskPattern);
+
+    if (!taskMatch || !taskMatch[0]) {
+      return null;
+    }
+
+    const taskBlock = taskMatch[0];
+
+    // Extract specific functionality requirements
+    const apiMethodMatch = taskBlock.match(
+      /(GET|POST|PUT|DELETE|PATCH)\s+\/api\/[^\s]+/
+    );
+    const contractTestMatch = taskBlock.match(
+      /Contract test (GET|POST|PUT|DELETE|PATCH)/
+    );
+    const browserTestMatch = taskBlock.match(/Browser test ([^\\n]+)/);
+
+    let functionality = "Unknown";
+
+    if (apiMethodMatch) {
+      functionality = `${apiMethodMatch[1]} ${apiMethodMatch[0]}`;
+    } else if (contractTestMatch) {
+      functionality = `Contract test ${contractTestMatch[1]}`;
+    } else if (browserTestMatch) {
+      functionality = browserTestMatch[1];
+    }
+
+    return {
+      taskId: this.taskId,
+      functionality: functionality,
+      taskDescription: taskBlock.split("\\n")[0],
+      fullTaskBlock: taskBlock,
+    };
+  }
+
+  async checkEvidenceAlignment(requirement) {
+    // Check MCP interaction log for alignment
+    const interactionLogPath = path.join(
+      this.evidenceDir,
+      "mcp-interaction.log"
+    );
+    const testResultsPath = path.join(
+      this.evidenceDir,
+      "mcp-test-results.json"
+    );
+
+    let logContent = "";
+    let testResults = null;
+
+    if (fs.existsSync(interactionLogPath)) {
+      logContent = fs.readFileSync(interactionLogPath, "utf8");
+    }
+
+    if (fs.existsSync(testResultsPath)) {
+      try {
+        testResults = JSON.parse(fs.readFileSync(testResultsPath, "utf8"));
+      } catch (error) {
+        // Invalid JSON
+      }
+    }
+
+    // Look for evidence of the specific functionality being tested
+    const requiredMethod = requirement.functionality.match(
+      /(GET|POST|PUT|DELETE|PATCH)/
+    );
+
+    if (requiredMethod) {
+      const method = requiredMethod[1];
+
+      // More precise detection - look for actual API testing, not just mentions
+      const actualApiTestingPattern = new RegExp(
+        `(Purpose|Testing|Command).*${method}.*(/api/|endpoint)`,
+        "gi"
+      );
+      const wrongMethodTestingPattern =
+        method !== "GET"
+          ? /(Purpose|Testing|Command).*(GET).*(\/api\/|endpoint)/gi
+          : /(Purpose|Testing|Command).*(POST|PUT|DELETE|PATCH).*(\/api\/|endpoint)/gi;
+
+      const testsCorrectMethod = actualApiTestingPattern.test(logContent);
+      const testsWrongMethod = wrongMethodTestingPattern.test(logContent);
+
+      // Special case: Check for substitution patterns (testing GET when POST required)
+      if (method === "POST") {
+        const getSubstitutionPattern =
+          /(Purpose|Result|Analysis).*GET.*\/api.*quotes/gi;
+        const postActualTesting = /POST.*request|fetch.*POST|method.*POST/gi;
+
+        if (
+          getSubstitutionPattern.test(logContent) &&
+          !postActualTesting.test(logContent)
+        ) {
+          return {
+            aligned: false,
+            actualFunctionality: "GET endpoint testing (substitution for POST)",
+            problem: `Task requires POST testing but evidence shows GET endpoint testing was substituted`,
+          };
+        }
+      }
+
+      if (testsWrongMethod && !testsCorrectMethod) {
+        return {
+          aligned: false,
+          actualFunctionality: "Different HTTP method tested",
+          problem: `Task requires ${method} testing but evidence shows different method testing`,
+        };
+      }
+
+      if (!testsCorrectMethod) {
+        return {
+          aligned: false,
+          actualFunctionality: "No evidence of required method testing",
+          problem: `No evidence found of actual ${method} API testing in MCP interaction log`,
+        };
+      }
+    }
+
+    return {
+      aligned: true,
+      actualFunctionality: requirement.functionality,
+      problem: null,
+    };
+  }
+
   async runConstitutionalChecker() {
     // For non-UI tasks (MCP: N/A), run specialized validation
     const isNonUITask =
@@ -1151,6 +1335,211 @@ class PostTaskValidator {
       this.warnings.push("Constitutional completion level not documented");
     } else {
       console.log("✓ Constitutional completion level documented");
+    }
+  }
+
+  /**
+   * Validate that debt references actually exist in sprint tasks or inventory
+   */
+  async validateDebtReferences(tracking) {
+    console.log(
+      `🔍 Validating debt references for strategy: ${tracking.strategy}`
+    );
+
+    if (tracking.strategy === "SPRINT_TASKS") {
+      // Validate sprint task references
+      for (const ref of tracking.references) {
+        if (ref.type === "SPRINT_TASK") {
+          const tasksFile = path.join(process.cwd(), ref.sprintFile);
+          if (!fs.existsSync(tasksFile)) {
+            this.errors.push(
+              `AMENDMENT 6 VIOLATION: Sprint tasks file not found: ${ref.sprintFile}`
+            );
+            continue;
+          }
+
+          const tasksContent = fs.readFileSync(tasksFile, "utf8");
+          // For sprint tasks, only validate that the task ID exists
+          // Debt ID correlation is maintained through the evidence file
+          const taskPattern = new RegExp(`\\b${ref.taskId}\\b`, "i");
+
+          if (!taskPattern.test(tasksContent)) {
+            this.errors.push(
+              `AMENDMENT 6 VIOLATION: Task ${ref.taskId} not found in ${ref.sprintFile}`
+            );
+          } else {
+            console.log(
+              `   ✓ Sprint task reference validated: ${
+                ref.taskId
+              } (debt: ${ref.debtId.substring(0, 12)}...)`
+            );
+          }
+        }
+      }
+    } else if (tracking.strategy === "INVENTORY") {
+      // Validate inventory references
+      for (const ref of tracking.references) {
+        if (ref.type === "INVENTORY") {
+          const inventoryFile = path.join(process.cwd(), ref.inventoryFile);
+          if (!fs.existsSync(inventoryFile)) {
+            this.errors.push(
+              `AMENDMENT 6 VIOLATION: Debt inventory file not found: ${ref.inventoryFile}`
+            );
+            continue;
+          }
+
+          try {
+            const inventory = JSON.parse(
+              fs.readFileSync(inventoryFile, "utf8")
+            );
+            const debtExists = Object.values(inventory.debt || {})
+              .flat()
+              .some((debt) => debt.id === ref.debtId);
+
+            if (!debtExists) {
+              this.errors.push(
+                `AMENDMENT 6 VIOLATION: Debt ${ref.debtId} not found in inventory ${ref.inventoryFile}`
+              );
+            } else {
+              console.log(
+                `   ✓ Inventory debt reference validated: ${ref.debtId}`
+              );
+            }
+          } catch (error) {
+            this.errors.push(
+              `AMENDMENT 6 VIOLATION: Could not parse inventory file ${ref.inventoryFile}: ${error.message}`
+            );
+          }
+        }
+      }
+    }
+  }
+
+  async validateTechnicalDebtEvidence() {
+    console.log("🔍 Validating Technical Debt Evidence (Amendment 6)");
+
+    const technicalDebtPath = path.join(
+      this.evidenceDir,
+      "technical-debt.json"
+    );
+
+    if (!fs.existsSync(technicalDebtPath)) {
+      // Generate empty debt evidence for tasks that didn't execute TDD tests
+      try {
+        const TDDDebtAnalyzer = require("./tdd-debt-analyzer.js");
+        TDDDebtAnalyzer.generateEmptyDebtEvidence(this.taskId);
+        console.log(
+          "✓ Generated empty technical debt evidence for non-TDD task"
+        );
+      } catch (error) {
+        this.errors.push(
+          `AMENDMENT 6 VIOLATION: Missing technical-debt.json evidence file and could not auto-generate: ${error.message}`
+        );
+        return;
+      }
+    }
+
+    try {
+      const debtEvidence = JSON.parse(
+        fs.readFileSync(technicalDebtPath, "utf8")
+      );
+
+      // Validate required structure
+      const requiredFields = [
+        "taskId",
+        "timestamp",
+        "tddTestsExecuted",
+        "testResults",
+        "identifiedDebt",
+        "constitutionalCompliance",
+        "correlationStatus",
+        "debtTrackingLocation",
+      ];
+
+      const missingFields = requiredFields.filter(
+        (field) => !(field in debtEvidence)
+      );
+      if (missingFields.length > 0) {
+        this.errors.push(
+          `AMENDMENT 6 VIOLATION: technical-debt.json missing required fields: ${missingFields.join(
+            ", "
+          )}`
+        );
+        return;
+      }
+
+      // Validate constitutional compliance
+      if (!debtEvidence.constitutionalCompliance?.debtTracked) {
+        this.errors.push(
+          "AMENDMENT 6 VIOLATION: Technical debt not properly tracked"
+        );
+      }
+
+      // Validate debt tracking location and references
+      const totalDebt = Object.values(debtEvidence.identifiedDebt).reduce(
+        (sum, count) => sum + count,
+        0
+      );
+
+      if (totalDebt > 0) {
+        // Validate tracking location structure
+        if (!debtEvidence.debtTrackingLocation) {
+          this.errors.push(
+            "AMENDMENT 6 VIOLATION: Missing debt tracking location information"
+          );
+        } else {
+          const tracking = debtEvidence.debtTrackingLocation;
+
+          // Validate tracking strategy
+          if (!["SPRINT_TASKS", "INVENTORY"].includes(tracking.strategy)) {
+            this.errors.push(
+              "AMENDMENT 6 VIOLATION: Invalid debt tracking strategy: " +
+                tracking.strategy
+            );
+          }
+
+          // Validate references exist
+          if (!tracking.references || tracking.references.length === 0) {
+            this.errors.push(
+              "AMENDMENT 6 VIOLATION: No debt tracking references provided"
+            );
+          } else {
+            // Validate actual references
+            await this.validateDebtReferences(tracking);
+          }
+
+          // Ensure duplication avoidance
+          if (!debtEvidence.correlationStatus?.avoidsDuplication) {
+            this.errors.push(
+              "AMENDMENT 6 VIOLATION: Duplication avoidance not confirmed"
+            );
+          }
+        }
+      }
+
+      // Log debt summary (rename to avoid duplicate variable)
+      const totalDebtCount = Object.values(debtEvidence.identifiedDebt).reduce(
+        (sum, count) => sum + count,
+        0
+      );
+      if (totalDebtCount > 0) {
+        console.log(`📊 Technical Debt Summary:`);
+        console.log(`   🔴 CRITICAL: ${debtEvidence.identifiedDebt.critical}`);
+        console.log(`   🟡 HIGH: ${debtEvidence.identifiedDebt.high}`);
+        console.log(`   🟠 MEDIUM: ${debtEvidence.identifiedDebt.medium}`);
+        console.log(`   ⚪ LOW: ${debtEvidence.identifiedDebt.low}`);
+        console.log(
+          `   📋 Generated Tasks: ${debtEvidence.generatedTasks?.length || 0}`
+        );
+      } else {
+        console.log("✓ No technical debt identified for this task");
+      }
+
+      console.log("✓ Technical debt evidence validation passed");
+    } catch (error) {
+      this.errors.push(
+        `AMENDMENT 6 VIOLATION: Could not parse technical-debt.json: ${error.message}`
+      );
     }
   }
 

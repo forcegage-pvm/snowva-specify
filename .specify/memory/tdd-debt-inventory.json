@@ -1,0 +1,185 @@
+{
+  "timestamp": "2025-09-29T10:55:18.773Z",
+  "summary": {
+    "critical": 3,
+    "high": 1,
+    "medium": 2,
+    "low": 0
+  },
+  "debt": {
+    "critical": [
+      {
+        "id": "DEBT-1759143318770-kqc79nk8a",
+        "sourceTest": "Contract Test: POST /api/v1/quotes - T005 Success Cases should correctly calculate totals for multiple items",
+        "testFile": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts",
+        "severity": "CRITICAL",
+        "description": "Fix /api/v1/quotes line item calculation logic",
+        "businessImpact": "Incorrect quote totals, business calculation errors",
+        "estimatedEffort": "M",
+        "dependencies": [
+          "contract-test-complete"
+        ],
+        "createdAt": "2025-09-29T10:55:18.770Z",
+        "sprintId": "006-quotes-technical-debt",
+        "status": "OPEN",
+        "evidence": [
+          "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m135\u001b[39m\nReceived: \u001b[31m150\u001b[39m\n    at Object.toBe (X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts:159:45)"
+        ]
+      },
+      {
+        "id": "DEBT-1759143318770-mwsgyt6s0",
+        "sourceTest": "Contract Test: POST /api/v1/quotes - T005 Success Cases should handle quotes with discounts correctly",
+        "testFile": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts",
+        "severity": "CRITICAL",
+        "description": "Fix /api/v1/quotes discount calculation logic",
+        "businessImpact": "Quote totals incorrect, pricing integrity compromised",
+        "estimatedEffort": "S",
+        "dependencies": [
+          "contract-test-complete"
+        ],
+        "createdAt": "2025-09-29T10:55:18.770Z",
+        "sprintId": "006-quotes-technical-debt",
+        "status": "OPEN",
+        "evidence": [
+          "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m850\u001b[39m\nReceived: \u001b[31m1000\u001b[39m\n    at Object.toBe (X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts:193:45)"
+        ]
+      },
+      {
+        "id": "DEBT-1759143318770-yiewfbhwh",
+        "sourceTest": "Contract Test: POST /api/v1/quotes - T005 Success Cases should generate unique quote numbers for concurrent requests",
+        "testFile": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts",
+        "severity": "CRITICAL",
+        "description": "Fix /api/v1/quotes unique ID generation",
+        "businessImpact": "Potential duplicate quote IDs in high-traffic scenarios",
+        "estimatedEffort": "M",
+        "dependencies": [
+          "contract-test-complete"
+        ],
+        "createdAt": "2025-09-29T10:55:18.770Z",
+        "sprintId": "006-quotes-technical-debt",
+        "status": "OPEN",
+        "evidence": [
+          "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: not \u001b[32m\"quote-1759139791801\"\u001b[39m\n    at Object.toBe (X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts:244:28)"
+        ]
+      }
+    ],
+    "high": [
+      {
+        "id": "DEBT-1759143318771-ayhmuvjnp",
+        "sourceTest": "Contract Test: POST /api/v1/quotes - T005 Validation Error Cases should return 400 Bad Request for invalid discount values",
+        "testFile": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts",
+        "severity": "HIGH",
+        "description": "Fix /api/v1/quotes discount validation",
+        "businessImpact": "Invalid discount values accepted, data integrity risks",
+        "estimatedEffort": "S",
+        "dependencies": [
+          "contract-test-complete"
+        ],
+        "createdAt": "2025-09-29T10:55:18.771Z",
+        "sprintId": "006-quotes-technical-debt",
+        "status": "OPEN",
+        "evidence": [
+          "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m201\u001b[39m\n    at Object.toBe (X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts:329:31)"
+        ]
+      }
+    ],
+    "medium": [
+      {
+        "id": "DEBT-1759143318768-jgbq4jj7b",
+        "sourceTest": "Contract Test: POST /api/v1/quotes - T005 Success Cases should return 201 Created with proper JSON structure for valid quote",
+        "testFile": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts",
+        "severity": "MEDIUM",
+        "description": "Fix /api/v1/quotes response structure",
+        "businessImpact": "Response format inconsistency, type matching issues",
+        "estimatedEffort": "XS",
+        "dependencies": [
+          "contract-test-complete"
+        ],
+        "createdAt": "2025-09-29T10:55:18.768Z",
+        "sprintId": "006-quotes-technical-debt",
+        "status": "OPEN",
+        "evidence": [
+          "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[33m@@ -1,12 +1,12 @@\u001b[39m\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"createdAt\": Any<String>,\u001b[39m\n\u001b[31m+   \"createdAt\": 2025-09-29T09:56:31.786Z,\u001b[39m\n\u001b[2m    \"createdBy\": Any<String>,\u001b[22m\n\u001b[2m    \"currency\": \"GBP\",\u001b[22m\n\u001b[2m    \"customerId\": \"cust-001\",\u001b[22m\n\u001b[2m    \"customerName\": \"Test Customer\",\u001b[22m\n\u001b[32m-   \"expiryDate\": Any<String>,\u001b[39m\n\u001b[31m+   \"expiryDate\": 2025-10-29T09:56:31.784Z,\u001b[39m\n\u001b[2m    \"id\": Any<String>,\u001b[22m\n\u001b[2m    \"isArchived\": Any<Boolean>,\u001b[22m\n\u001b[2m    \"lastModifiedBy\": Any<String>,\u001b[22m\n\u001b[2m    \"lineItems\": ArrayContaining [\u001b[22m\n\u001b[2m      ObjectContaining {\u001b[22m\n\u001b[33m@@ -30,9 +30,9 @@\u001b[39m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"subtotal\": Any<Number>,\u001b[22m\n\u001b[2m    \"taxAmount\": Any<Number>,\u001b[22m\n\u001b[2m    \"totalAmount\": Any<Number>,\u001b[22m\n\u001b[32m-   \"updatedAt\": Any<String>,\u001b[39m\n\u001b[32m-   \"validUntil\": Any<String>,\u001b[39m\n\u001b[31m+   \"updatedAt\": 2025-09-29T09:56:31.786Z,\u001b[39m\n\u001b[31m+   \"validUntil\": 2025-10-29T09:56:31.784Z,\u001b[39m\n\u001b[2m    \"version\": Any<Number>,\u001b[22m\n\u001b[2m  }\u001b[22m\n    at Object.toMatchObject (X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts:82:20)"
+        ]
+      },
+      {
+        "id": "DEBT-1759143318771-j1esqg7hl",
+        "sourceTest": "Contract Test: POST /api/v1/quotes - T005 Business Logic Validation should generate proper expiry date (default 30 days)",
+        "testFile": "X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts",
+        "severity": "MEDIUM",
+        "description": "Fix /api/v1/quotes date comparison logic",
+        "businessImpact": "Date comparison test failures, minor API inconsistency",
+        "estimatedEffort": "XS",
+        "dependencies": [
+          "contract-test-complete"
+        ],
+        "createdAt": "2025-09-29T10:55:18.771Z",
+        "sprintId": "006-quotes-technical-debt",
+        "status": "OPEN",
+        "evidence": [
+          "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\n\u001b[2mIf it should pass with deep equality, replace \"toBe\" with \"toStrictEqual\"\u001b[22m\n\nExpected: \u001b[32m2025-10-29T09:56:31.807Z\u001b[39m\nReceived: serializes to the same string\n    at Object.toBe (X:\\Cloud Storage\\Dropbox\\Repositories\\react\\snowva\\packages\\web\\__tests__\\contracts\\quotes-post.test.ts:412:32)"
+        ]
+      }
+    ],
+    "low": []
+  },
+  "tasks": [
+    {
+      "id": "T014.1",
+      "priority": "CRITICAL",
+      "title": "Fix /api/v1/quotes line item calculation logic",
+      "description": "**TDD Source**: Contract Test: POST /api/v1/quotes - T005 Success Cases should correctly calculate totals for multiple items\n**Business Impact**: Incorrect quote totals, business calculation errors",
+      "evidence": "evidence/T014.1/ with implementation, business logic validation",
+      "mcp": "**REQUIRED** - Browser test functionality with API validation",
+      "dependencies": [
+        "contract-test-complete"
+      ],
+      "estimatedEffort": "M",
+      "debtId": "DEBT-1759143318770-kqc79nk8a",
+      "status": "PENDING"
+    },
+    {
+      "id": "T014.2",
+      "priority": "CRITICAL",
+      "title": "Fix /api/v1/quotes discount calculation logic",
+      "description": "**TDD Source**: Contract Test: POST /api/v1/quotes - T005 Success Cases should handle quotes with discounts correctly\n**Business Impact**: Quote totals incorrect, pricing integrity compromised",
+      "evidence": "evidence/T014.2/ with implementation, business logic validation",
+      "mcp": "**REQUIRED** - Browser test functionality with API validation",
+      "dependencies": [
+        "contract-test-complete"
+      ],
+      "estimatedEffort": "S",
+      "debtId": "DEBT-1759143318770-mwsgyt6s0",
+      "status": "PENDING"
+    },
+    {
+      "id": "T014.3",
+      "priority": "CRITICAL",
+      "title": "Fix /api/v1/quotes unique ID generation",
+      "description": "**TDD Source**: Contract Test: POST /api/v1/quotes - T005 Success Cases should generate unique quote numbers for concurrent requests\n**Business Impact**: Potential duplicate quote IDs in high-traffic scenarios",
+      "evidence": "evidence/T014.3/ with implementation, business logic validation",
+      "mcp": "**REQUIRED** - Browser test functionality with API validation",
+      "dependencies": [
+        "contract-test-complete"
+      ],
+      "estimatedEffort": "M",
+      "debtId": "DEBT-1759143318770-yiewfbhwh",
+      "status": "PENDING"
+    },
+    {
+      "id": "T014.4",
+      "priority": "HIGH",
+      "title": "Fix /api/v1/quotes discount validation",
+      "description": "**TDD Source**: Contract Test: POST /api/v1/quotes - T005 Validation Error Cases should return 400 Bad Request for invalid discount values\n**Business Impact**: Invalid discount values accepted, data integrity risks",
+      "evidence": "evidence/T014.4/ with implementation, validation",
+      "mcp": "**REQUIRED** - Browser test UI functionality",
+      "dependencies": [
+        "contract-test-complete"
+      ],
+      "estimatedEffort": "S",
+      "debtId": "DEBT-1759143318771-ayhmuvjnp",
+      "status": "FUTURE_SPRINT"
+    }
+  ],
+  "trackingNote": "Debt added to inventory - too large for current sprint"
+}

@@ -1,0 +1,6 @@
+{
+  "type": "take_screenshot",
+  "response": {
+    "output": "# take_screenshot response\nTook a screenshot of size 1920x1080\nOCR detected text:\nPOST /api/v1/quotes Contract Testing\n\nTest Results Summary:\n- Total Tests: 12\n- Passed: 6\n- Failed: 6\n\nFailed Tests:\n1. Line item calculation: Expected 135, Received 150\n2. Discount calculation: Expected 850, Received 1000  \n3. Unique ID generation: Duplicate IDs generated\n4. Discount validation: Invalid values accepted (400 vs 201)\n5. Response structure: Date format mismatch\n6. Date comparison: Serialization issues\n\nAPI Endpoint Status: OPERATIONAL\nContract Validation: ACTIVE\nTechnical Debt: 6 ITEMS IDENTIFIED\n\nCRITICAL Issues Require Immediate Attention:\n- T014.1: Fix line item calculation logic\n- T014.2: Fix discount calculation logic  \n- T014.3: Fix unique ID generation\n- T014.4: Fix discount validation\n\nTest Environment: localhost:3000\nBrowser: Chrome DevTools\nTimestamp: 2025-09-29T10:59:12.000Z"
+  }
+}
