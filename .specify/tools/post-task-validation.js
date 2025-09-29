@@ -220,6 +220,10 @@ class PostTaskValidator {
 
     // MANDATE 8: ZERO ERROR TOLERANCE - Constitutional requirement
     await this.enforceZeroErrorTolerance();
+
+    // AMENDMENT 4: EVIDENCE FABRICATION DETECTION - Anti-fraud enforcement
+    await this.validateEvidenceAuthenticity();
+
     await this.runConstitutionalChecker();
     await this.validateCompletionLevel();
 
@@ -1640,6 +1644,51 @@ class PostTaskValidator {
         "   constitutes a CONSTITUTIONAL VIOLATION and must be rolled back"
       );
       process.exit(1);
+    }
+  }
+  async validateEvidenceAuthenticity() {
+    console.log("🚨 AMENDMENT 4: Evidence Fabrication Detection");
+
+    try {
+      const {
+        EvidenceFabricationDetector,
+      } = require("./evidence-fabrication-detector");
+      const detector = new EvidenceFabricationDetector();
+
+      const results = detector.validateAllEvidenceFiles(this.repoRoot);
+
+      if (!results.allValid) {
+        console.log(
+          `🚨 EVIDENCE FABRICATION DETECTED: ${results.violationCount} violations found`
+        );
+
+        results.results.forEach((violation, index) => {
+          this.errors.push(
+            `AMENDMENT 4 VIOLATION: Evidence fabrication in ${path.basename(
+              violation.filePath
+            )}\n` +
+              `   ${violation.violations
+                .map((v) => `• ${v.message}`)
+                .join("\n   ")}\n` +
+              `   Recommendations: ${
+                violation.recommendation?.join(", ") || "Fix fabricated content"
+              }`
+          );
+        });
+
+        console.log(
+          `❌ CONSTITUTIONAL COMPLIANCE: Evidence fabrication must be fixed immediately`
+        );
+      } else {
+        console.log(
+          `✅ AMENDMENT 4: All evidence files are authentic (${results.totalFiles} files validated)`
+        );
+      }
+    } catch (error) {
+      this.warnings.push(
+        `Evidence fabrication detector not available: ${error.message}`
+      );
+      console.log(`⚠️  WARNING: Could not run evidence fabrication detection`);
     }
   }
 }

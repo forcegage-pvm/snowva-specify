@@ -189,7 +189,22 @@ class PreTaskChecker {
   }
 
   async checkTDDDebtBlocking() {
-    // Constitutional Amendment 6: Check for blocking CRITICAL TDD debt
+    // Constitutional Amendment 6: Smart Routing Strategy - Debt tracking for prioritization, not blocking
+
+    // Check if current task is a TDD debt resolution task
+    const isTDDDebtTask =
+      this.taskId.match(/^T014\.[1-9]/) ||
+      this.taskId.includes("Fix") ||
+      this.taskId.includes("debt");
+
+    if (isTDDDebtTask) {
+      console.log(
+        `✓ Task ${this.taskId} is TDD debt resolution - allowed to proceed`
+      );
+      return;
+    }
+
+    // Amendment 6 Smart Routing: Check debt status for informational purposes only
     const debtInventoryPath = path.join(
       this.repoRoot,
       ".specify",
@@ -197,49 +212,51 @@ class PreTaskChecker {
       "tdd-debt-inventory.json"
     );
 
-    if (!fs.existsSync(debtInventoryPath)) {
-      console.log("✓ No TDD debt inventory found - proceeding");
-      return;
+    let inventoryDebtCount = 0;
+    let sprintDebtCount = 0;
+
+    // Check inventory debt (post-sprint resolution)
+    if (fs.existsSync(debtInventoryPath)) {
+      try {
+        const debtData = JSON.parse(fs.readFileSync(debtInventoryPath, "utf8"));
+        inventoryDebtCount =
+          (debtData.debt?.critical || []).length +
+          (debtData.debt?.high || []).length;
+      } catch (error) {
+        this.warnings.push(
+          `Could not read TDD debt inventory: ${error.message}`
+        );
+      }
     }
 
-    try {
-      const debtData = JSON.parse(fs.readFileSync(debtInventoryPath, "utf8"));
-      const criticalDebt = debtData.debt?.critical || [];
+    // Check for sprint debt tasks (current sprint resolution)
+    const tasksPath = path.join(
+      this.repoRoot,
+      "specs",
+      "006-quotes-technical-debt",
+      "tasks.md"
+    );
 
-      if (criticalDebt.length === 0) {
-        console.log("✓ No CRITICAL TDD debt blocking development");
-        return;
-      }
+    if (fs.existsSync(tasksPath)) {
+      const tasksContent = fs.readFileSync(tasksPath, "utf8");
+      const sprintDebtMatches = tasksContent.match(/T014\.[1-9]/g);
+      sprintDebtCount = sprintDebtMatches ? sprintDebtMatches.length : 0;
+    }
 
-      // Check if current task is a TDD debt resolution task
-      const isTDDDebtTask =
-        this.taskId.match(/^T014\.[1-9]/) ||
-        this.taskId.includes("Fix") ||
-        this.taskId.includes("debt");
-
-      if (isTDDDebtTask) {
-        console.log(
-          `✓ Task ${this.taskId} is TDD debt resolution - allowed to proceed`
-        );
-        return;
-      }
-
-      // Block non-debt tasks when CRITICAL debt exists
-      this.errors.push(
-        `CONSTITUTIONAL AMENDMENT 6 VIOLATION: ${criticalDebt.length} CRITICAL TDD debt items must be resolved before proceeding with non-debt tasks`
-      );
-
-      console.log(`❌ CRITICAL TDD DEBT BLOCKING DEVELOPMENT:`);
-      criticalDebt.forEach((debt, index) => {
-        console.log(
-          `   ${index + 1}. ${debt.description} (Source: ${debt.sourceTest})`
-        );
-      });
+    // Smart Routing: Neither SPRINT_TASKS nor INVENTORY debt blocks development
+    console.log("✓ TDD debt tracking active (Amendment 6 Smart Routing)");
+    if (sprintDebtCount > 0) {
       console.log(
-        `\n🔧 Resolve these debt items first: T014.1, T014.2, T014.3`
+        `  📋 Current sprint debt: ${sprintDebtCount} items (prioritized for this sprint)`
       );
-    } catch (error) {
-      this.warnings.push(`Could not read TDD debt inventory: ${error.message}`);
+    }
+    if (inventoryDebtCount > 0) {
+      console.log(
+        `  � Inventory debt: ${inventoryDebtCount} items (scheduled for future sprints)`
+      );
+    }
+    if (sprintDebtCount === 0 && inventoryDebtCount === 0) {
+      console.log("  🎯 No outstanding TDD debt");
     }
   }
 

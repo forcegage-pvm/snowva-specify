@@ -64,7 +64,91 @@ See .specify/memory/constitution.md, .specify/memory/testing-strategy.md, and .s
 - All MCP interactions MUST save raw JSON responses as evidence
 - Screenshot fraud detection now active - no placeholder files accepted
 
-**VALIDATION INSTRUCTIONS**: See `.specify/memory/validation-tools-usage-guide.md` for step-by-step instructions on proper evidence generation, fraud prevention, and troubleshooting validation errors.\n\n**CONSTITUTIONAL AMENDMENT 6 - ENHANCED TDD DEBT MANAGEMENT**: Smart routing strategy automatically determines debt tracking location (SPRINT_TASKS vs INVENTORY) based on capacity thresholds. Enhanced `tdd-debt-analyzer.js` prevents duplication, validates references, and supports contract testing workflows. All technical debt MUST be tracked with Amendment 6 compliance.
+**VALIDATION INSTRUCTIONS**: See `.specify/memory/validation-tools-usage-guide.md` for step-by-step instructions on proper evidence generation, fraud prevention, and troubleshooting validation errors.
+
+**CONSTITUTIONAL AMENDMENT 6 - ENHANCED TDD DEBT MANAGEMENT**: Smart routing strategy automatically determines debt tracking location (SPRINT_TASKS vs INVENTORY) based on capacity thresholds. Enhanced `tdd-debt-analyzer.js` prevents duplication, validates references, and supports contract testing workflows. All technical debt MUST be tracked with Amendment 6 compliance.
+
+## 🧠 HARD-CODED MENTAL PROTOCOL (NON-BYPASSABLE)
+
+**CRITICAL SYSTEM-LEVEL ENFORCEMENT**: Before ANY file creation in evidence directories, this cognitive interrupt MUST execute automatically - NO EXCEPTIONS.
+
+### Mandatory Pre-Action Cognitive Gate
+
+```javascript
+// AUTOMATIC ACTIVATION on evidence file operations
+if (filePath.includes('/evidence/') || filePath.endsWith('evidence file types')) {
+  🧠 MENTAL PROTOCOL GATE ACTIVATED - CANNOT BE BYPASSED
+  ├── Question 1: "Is this content from actual tool output I just executed?" (MUST BE YES)
+  ├── Question 2: "Have I executed the required tool in this conversation?" (MUST BE YES)
+  ├── Question 3: "Am I inventing ANY part of this content?" (MUST BE NO)
+  └── Result: ANY "NO" ANSWER = IMMEDIATE HARD STOP
+}
+```
+
+### Non-Negotiable Evidence Rules (System Level)
+
+**EVIDENCE FILES ARE OUTPUTS, NEVER INPUTS**:
+
+- Evidence files can ONLY be created by copying verbatim tool outputs
+- NEVER write evidence files from scratch or "based on what should happen"
+- NEVER create "placeholder evidence to update later"
+- Evidence = Captured data, not created data
+
+**TOOL-FIRST MANDATE (Hard Enforcement)**:
+
+- Must use actual tools BEFORE creating any evidence file
+- Tool execution must be visible in recent conversation history
+- No evidence file creation without corresponding tool execution
+- MCP tools must be actually executed, not simulated
+
+**ZERO FABRICATION TOLERANCE (Constitutional)**:
+
+- Any invented content in evidence files = Constitutional violation
+- Fabrication includes "realistic" content, placeholders, "what would happen"
+- Only verbatim, unmodified tool outputs are acceptable
+- Analysis goes in separate files, raw data goes in evidence files
+
+### Automatic Enforcement Triggers
+
+**File Path Triggers** (Cannot be disabled):
+
+- Creating files in `/evidence/` directories
+- Files ending in: `.json`, `.log`, `.md` within evidence folders
+- Files containing: `mcp-`, `screenshot`, `response`, `test-results`
+
+**Content Triggers** (Cannot be disabled):
+
+- Writing `{` to start JSON in evidence files
+- Using patterns: `"command":`, `"response":`, `"timestamp":`, `"mcp_chrome"`
+- Creating structured data without preceding tool usage
+
+**Action Triggers** (Cannot be disabled):
+
+- Any `create_file()` call targeting evidence directories
+- Any `replace_string_in_file()` call in evidence directories
+- Writing analysis claiming functionality without MCP validation
+
+### Hard-Stop Enforcement Protocol
+
+When mental protocol violations are detected:
+
+1. **IMMEDIATE HALT**: Stop current action completely - no exceptions
+2. **TOOL REQUIREMENT**: Must execute actual tools to generate required evidence
+3. **VERIFICATION**: Must confirm tool outputs are authentic before file creation
+4. **COMPLIANCE**: Only proceed with 100% authentic tool outputs
+
+**VIOLATION CONSEQUENCE**: Constitutional non-compliance, task failure, development halt until fixed.
+
+### System Integration Points
+
+This mental protocol is enforced through:
+
+- **Pre-action evidence enforcer**: Blocks file operations before they happen
+- **Constitutional validation**: Validates evidence authenticity post-creation
+- **Tool execution hooks**: Requires actual tool usage before evidence creation
+- **Conversation context**: Mental protocol rules always present and active
+
+**THIS PROTOCOL CANNOT BE BYPASSED, OVERRIDDEN, OR IGNORED**
 
 ## Recent Changes
 
